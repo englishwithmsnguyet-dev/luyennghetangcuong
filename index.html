@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUYỆN NGHE TĂNG CƯỜNG - ENGLISHWITHMISSNGUYET</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>VSTEP<br>LISTENING</h1>
+                <p>LUYỆN NGHE TĂNG CƯỜNG</p>
+            </div>
+            
+            <div class="theme-toggle">
+                <button id="theme-btn" aria-label="Toggle dark mode">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="progress-box">
+                <div class="progress-header">
+                    <span>Tiến độ lộ trình</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            
+            <nav class="day-menu" id="day-menu">
+                <!-- Day list will be injected here by JS -->
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                
+                <a href="https://www.facebook.com/nguyetpham28" target="_blank" class="top-badge">
+                    <span>ENGLISH WITH MISS NGUYET</span>
+                </a>
+                
+                <div class="page-header">
+                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-left">
+                    <h2>VSTEP LISTENING</h2>
+                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-right">
+                </div>
+                <p class="subtitle">LUYỆN NGHE TĂNG CƯỜNG - TIẾN BỘ KHÔNG TƯỞNG</p>
+                
+                <div id="active-day-content">
+                    <div class="alert-box">
+                        <div class="alert-content">
+                            <strong>LƯU Ý:</strong> Chỉ nghe 1 lần duy nhất, không nghe lại, không tua, không chỉnh tốc độ lúc làm bài. Sau khi hoàn thành xong có thể nghe lại nhiều lần.
+                        </div>
+                    </div>
+                    
+                    <!-- Audio Player Card -->
+                    <div class="card audio-card">
+                        <audio id="native-audio" controls>
+                            <source src="" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <!-- Questions Card -->
+                    <div class="card questions-card">
+                        <div id="questions-container">
+                            <!-- Questions will be injected here by JS -->
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="submit-btn" style="display: none;">NỘP BÀI</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="home-content" style="display: none;" class="home-wrapper">
+                    
+                    <!-- Hero Warning Card -->
+                    <div class="card home-hero-card">
+                        <div class="home-icon-lg">⚠️</div>
+                        <h2 class="home-title">LƯU Ý ĐỐI VỚI CHUỖI LUYỆN NGHE TĂNG CƯỜNG</h2>
+                        <p class="home-subtitle">Trước khi bắt đầu, cô muốn các bạn hiểu một điều:</p>
+                    </div>
+
+                    <!-- Goals and Reality Grid -->
+                    <div class="home-grid">
+                        <div class="card home-box goal-box">
+                            <div class="box-header">
+                                <span class="box-icon">🎯</span>
+                                <h3>Mục tiêu của chuỗi này</h3>
+                            </div>
+                            <ul>
+                                <li><span><strong>KHÔNG PHẢI</strong> là làm đúng thật nhiều câu.</span></li>
+                                <li><span><strong>MÀ LÀ</strong> làm quen với những bài nghe khó hơn mức thông thường.</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="card home-box reality-box">
+                            <div class="box-header">
+                                <span class="box-icon">❌</span>
+                                <h3>Vì vậy, xin đừng...</h3>
+                            </div>
+                            <ul>
+                                <li><span>Đừng hoảng hốt nếu điểm số thấp hơn bình thường.</span></li>
+                                <li><span>Đừng nản nếu có bài nghe chỉ hiểu được một phần.</span></li>
+                                <li><span>Đừng vội kết luận rằng mình "nghe kém".</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card home-highlight">
+                        <p>Bởi vì những bài nghe trong chuỗi này được lựa chọn với độ khó cao hơn để giúp các bạn luyện khả năng xử lý những tình huống khó trong đề thi thật.</p>
+                    </div>
+
+                    <!-- Action Grid -->
+                    <div class="home-grid">
+                        <div class="card home-box action-box">
+                            <div class="box-header">
+                                <span class="box-icon">📝</span>
+                                <h3>Khi làm bài</h3>
+                            </div>
+                            <ul class="checklist">
+                                <li><span>Chỉ nghe 01 lần.</span></li>
+                                <li><span>Không bấm dừng.</span></li>
+                                <li><span>Không tua lại.</span></li>
+                                <li><span>Không chỉnh tốc độ.</span></li>
+                                <li><span>Cố gắng hoàn thành bài trước khi xem đáp án.</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="card home-box action-box">
+                            <div class="box-header">
+                                <span class="box-icon">🔍</span>
+                                <h3>Sau khi làm bài</h3>
+                            </div>
+                            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Đừng chỉ xem mình đúng bao nhiêu câu. Hãy xem:</p>
+                            <ul class="checklist check-green">
+                                <li><span>Mình sai ở đâu?</span></li>
+                                <li><span>Mình bị bẫy như thế nào?</span></li>
+                                <li><span>Mình bỏ lỡ từ khóa nào?</span></li>
+                                <li><span>Người ra đề paraphrase ra sao?</span></li>
+                            </ul>
+                            <p class="note">Đây mới là phần quan trọng nhất của quá trình luyện nghe.</p>
+                        </div>
+                    </div>
+
+                    <!-- Part 3 Focus -->
+                    <div class="card home-box focus-box">
+                        <div class="box-header">
+                            <span class="box-icon">🎧</span>
+                            <h3>Đối với các bài PART 03 học thuật</h3>
+                        </div>
+                        <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">Nếu gặp chủ đề lạ hoặc khó hiểu, các bạn <strong>không cần cố hiểu 100% từng từ</strong>.</p>
+                        <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">Thay vào đó, hãy tập trung:</p>
+                        <ul class="focus-list">
+                            <li><span>1</span> <span>Xác định chủ đề chính.</span></li>
+                            <li><span>2</span> <span>Theo dõi ý chính của người nói.</span></li>
+                            <li><span>3</span> <span>Nắm được thông tin quan trọng liên quan đến câu hỏi.</span></li>
+                        </ul>
+                        <p class="note">Ngay cả trong phòng thi thật, không ai cần hiểu toàn bộ bài nghe để làm đúng.</p>
+                    </div>
+
+                    <!-- Final Message -->
+                    <div class="card home-final-card">
+                        <div class="box-header center">
+                            <span class="box-icon">💪</span>
+                            <h3>Điều cuối cùng cô muốn nhắn nhủ</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin-top: 1rem;">Nếu một bài nghe khiến các bạn cảm thấy khó chịu, đó thường là bài nghe các bạn cần luyện nhất.</p>
+                        
+                        <div class="final-quote">
+                            <p>Những bài dễ giúp chúng ta <span style="color: #10b981;">tự tin</span>.</p>
+                            <p>Những bài khó giúp chúng ta <span style="color: var(--color-alert-border);">tiến bộ</span>.</p>
+                        </div>
+                        
+                        <p style="color: var(--text-secondary); font-weight: 600;">Vì vậy, hãy coi mỗi bài nghe khó là một cơ hội để nâng cấp kỹ năng Listening của mình trước ngày thi.</p>
+                    </div>
+                </div>
+
+                <div id="placeholder-content" style="display: none;">
+                    <div class="card placeholder-card">
+                        <h3>Sắp ra mắt</h3>
+                        <p>Dữ liệu cho bài nghe này hiện chưa có sẵn. Xin vui lòng quay lại sau!</p>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="watermark">
+                <span>#englishwithmissnguyet</span>
+            </div>
+        </main>
+        
+        <!-- Results Overlay -->
+        <div class="results-overlay" id="results-overlay">
+            <div class="results-modal card">
+                <h2>Kết Quả Làm Bài</h2>
+                <div class="score-display">
+                    <span class="score-number" id="final-score">0</span>
+                    <span class="score-total">/ 8</span>
+                </div>
+                <p class="score-message" id="score-message">Làm tốt lắm! Hãy tiếp tục luyện tập nhé.</p>
+                <div class="results-actions">
+                    <button class="btn btn-secondary" id="review-btn">Xem lại đáp án</button>
+                    <button class="btn btn-primary" id="restart-btn">Làm lại bài này</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
