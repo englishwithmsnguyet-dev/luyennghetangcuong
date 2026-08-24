@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderSidebar();
         loadDay(currentPartIndex);
+        checkLoginState();
     }
 
     // Render Sidebar Menu
@@ -534,6 +535,136 @@ document.addEventListener('DOMContentLoaded', () => {
             // switch icon to sun
             themeBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
         }
+    });
+
+    // --- Login Logic ---
+    const loginOverlay = document.getElementById('loginOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const studentNameInput = document.getElementById('studentName');
+    const studentClassInput = document.getElementById('studentClass');
+    const studentPasswordInput = document.getElementById('studentPassword');
+    const loginError = document.getElementById('loginError');
+    const btnLogin = document.getElementById('btnLogin');
+
+    const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209'];
+    const REQUIRED_PASSWORD = 'VSTEPSEPTEMBER';
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScU5Jd_R15uECAgsBMHZsqKAaCR2g2K1IzqOGs-ZN9_RbDkdQ/formResponse';
+    const GOOGLE_FORM_ENTRY = 'entry.388968236';
+
+    function checkLoginState() {
+        const loggedIn = localStorage.getItem('vstep_student_logged_in') || sessionStorage.getItem('vstep_student_logged_in');
+        if (loggedIn === 'true') {
+            if (loginOverlay) loginOverlay.classList.add('hidden');
+        } else {
+            if (loginOverlay) loginOverlay.classList.remove('hidden');
+            const savedName = localStorage.getItem('vstep_student_name') || '';
+            const savedClass = localStorage.getItem('vstep_student_class') || '';
+            if (studentNameInput && savedName) studentNameInput.value = savedName;
+            if (studentClassInput && savedClass) studentClassInput.value = savedClass;
+        }
+    }
+
+    function showLoginError(msg) {
+        if (!loginError) return;
+        loginError.textContent = msg;
+        loginError.style.display = 'block';
+    }
+
+    function handleLoginSubmit() {
+        const nameVal = studentNameInput ? studentNameInput.value.trim() : '';
+        const rawClassVal = studentClassInput ? studentClassInput.value.trim().toUpperCase().replace(/\s+/g, '') : '';
+        const passwordVal = studentPasswordInput ? studentPasswordInput.value.trim() : '';
+
+        if (!nameVal) {
+            showLoginError('Vui lòng nhập đầy đủ Họ và tên.');
+            if (studentNameInput) studentNameInput.focus();
+            return;
+        }
+
+        if (!rawClassVal) {
+            showLoginError('Vui lòng nhập Lớp học.');
+            if (studentClassInput) studentClassInput.focus();
+            return;
+        }
+
+        if (!ALLOWED_CLASSES.includes(rawClassVal)) {
+            showLoginError(`Lớp học không hợp lệ. Chỉ chấp nhận các lớp: ${ALLOWED_CLASSES.join(', ')}.`);
+            if (studentClassInput) studentClassInput.focus();
+            return;
+        }
+
+        if (!passwordVal) {
+            showLoginError('Vui lòng nhập Mật khẩu.');
+            if (studentPasswordInput) studentPasswordInput.focus();
+            return;
+        }
+
+        if (passwordVal.toUpperCase() !== REQUIRED_PASSWORD) {
+            showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
+            if (studentPasswordInput) {
+                studentPasswordInput.focus();
+                studentPasswordInput.select();
+            }
+            return;
+        }
+
+        if (loginError) loginError.style.display = 'none';
+        if (btnLogin) {
+            btnLogin.textContent = 'ĐANG VÀO LỚP...';
+            btnLogin.disabled = true;
+        }
+
+        // Save student info to storage
+        localStorage.setItem('vstep_student_name', nameVal);
+        localStorage.setItem('vstep_student_class', rawClassVal);
+        localStorage.setItem('vstep_student_logged_in', 'true');
+        sessionStorage.setItem('vstep_student_logged_in', 'true');
+
+        // Submit to Google Form (no-cors)
+        try {
+            const formData = new URLSearchParams();
+            formData.append(GOOGLE_FORM_ENTRY, `${nameVal} - ${rawClassVal}`);
+            fetch(GOOGLE_FORM_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            }).catch(e => console.log('Log form info error', e));
+        } catch (e) {
+            console.log('Log form error', e);
+        }
+
+        setTimeout(() => {
+            if (loginOverlay) loginOverlay.classList.add('hidden');
+            if (btnLogin) {
+                btnLogin.textContent = 'BẮT ĐẦU HỌC NGAY';
+                btnLogin.disabled = false;
+            }
+        }, 300);
+    }
+
+    if (btnLogin) {
+        btnLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleLoginSubmit();
+        });
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleLoginSubmit();
+        });
+    }
+
+    [studentNameInput, studentClassInput, studentPasswordInput].forEach((input) => {
+        if (!input) return;
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleLoginSubmit();
+            }
+        });
     });
 
     init();
