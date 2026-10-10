@@ -548,8 +548,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209'];
     const REQUIRED_PASSWORD = 'VSTEPSEPTEMBER';
-    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScU5Jd_R15uECAgsBMHZsqKAaCR2g2K1IzqOGs-ZN9_RbDkdQ/formResponse';
-    const GOOGLE_FORM_ENTRY = 'entry.388968236';
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
+    const GOOGLE_FORM_ENTRY = 'entry.1205151935';
 
     function checkLoginState() {
         const loggedIn = localStorage.getItem('vstep_student_logged_in') || sessionStorage.getItem('vstep_student_logged_in');
