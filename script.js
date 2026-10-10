@@ -547,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('btnLogin');
 
     const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209'];
-    const REQUIRED_PASSWORD = 'VSTEPSEPTEMBER';
+    const REQUIRED_PASSWORD = 'PRACTICELISTENING';
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
 
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (passwordVal.toUpperCase() !== REQUIRED_PASSWORD) {
+        if (passwordVal.toUpperCase().replace(/\s+/g, '') !== REQUIRED_PASSWORD) {
             showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
             if (studentPasswordInput) {
                 studentPasswordInput.focus();
