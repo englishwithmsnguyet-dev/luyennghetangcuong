@@ -167,8 +167,8 @@
   // 2. LUCKY CLOVER GARDEN ENGINE
   // ==========================================
   const FlowerGarden = {
-    STORAGE_KEY: 'flower_garden_data_v1',
     WATER_PER_WATERING: 10, // Giọt nước cần thiết cho mỗi lần tưới
+    currentActiveAccountId: null,
 
     state: {
       currentFlowerId: 'clover',
@@ -191,7 +191,112 @@
 
     currentQuizIndex: 0,
 
+    getDefaultState(studentName = '') {
+      const today = new Date().toISOString().slice(0, 10);
+      return {
+        studentName: studentName || '',
+        currentFlowerId: 'clover',
+        progress: 30, // 30% khởi đầu xanh non
+        moisture: 75,
+        sunlight: 80,
+        waterDrops: 35, // 35 giọt nước nỗ lực khởi đầu cho mỗi tài khoản
+        loginStreak: 1,
+        lastLoginDate: today,
+        lastWateredDate: today,
+        isWilted: false,
+        harvestCount: 0,
+        basket: {
+          clover: 0
+        },
+        harvestedQuotes: [], // Kho tàng động lực độc lập cho từng tài khoản
+        seenQuizIds: [],
+        history: []
+      };
+    },
+
+    slugify(str) {
+      if (!str) return 'guest';
+      return String(str).toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'guest';
+    },
+
+    getAccountId() {
+      // 1. Check JSON session in listening-mock-tests
+      try {
+        const sessionStr = localStorage.getItem('vstep_user_session');
+        if (sessionStr) {
+          const parsed = JSON.parse(sessionStr);
+          if (parsed) {
+            if (parsed.isTeacher || (parsed.name && /^(ptmn|cô nguyệt|co nguyet)$/i.test(String(parsed.name).trim()))) {
+              return 'teacher_ptmn';
+            }
+            if (parsed.name) {
+              const s = this.cleanStudentName(parsed.name);
+              if (s && s !== 'Bạn') {
+                return 'user_' + this.slugify(s);
+              }
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2. Check localStorage / sessionStorage candidate keys
+      try {
+        const candidateKeys = ['vstep_student_name', 'student_name', 'studentName', 'userName', 'username'];
+        for (const k of candidateKeys) {
+          const val = localStorage.getItem(k) || sessionStorage.getItem(k);
+          if (val && typeof val === 'string') {
+            const s = this.cleanStudentName(val);
+            if (s && s !== 'Bạn') {
+              return 'user_' + this.slugify(s);
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 3. Check common DOM elements on the page
+      if (typeof document !== 'undefined') {
+        const selectors = [
+          '#sidebar-user-name',
+          '#b-stat-student',
+          '#student-name',
+          '.user-name',
+          '#user-display-name',
+          '#current-user-name'
+        ];
+        for (const sel of selectors) {
+          const el = document.querySelector(sel);
+          if (el && el.textContent) {
+            const s = this.cleanStudentName(el.textContent);
+            if (s && s !== 'Bạn') {
+              return 'user_' + this.slugify(s);
+            }
+          }
+        }
+      }
+
+      // 4. Check custom name in state if exists
+      if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
+        const s = this.cleanStudentName(this.state.studentName);
+        if (s && s !== 'Bạn') {
+          return 'user_' + this.slugify(s);
+        }
+      }
+
+      // 5. Fallback: guest
+      return 'guest';
+    },
+
+    getStorageKey(accountId = null) {
+      const acc = accountId || this.getAccountId();
+      return `flower_garden_data_v2_${acc}`;
+    },
+
     init() {
+      this.currentActiveAccountId = this.getAccountId();
       this.loadState();
       this.checkWiltingStatus();
       this.checkDailyLoginReward();
@@ -235,8 +340,26 @@
     },
 
     loadState() {
+      const accId = this.getAccountId();
+      this.currentActiveAccountId = accId;
+      const storageKey = this.getStorageKey(accId);
+      const studentName = this.getStudentName();
+
+      // Bắt đầu với trạng thái mặc định sạch sẽ của tài khoản này
+      this.state = this.getDefaultState(studentName);
+
+      // Kế thừa dữ liệu thử nghiệm trước đây DUY NHẤT cho tài khoản giáo viên (teacher_ptmn)
+      if (accId === 'teacher_ptmn') {
+        try {
+          const legacy = localStorage.getItem('flower_garden_data_v1');
+          if (legacy && !localStorage.getItem(storageKey)) {
+            localStorage.setItem(storageKey, legacy);
+          }
+        } catch (e) {}
+      }
+
       try {
-        const saved = localStorage.getItem(this.STORAGE_KEY);
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved);
           this.state = Object.assign(this.state, parsed);
@@ -249,7 +372,7 @@
       this.state.currentFlowerId = 'clover';
       const cloverCount = (this.state.basket && (this.state.basket.clover || this.state.basket.sunflower || this.state.harvestCount)) || 0;
       this.state.basket = { clover: cloverCount };
-      if (!this.state.harvestCount) {
+      if (typeof this.state.harvestCount !== 'number') {
         this.state.harvestCount = cloverCount;
       }
       if (typeof this.state.waterDrops !== 'number' || isNaN(this.state.waterDrops)) {
@@ -265,14 +388,59 @@
         // Initialize to today for fresh players so they start healthy
         this.state.lastWateredDate = new Date().toISOString().slice(0, 10);
       }
+      if (studentName && studentName !== 'Bạn') {
+        this.state.studentName = studentName;
+      }
     },
 
     saveState() {
       try {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
+        const storageKey = this.getStorageKey(this.currentActiveAccountId);
+        localStorage.setItem(storageKey, JSON.stringify(this.state));
       } catch (e) {
         console.warn('Could not save garden state to localStorage', e);
       }
+    },
+
+    checkAccountChange() {
+      const newAccountId = this.getAccountId();
+      if (this.currentActiveAccountId && newAccountId !== this.currentActiveAccountId) {
+        this.switchAccount(newAccountId);
+      }
+    },
+
+    switchAccount(newAccountId) {
+      // 1. Lưu lại tài khoản hiện tại trước khi chuyển đổi
+      if (this.currentActiveAccountId) {
+        this.saveState();
+      }
+
+      // 2. Cập nhật ID tài khoản đang hoạt động
+      this.currentActiveAccountId = newAccountId;
+
+      // 3. Tải dữ liệu riêng biệt của tài khoản mới
+      this.loadState();
+
+      // 4. Kiểm tra héo cây & phần thưởng điểm danh của tài khoản này
+      this.checkWiltingStatus();
+      this.checkDailyLoginReward();
+
+      // 5. Cập nhật lại toàn bộ giao diện chậu cây & header
+      this.render();
+      this.updateTitleWithStudentName();
+
+      // 6. Cập nhật lại Modal Kho Tàng / Bộ Sưu Tập nếu đang mở
+      const basketModal = document.getElementById('garden-basket-modal');
+      if (basketModal && basketModal.classList.contains('active')) {
+        const subtext = basketModal.querySelector('#basket-modal-subtext');
+        if (subtext) {
+          subtext.innerHTML = `Mỗi cành cỏ 4 lá may mắn được <b>${this.escapeHtml(this.getStudentName())}</b> vun trồng là một niềm tin gửi gắm tới mục tiêu kỳ thi VSTEP:`;
+        }
+        this.renderBasketStats();
+        this.renderQuotesArchive();
+      }
+
+      console.log(`[FlowerGarden] Successfully switched garden state to account: ${newAccountId}`);
     },
 
     // ==========================================
@@ -405,19 +573,24 @@
     },
 
     // ==========================================
-    // STUDENT NAME PERSONALIZATION ENGINE
+    // STUDENT NAME PERSONALIZATION & ACCOUNT WATCHER ENGINE
     // ==========================================
     initStudentNameWatcher() {
       if (typeof window === 'undefined') return;
 
-      // 1. Storage event listener (sync name across tabs or when login occurs)
+      // 1. Storage event listener (sync account/name across tabs or when login occurs)
       window.addEventListener('storage', (e) => {
         if (e.key === 'vstep_student_name' || e.key === 'vstep_user_session' || e.key === 'student_name') {
-          this.updateTitleWithStudentName();
+          this.checkAccountChange();
         }
       });
 
-      // 2. DOM MutationObserver to detect async login name rendering
+      // 2. Periodic watcher (runs every 800ms to immediately catch login/logout in single-page apps)
+      setInterval(() => {
+        this.checkAccountChange();
+      }, 800);
+
+      // 3. DOM MutationObserver to detect async login name rendering
       const candidateElements = [
         document.getElementById('sidebar-user-name'),
         document.getElementById('b-stat-student'),
@@ -428,7 +601,7 @@
 
       if (window.MutationObserver && candidateElements.length > 0) {
         const observer = new MutationObserver(() => {
-          this.updateTitleWithStudentName();
+          this.checkAccountChange();
         });
         candidateElements.forEach(el => {
           observer.observe(el, { childList: true, characterData: true, subtree: true });
@@ -437,16 +610,17 @@
     },
 
     getStudentName() {
-      // 1. Check custom name in flower garden state
-      if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
-        const s = this.cleanStudentName(this.state.studentName);
-        if (s && s !== 'Bạn') return s;
-        // Clean legacy "Cô Nguyệt" stored in state
-        if (/cô nguyệt|co nguyet|ptmn/i.test(this.state.studentName)) {
-          this.state.studentName = '';
-          this.saveState();
+      // 1. Check JSON session in listening-mock-tests
+      try {
+        const sessionStr = localStorage.getItem('vstep_user_session');
+        if (sessionStr) {
+          const parsed = JSON.parse(sessionStr);
+          if (parsed && parsed.name) {
+            const s = this.cleanStudentName(parsed.name);
+            if (s && s !== 'Bạn') return s;
+          }
         }
-      }
+      } catch (e) {}
 
       // 2. Check localStorage / sessionStorage
       try {
@@ -458,42 +632,40 @@
             if (s && s !== 'Bạn') return s;
           }
         }
-
-        // Check JSON session in listening-mock-tests
-        const sessionStr = localStorage.getItem('vstep_user_session');
-        if (sessionStr) {
-          const parsed = JSON.parse(sessionStr);
-          if (parsed && parsed.name) {
-            const s = this.cleanStudentName(parsed.name);
-            if (s && s !== 'Bạn') return s;
-          }
-        }
       } catch (e) {}
 
       // 3. Check common DOM elements on the page
-      const selectors = [
-        '#sidebar-user-name',
-        '#b-stat-student',
-        '#student-name',
-        '.user-name',
-        '#user-display-name',
-        '#current-user-name'
-      ];
-      for (const sel of selectors) {
-        const el = document.querySelector(sel);
-        if (el && el.textContent) {
-          const s = this.cleanStudentName(el.textContent);
-          if (s && s !== 'Bạn') return s;
+      if (typeof document !== 'undefined') {
+        const selectors = [
+          '#sidebar-user-name',
+          '#b-stat-student',
+          '#student-name',
+          '.user-name',
+          '#user-display-name',
+          '#current-user-name'
+        ];
+        for (const sel of selectors) {
+          const el = document.querySelector(sel);
+          if (el && el.textContent) {
+            const s = this.cleanStudentName(el.textContent);
+            if (s && s !== 'Bạn') return s;
+          }
         }
       }
 
-      // 4. Default fallback: "Bạn"
+      // 4. Check custom name in flower garden state
+      if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
+        const s = this.cleanStudentName(this.state.studentName);
+        if (s && s !== 'Bạn') return s;
+      }
+
+      // 5. Default fallback: "Bạn"
       return 'Bạn';
     },
 
     cleanStudentName(raw) {
       if (!raw || typeof raw !== 'string') return '';
-      let s = raw.trim();
+      let s = raw.trim().replace(/\s+/g, ' ');
       // Filter out generic placeholders and teacher identifiers
       if (/^(học viên|hoc vien|học viên vstep|chưa nhập tên|chua nhap ten|ẩn danh|an danh|học viên ẩn danh|cô nguyệt|co nguyet|ptmn|giáo viên|giao vien|teacher|cô nguyệt \(ptmn\))$/i.test(s)) return '';
 
@@ -529,11 +701,10 @@
         localStorage.setItem('vstep_student_name', clean);
         sessionStorage.setItem('vstep_student_name', clean);
       } catch (e) {}
-      this.saveState();
-      this.updateTitleWithStudentName();
+      this.checkAccountChange();
       this.updateSpeechBubble(`Chào mừng ${clean} đến với Chậu Cỏ May Mắn! Chăm chỉ tích lũy nước nỗ lực mỗi ngày nhé! 🍀✨`);
       if (typeof showToast === 'function') {
-        showToast(`🍀 Đã cập nhật tên chủ nhân Chậu Cỏ May Mắn: ${clean}!`);
+        showToast(`🍀 Đã chuyển sang Chậu Cỏ May Mắn của học viên: ${clean}!`);
       }
     },
 
@@ -2281,7 +2452,7 @@
   };
 
   // Plug-and-play auto initialization on any website
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     const autoInit = () => {
       if (document.getElementById('garden-container') && !FlowerGarden._initialized) {
         FlowerGarden._initialized = true;

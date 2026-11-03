@@ -226,17 +226,45 @@
 
   /**
    * Thuật toán lấy ngẫu nhiên KHÔNG TRÙNG LẶP (Non-repeating Shuffle Deck)
-   * Sử dụng localStorage để ghi nhớ các câu đã xem, lặp lại chu kỳ mới khi đã xem hết 100%.
+   * Sử dụng localStorage riêng biệt theo từng tài khoản học viên để ghi nhớ các câu đã xem.
    */
-  const DAILY_QUOTES_STORAGE_KEY = 'miss_nguyet_daily_quotes_seen_v1';
+  function getActiveUserStorageSuffix() {
+    try {
+      if (typeof window !== 'undefined' && window.FlowerGarden && typeof window.FlowerGarden.getAccountId === 'function') {
+        const id = window.FlowerGarden.getAccountId();
+        if (id) return id;
+      }
+      if (typeof localStorage !== 'undefined') {
+        const sess = localStorage.getItem('vstep_user_session');
+        if (sess) {
+          const p = JSON.parse(sess);
+          if (p && p.name) {
+            const s = String(p.name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            if (s) return 'user_' + s;
+          }
+        }
+        const sName = localStorage.getItem('vstep_student_name');
+        if (sName) {
+          const s = String(sName).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+          if (s) return 'user_' + s;
+        }
+      }
+    } catch (e) {}
+    return 'default';
+  }
+
+  function getDailyQuotesStorageKey() {
+    return 'miss_nguyet_daily_quotes_seen_v2_' + getActiveUserStorageSuffix();
+  }
 
   function getRandomNonRepeatingQuote() {
     const quotes = DAILY_INSPIRATION_QUOTES;
     if (!quotes || quotes.length === 0) return null;
 
+    const storageKey = getDailyQuotesStorageKey();
     let seenIds = [];
     try {
-      const saved = localStorage.getItem(DAILY_QUOTES_STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         seenIds = JSON.parse(saved);
         if (!Array.isArray(seenIds)) seenIds = [];
@@ -260,10 +288,10 @@
     const randomIndex = Math.floor(Math.random() * available.length);
     const chosen = available[randomIndex];
 
-    // Ghi nhớ câu đã xem
+    // Ghi nhớ câu đã xem cho tài khoản hiện tại
     seenIds.push(chosen.id);
     try {
-      localStorage.setItem(DAILY_QUOTES_STORAGE_KEY, JSON.stringify(seenIds));
+      localStorage.setItem(storageKey, JSON.stringify(seenIds));
     } catch (e) {}
 
     return chosen;
@@ -1930,12 +1958,15 @@
   /**
    * Thuật toán chọn câu hỏi ôn thi VSTEP KHÔNG TRÙNG LẶP (Non-Repeating Quiz Engine)
    * Đảm bảo:
-   * 1. Tuyệt đối không lặp lại câu hỏi đã trả lời trong chu kỳ hiện tại.
-   * 2. Hỗ trợ lọc theo danh mục cụ thể hoặc toàn bộ câu hỏi.
-   * 3. Khi hoàn thành 100% câu hỏi trong danh mục, tự động khởi động chu kỳ mới
+   * 1. Phân lập tiến độ câu hỏi theo từng tài khoản học viên (không bị ảnh hưởng bởi người khác).
+   * 2. Tuyệt đối không lặp lại câu hỏi đã trả lời trong chu kỳ hiện tại.
+   * 3. Hỗ trợ lọc theo danh mục cụ thể hoặc toàn bộ câu hỏi.
+   * 4. Khi hoàn thành 100% câu hỏi trong danh mục, tự động khởi động chu kỳ mới
    *    nhưng giữ lại câu vừa làm gần nhất để không bao giờ bị trùng 2 câu liên tiếp!
    */
-  const QUIZ_SEEN_STORAGE_KEY = 'miss_nguyet_quiz_seen_ids_v1';
+  function getQuizSeenStorageKey() {
+    return 'miss_nguyet_quiz_seen_ids_v2_' + getActiveUserStorageSuffix();
+  }
 
   function getNextNonRepeatingQuizQuestion(selectedCategory = 'all', seenIds = null) {
     const questions = EXAM_QUIZ_QUESTIONS || [];
@@ -1950,9 +1981,10 @@
 
     // Load or normalize seenIds
     let currentSeen = Array.isArray(seenIds) ? [...seenIds] : [];
+    const storageKey = getQuizSeenStorageKey();
     if (!seenIds && typeof window !== 'undefined' && window.localStorage) {
       try {
-        const saved = localStorage.getItem(QUIZ_SEEN_STORAGE_KEY);
+        const saved = localStorage.getItem(storageKey);
         if (saved) currentSeen = JSON.parse(saved);
         if (!Array.isArray(currentSeen)) currentSeen = [];
       } catch (e) {
@@ -1983,7 +2015,7 @@
 
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
-        localStorage.setItem(QUIZ_SEEN_STORAGE_KEY, JSON.stringify(currentSeen));
+        localStorage.setItem(storageKey, JSON.stringify(currentSeen));
       } catch (e) {}
     }
 
@@ -2002,7 +2034,8 @@
   function resetQuizSeenHistory() {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
-        localStorage.removeItem(QUIZ_SEEN_STORAGE_KEY);
+        const storageKey = getQuizSeenStorageKey();
+        localStorage.removeItem(storageKey);
       } catch (e) {}
     }
   }
