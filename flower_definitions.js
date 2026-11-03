@@ -1398,10 +1398,10 @@
     "topic": "Task 2 — Dạng Thuận Lợi & Bất Lợi (Advantages and Disadvantages)",
     "question": "Đề bài có câu lệnh: 'What are the advantages and disadvantages of studying abroad?' hoặc 'Do the advantages outweigh the disadvantages?' Đây là dạng bài luận nào?",
     "options": [
-      "ADVANTAGES AND DISADVANTAGES (Thảo Luận Thuận Lợi & Bất Lợi)",
-      "OPINION (Trình Bày Quan Điểm)",
-      "CAUSES – EFFECTS – SOLUTIONS (Nguyên Nhân, Hậu Quả & Giải Pháp)",
-      "DISCUSSION (Thảo Luận 2 Chiều)"
+      "Advantages and Disadvantages (Thảo luận Thuận lợi & Bất lợi)",
+      "Opinion (Trình bày Quan điểm cá nhân)",
+      "Causes – Effects – Solutions (Nguyên nhân, Hậu quả & Giải pháp)",
+      "Discussion (Thảo luận 2 chiều)"
     ],
     "answer": 0,
     "explain": "Câu lệnh hỏi về advantages and disadvantages / benefits and drawbacks là Dạng Luận 1 trong giáo trình của Cô Nguyệt. Cần phân tích cả mặt tích cực và tiêu cực."
@@ -1415,10 +1415,10 @@
     "topic": "Task 2 — Dạng Nguyên Nhân & Giải Pháp (Causes - Solutions)",
     "question": "Đề bài: 'Many young people are spending too much time on social media. What are the causes of this issue and suggest some practical solutions.' Đây là dạng bài luận nào?",
     "options": [
-      "CAUSES – EFFECTS – SOLUTIONS (Nguyên Nhân, Hậu Quả & Giải Pháp)",
-      "DISCUSSION (Thảo Luận 2 Chiều)",
-      "OPINION (Trình Bày Quan Điểm)",
-      "ADVANTAGES AND DISADVANTAGES (Thuận Lợi & Bất Lợi)"
+      "Causes – Effects – Solutions (Nguyên nhân, Hậu quả & Giải pháp)",
+      "Discussion (Thảo luận 2 chiều)",
+      "Opinion (Trình bày Quan điểm cá nhân)",
+      "Advantages and Disadvantages (Thuận lợi & Bất lợi)"
     ],
     "answer": 0,
     "explain": "Đề bài yêu cầu phân tích nguyên nhân (causes) và giải pháp (solutions) là Dạng Luận 2 trong hệ thống của Cô Nguyệt. Thân bài 1 viết nguyên nhân, Thân bài 2 viết giải pháp tương ứng."
@@ -1432,10 +1432,10 @@
     "topic": "Task 2 — Dạng Luận Quan Điểm (Opinion)",
     "question": "Đề bài kết thúc bằng: 'Do you agree or disagree with this statement?' hoặc 'To what extent do you agree or disagree?' Đây là dạng bài luận nào?",
     "options": [
-      "OPINION (Trình Bày Quan Điểm)",
-      "DISCUSSION (Thảo Luận 2 Chiều)",
-      "CAUSES – EFFECTS – SOLUTIONS (Nguyên Nhân, Hậu Quả & Giải Pháp)",
-      "ADVANTAGES AND DISADVANTAGES (Thuận Lợi & Bất Lợi)"
+      "Opinion (Trình bày Quan điểm cá nhân)",
+      "Discussion (Thảo luận 2 chiều)",
+      "Causes – Effects – Solutions (Nguyên nhân, Hậu quả & Giải pháp)",
+      "Advantages and Disadvantages (Thuận lợi & Bất lợi)"
     ],
     "answer": 0,
     "explain": "Câu lệnh 'Do you agree or disagree' là Dạng Luận Opinion (Dạng 3). Thí sinh cần nêu rõ quan điểm cá nhân ngay tại câu Thesis Statement ở Mở bài!"
@@ -1449,10 +1449,10 @@
     "topic": "Task 2 — Dạng Luận Thảo Luận 2 Chiều (Discussion)",
     "question": "Đề bài có câu lệnh: 'Discuss both views and give your own opinion.' Đây là dạng bài luận nào?",
     "options": [
-      "DISCUSSION (Thảo Luận 2 Chiều)",
-      "CAUSES – EFFECTS – SOLUTIONS (Nguyên Nhân, Hậu Quả & Giải Pháp)",
-      "ADVANTAGES AND DISADVANTAGES (Thuận Lợi & Bất Lợi)",
-      "LETTER OF ADVICE (Thư Cho Lời Khuyên)"
+      "Discussion (Thảo luận 2 chiều)",
+      "Causes – Effects – Solutions (Nguyên nhân, Hậu quả & Giải pháp)",
+      "Advantages and Disadvantages (Thuận lợi & Bất lợi)",
+      "Letter of Advice (Thư cho lời khuyên)"
     ],
     "answer": 0,
     "explain": "Câu lệnh 'Discuss both views and give your opinion' là Dạng Luận Discussion (Dạng 4). Bắt buộc Thân bài 1 bàn góc nhìn thứ nhất, Thân bài 2 bàn góc nhìn thứ hai, rồi chốt quan điểm cá nhân."
@@ -1624,15 +1624,10 @@
         <div class="clover-ground-shadow" aria-hidden="true"></div>
         <div class="clover-aura-halo" aria-hidden="true"></div>
         <div class="clover-breeze-rig">
-          <picture class="clover-picture-wrap">
-            <source type="image/webp" srcset="assets/garden/clover_stage_${stage}.webp">
-            <img src="assets/garden/clover_stage_${stage}.png"
-                 alt="Cỏ 4 Lá May Mắn VSTEP - Giai đoạn ${stage}"
-                 class="clover-living-art"
-                 draggable="false"
-                 loading="eager"
-                 decoding="async" />
-          </picture>
+          <img src="assets/garden/clover_stage_${stage}.png"
+               alt="Cỏ 4 Lá May Mắn VSTEP - Giai đoạn ${stage}"
+               class="clover-living-art"
+               draggable="false" />
           <svg viewBox="0 0 100 100" class="clover-dew-overlay" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             ${glintMarkup}
             ${stage4Accents}

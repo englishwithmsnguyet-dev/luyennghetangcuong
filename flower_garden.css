@@ -3,6 +3,44 @@
    Gói giao diện độc lập - Tương thích 100% với mọi website của Cô Nguyệt
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+/* ==========================================================================
+   GLOBAL TYPOGRAPHY ENGINE (PLUS JAKARTA SANS & BE VIETNAM PRO)
+   Guarantees 100% native Vietnamese diacritic rendering without glitches
+   ========================================================================== */
+.garden-container,
+.garden-container *,
+.daily-quote-card,
+.daily-quote-card *,
+.garden-modal,
+.garden-modal *,
+.vstep-hub-card,
+.vstep-hub-card *,
+.garden-quiz-card,
+.garden-quiz-card *,
+.garden-basket-modal,
+.garden-basket-modal *,
+.harvest-celebration-card,
+.harvest-celebration-card *,
+.garden-speech-bubble,
+.garden-speech-bubble *,
+.quiz-question-box,
+.quiz-question-box *,
+.quiz-option-btn,
+.quiz-option-btn *,
+.quiz-prompt,
+.quiz-modal-tabs,
+.quiz-tab-btn,
+.quiz-filter-pill,
+.quiz-badge,
+.quiz-feedback-box,
+.quiz-feedback-box * {
+    font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
 /* ==========================================
    FLOWER GARDEN ("VƯỜN HOA CỦA CÔ NGUYỆT")
    ========================================== */
@@ -66,7 +104,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 6px;
+    padding-bottom: 4px;
     overflow: hidden;
     cursor: pointer;
     margin-bottom: 14px;
@@ -172,8 +210,8 @@
 /* Flower Pot & Lifelike Botanical Clover Rig */
 .garden-pot-wrapper {
     position: relative;
-    width: 216px;
-    height: 216px;
+    width: 222px;
+    height: 222px;
     z-index: 2;
     display: flex;
     align-items: flex-end;
@@ -209,11 +247,11 @@
 .clover-ground-shadow {
     position: absolute;
     left: 50%;
-    bottom: 3.5%;
-    width: 54%;
-    height: 11%;
+    bottom: 2.2%;
+    width: 52%;
+    height: 10.5%;
     transform: translateX(-50%);
-    background: radial-gradient(ellipse at 50% 50%, rgba(68, 36, 18, 0.38) 0%, rgba(68, 36, 18, 0.16) 55%, rgba(68, 36, 18, 0) 78%);
+    background: radial-gradient(ellipse at 50% 50%, rgba(68, 36, 18, 0.34) 0%, rgba(68, 36, 18, 0.14) 55%, rgba(68, 36, 18, 0) 78%);
     border-radius: 50%;
     z-index: 1;
 }
@@ -247,19 +285,6 @@
     transform-origin: 50% 95%;
     animation: cloverBotanicalBreeze 5.2s ease-in-out infinite;
     will-change: transform;
-}
-
-.clover-picture-wrap {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.harvest-clover-pic,
-.basket-hero-pic {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .clover-living-art {
@@ -1198,140 +1223,167 @@
     margin-bottom: 8px;
 }
 .quiz-prompt {
-    font-size: 15px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 14px;
-    line-height: 1.5;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #0F172A !important;
+    margin-bottom: 16px !important;
+    line-height: 1.6 !important;
+    letter-spacing: -0.01em !important;
 }
 .quiz-options-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
 }
 .quiz-option-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: #FFFFFF;
-    border: 1.5px solid #E5E7EB;
-    border-radius: 12px;
-    font-size: 13.5px;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 16px !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    text-align: left !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    line-height: 1.5 !important;
 }
 .quiz-option-btn:hover:not(:disabled) {
-    border-color: #38BDF8;
-    background: #F0F9FF;
-    transform: translateX(3px);
+    border-color: #38BDF8 !important;
+    background: #F0F9FF !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.12) !important;
 }
 .option-letter {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #F3F4F6;
-    color: #4B5563;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    flex-shrink: 0;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #F1F5F9 !important;
+    color: #475569 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    flex-shrink: 0 !important;
+    border: 1px solid #CBD5E1 !important;
+    transition: all 0.2s ease !important;
+}
+.option-text {
+    flex: 1 !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    color: inherit !important;
 }
 .quiz-option-btn.is-correct {
     border-color: #10B981 !important;
     background: #ECFDF5 !important;
     color: #065F46 !important;
-    font-weight: 700;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16) !important;
 }
 .quiz-option-btn.is-correct .option-letter {
-    background: #10B981;
-    color: #FFFFFF;
+    background: #10B981 !important;
+    color: #FFFFFF !important;
+    border-color: #059669 !important;
 }
 .quiz-option-btn.is-wrong {
     border-color: #EF4444 !important;
     background: #FEF2F2 !important;
     color: #991B1B !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.12) !important;
 }
 .quiz-option-btn.is-wrong .option-letter {
-    background: #EF4444;
-    color: #FFFFFF;
+    background: #EF4444 !important;
+    color: #FFFFFF !important;
+    border-color: #DC2626 !important;
 }
 .quiz-feedback-box {
-    margin-top: 14px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-size: 13px;
-    animation: slideDownFade 0.25s ease;
+    margin-top: 16px !important;
+    padding: 14px 18px !important;
+    border-radius: 14px !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    animation: slideDownFade 0.25s ease !important;
 }
 .feedback-correct {
-    background: #ECFDF5;
-    border: 1px solid #A7F3D0;
-    color: #065F46;
+    background: #F0FDF4 !important;
+    border: 1.5px solid #86EFAC !important;
+    color: #14532D !important;
 }
 .feedback-wrong {
-    background: #FEF3C7;
-    border: 1px solid #FDE68A;
-    color: #92400E;
+    background: #FEF2F2 !important;
+    border: 1.5px solid #FCA5A5 !important;
+    color: #7F1D1D !important;
 }
 .feedback-title {
-    font-weight: 700;
-    margin-bottom: 4px;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    margin-bottom: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
 }
 .feedback-explain {
-    margin: 0;
-    line-height: 1.45;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    opacity: 0.95 !important;
+    margin: 0 !important;
+    line-height: 1.5 !important;
 }
-
 /* ==========================================
    VSTEP STUDY HUB & TABBED QUIZ MODAL
    ========================================== */
 .vstep-hub-card {
-    max-width: 780px !important;
+    max-width: 800px !important;
     width: 95% !important;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
+    max-height: 90vh !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 /* Tabs Bar */
 .quiz-modal-tabs {
-    display: flex;
-    gap: 6px;
-    background: #F3F4F6;
-    padding: 5px;
-    border-radius: 14px;
-    margin-bottom: 16px;
-    overflow-x: auto;
+    display: flex !important;
+    gap: 6px !important;
+    background: #F1F5F9 !important;
+    padding: 5px !important;
+    border-radius: 14px !important;
+    margin-bottom: 16px !important;
+    overflow-x: auto !important;
 }
 .quiz-tab-btn {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-    font-size: 13px;
-    font-weight: 700;
-    color: #4B5563;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 9px 10px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
 }
 .quiz-tab-btn:hover {
-    color: #1F2937;
-    background: rgba(255, 255, 255, 0.6);
+    color: #0F172A !important;
+    background: rgba(255, 255, 255, 0.7) !important;
 }
 .quiz-tab-btn.active {
-    background: #FFFFFF;
-    color: #0369A1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #FFFFFF !important;
+    color: #0284C7 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Tab Panels */
@@ -2712,9 +2764,7 @@
 /* ========================================================
    WILTED PLANT STATE (CÂY HÉO RŨ KHI >= 1 NGÀY KHÔNG TƯỚI)
    ======================================================== */
-.garden-pot-wrapper.is-wilted .clover-living-art,
 .garden-pot-wrapper.is-wilted .clover-living-img,
-.clover-living-art.is-wilted,
 .clover-living-img.is-wilted {
     filter: grayscale(60%) saturate(50%) sepia(25%) brightness(0.82) hue-rotate(-20deg) !important;
     transform: translateY(8px) rotate(-4deg) scale(0.92) !important;
