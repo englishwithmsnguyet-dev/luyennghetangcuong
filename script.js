@@ -116,6 +116,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Helpers matching Luyen Nghe Chong Diec
+    function formatTranscript(text) {
+        if (!text) return "";
+        const regex = /\b(M|W|Nam|Nữ|Rachel|Man|Woman|COUNSELLOR|JOHN|Speaker \d+|Speaker [A-Z])\s*:\s*/g;
+        let formatted = text.replace(regex, (match, speaker) => {
+            return `<br><strong>${speaker}:</strong> `;
+        });
+        formatted = formatted.trim();
+        if (formatted.startsWith('<br>')) {
+            formatted = formatted.substring(4);
+        }
+        return formatted;
+    }
+
+    window.speakWord = function(word) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let cleanWord = word.split('/')[0].split(',')[0].trim();
+            cleanWord = cleanWord.replace(/\([^)]*\)/g, '').trim();
+            cleanWord = cleanWord.replace(/[^\w\s\-]/g, '').trim();
+
+            if (!cleanWord) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleanWord);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+
+            const voices = window.speechSynthesis.getVoices();
+            const priorities = ["Google US English", "Ava", "Allison", "Siri", "Samantha", "Victoria"];
+            for (const name of priorities) {
+                const found = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
+                if (found) {
+                    utterance.voice = found;
+                    break;
+                }
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+
     // Load Specific Day
     function loadDay(index) {
         const dayData = appData[index];
@@ -229,9 +269,15 @@ document.addEventListener('DOMContentLoaded', () => {
             questionBlock.appendChild(optionsList);
             
             if (isReviewMode && q.explanation) {
+                const hasHighlights = q.explanation && (q.explanation.includes('highlight') || q.explanation.includes('highlight-answer'));
                 const explanationToggle = document.createElement('button');
-                explanationToggle.className = 'explanation-toggle';
-                explanationToggle.innerHTML = `Giải thích chi tiết`;
+                explanationToggle.className = 'btn-explain';
+                explanationToggle.innerHTML = `
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    ${hasHighlights ? 'Giải thích chi tiết (Khoanh vùng đáp án)' : 'Giải thích chi tiết'}
+                `;
                 
                 const explanationDiv = document.createElement('div');
                 explanationDiv.className = 'explanation-box';
@@ -241,31 +287,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 const matchIdx = expHTML.indexOf("<div class='transcript-en'>");
                 
                 if (matchIdx === 0) {
-                    // Practice 1-15: explanation only has transcript. Extract highlighted text to act as quote.
-                    const enMatch = q.explanation.match(/<div class='transcript-en'>[\s\S]*?<span class='highlight'>([\s\S]*?)<\/span>[\s\S]*?<\/div>/);
-                    const viMatch = q.explanation.match(/<div class='transcript-vi'>[\s\S]*?<span class='highlight'>([\s\S]*?)<\/span>[\s\S]*?<\/div>/);
+                    // Practice 1-15: explanation has transcript with highlights
+                    const enMatch = q.explanation.match(/<div class='transcript-en'>([\s\S]*?)<\/div>/);
+                    const viMatch = q.explanation.match(/<div class='transcript-vi'>([\s\S]*?)<\/div>/);
                     
-                    let extractedQuote = "";
-                    if (enMatch && enMatch[1]) {
-                        extractedQuote = `<div class='explanation-quote' style='margin-bottom: 1rem;'><b>Đáp án nằm ở câu:</b> <span class='highlight'>"${enMatch[1].trim()}"</span>`;
-                        if (viMatch && viMatch[1]) {
-                            extractedQuote += `<br><i>(${viMatch[1].trim()})</i>`;
-                        }
-                        extractedQuote += `</div>`;
+                    let enText = enMatch ? enMatch[1] : '';
+                    let viText = viMatch ? viMatch[1] : '';
+                    
+                    const enHighlightMatch = enText.match(/<span class=['"](?:highlight|highlight-answer)['"]>([\s\S]*?)<\/span>/);
+                    const viHighlightMatch = viText.match(/<span class=['"](?:highlight|highlight-answer)['"]>([\s\S]*?)<\/span>/);
+                    
+                    let quoteHTML = '';
+                    if (enHighlightMatch && enHighlightMatch[1]) {
+                        quoteHTML = `
+                            <div class="explanation-quote" style="margin-bottom: 14px;">
+                                <b>Đáp án nằm ở câu:</b> <span class="highlight-answer">"${enHighlightMatch[1].trim()}"</span>
+                                ${viHighlightMatch && viHighlightMatch[1] ? `<br><i>(${viHighlightMatch[1].trim()})</i>` : ''}
+                            </div>
+                        `;
                     }
                     
-                    expHTML = extractedQuote + q.explanation.replace("<div class='transcript-vi'>", "<div class='transcript-vi' style='margin-top: 1rem;'><strong>Dịch nghĩa:</strong><br>");
+                    explanationDiv.innerHTML = `
+                        ${quoteHTML}
+                        <h4 class="exp-heading">TIẾNG ANH</h4>
+                        <div class="transcript-box text-en">${formatTranscript(enText)}</div>
+                        <h4 class="exp-heading">TIẾNG VIỆT</h4>
+                        <div class="transcript-box text-vi">${formatTranscript(viText)}</div>
+                    `;
                 } else if (matchIdx !== -1) {
-                    // Practice 16+: strip transcript from explanation (it's shown at the end of the part)
+                    // Practice 16+: strip transcript from explanation (it's shown at the end in full transcript)
                     const brIdx = expHTML.lastIndexOf("<br>", matchIdx);
-                    if (brIdx !== -1 && matchIdx - brIdx <= 5) {
-                        expHTML = expHTML.substring(0, brIdx);
-                    } else {
-                        expHTML = expHTML.substring(0, matchIdx);
-                    }
+                    let quoteOnly = (brIdx !== -1 && matchIdx - brIdx <= 5) ? expHTML.substring(0, brIdx) : expHTML.substring(0, matchIdx);
+                    
+                    explanationDiv.innerHTML = `
+                        <h4 class="exp-heading">GIẢI THÍCH CHI TIẾT</h4>
+                        <div class="transcript-box text-en" style="line-height: 1.8;">
+                            ${quoteOnly}
+                        </div>
+                    `;
+                } else {
+                    explanationDiv.innerHTML = `
+                        <h4 class="exp-heading">GIẢI THÍCH</h4>
+                        <div class="transcript-box text-en">${expHTML}</div>
+                    `;
                 }
-                
-                explanationDiv.innerHTML = `<strong>Giải thích:</strong><br><br>${expHTML}`;
                 
                 explanationToggle.addEventListener('click', () => {
                     if (explanationDiv.style.display === 'none') {
@@ -295,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasGlobalTranscript = true;
                     transcriptHTML = q.explanation.substring(matchIdx);
                     // Remove any existing highlights to start fresh
-                    transcriptHTML = transcriptHTML.replace(/<span class='highlight'>(.*?)<\/span>/g, "$1");
+                    transcriptHTML = transcriptHTML.replace(/<span class=['"](?:highlight|highlight-answer)['"]>(.*?)<\/span>/g, "$1");
                     break;
                 }
             }
@@ -309,17 +374,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // English Quote
                     let enQuote = null;
-                    const enQuoteMatch = q.explanation.match(/<span class='highlight'>"([^"]+)"<\/span>/);
+                    const enQuoteMatch = q.explanation.match(/<span class=['"](?:highlight|highlight-answer)['"]>"([^"]+)"<\/span>/);
                     if (enQuoteMatch && enQuoteMatch[1]) {
                         enQuote = enQuoteMatch[1];
                     } else {
-                        const enHighlightMatch = q.explanation.match(/<span class='highlight'>([^<]+)<\/span>/);
+                        const enHighlightMatch = q.explanation.match(/<span class=['"](?:highlight|highlight-answer)['"]>([^<]+)<\/span>/);
                         if (enHighlightMatch && enHighlightMatch[1]) {
                             enQuote = enHighlightMatch[1].replace(/^"|"$/g, '').trim();
                         }
                     }
                     if (enQuote && enQuote.length > 5) {
-                        transcriptHTML = transcriptHTML.split(enQuote).join(`<span class='highlight'>${enQuote}</span>`);
+                        transcriptHTML = transcriptHTML.split(enQuote).join(`<span class='highlight-answer'>${enQuote}</span>`);
                     }
                     
                     // Vietnamese Quote
@@ -327,27 +392,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (viQuoteMatch && viQuoteMatch[1]) {
                         const viQuote = viQuoteMatch[1].trim();
                         if (viQuote.length > 5) {
-                            transcriptHTML = transcriptHTML.split(viQuote).join(`<span class='highlight'>${viQuote}</span>`);
+                            transcriptHTML = transcriptHTML.split(viQuote).join(`<span class='highlight-answer'>${viQuote}</span>`);
                         }
                     }
                 });
 
                 const transcriptToggle = document.createElement('button');
-                transcriptToggle.className = 'explanation-toggle';
-                transcriptToggle.style.marginTop = '1rem';
-                transcriptToggle.style.backgroundColor = 'rgba(59, 130, 246, 0.15)'; // subtle primary blue background
-                transcriptToggle.style.borderColor = 'rgba(59, 130, 246, 0.3)';
-                transcriptToggle.style.color = 'var(--text-primary)'; // standard text color
-                transcriptToggle.innerHTML = `Xem Full Transcript`;
+                transcriptToggle.className = 'btn-full-transcript';
+                transcriptToggle.innerHTML = `
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    FULL TRANSCRIPT (BÀI NGHE CHI TIẾT)
+                `;
+                
+                const enMatch = transcriptHTML.match(/<div class='transcript-en'>([\s\S]*?)<\/div>/);
+                const viMatch = transcriptHTML.match(/<div class='transcript-vi'>([\s\S]*?)<\/div>/);
+                
+                let enText = enMatch ? enMatch[1].replace(/^<b>FULL TRANSCRIPT:<\/b><br>/i, '') : transcriptHTML;
+                let viText = viMatch ? viMatch[1].replace(/^<b>BÀI DỊCH:<\/b><br>/i, '') : '';
                 
                 const transcriptDiv = document.createElement('div');
-                transcriptDiv.className = 'explanation-box';
+                transcriptDiv.className = 'full-transcript-content';
                 transcriptDiv.style.display = 'none';
-                transcriptDiv.innerHTML = `<strong>Transcript:</strong><br>${transcriptHTML.replace("<div class='transcript-vi'>", "<div class='transcript-vi'><strong>Dịch nghĩa:</strong><br>")}`;
+                transcriptDiv.innerHTML = `
+                    <div class="transcript-column">
+                        <h4>TRANSCRIPT ĐẦY ĐỦ (TIẾNG ANH)</h4>
+                        <div class="transcript-box text-en">${formatTranscript(enText)}</div>
+                    </div>
+                    <div class="transcript-column">
+                        <h4>BẢN DỊCH ĐẦY ĐỦ (TIẾNG VIỆT)</h4>
+                        <div class="transcript-box text-vi">${formatTranscript(viText)}</div>
+                    </div>
+                `;
                 
                 transcriptToggle.addEventListener('click', () => {
                     if (transcriptDiv.style.display === 'none') {
-                        transcriptDiv.style.display = 'block';
+                        transcriptDiv.style.display = 'grid';
                     } else {
                         transcriptDiv.style.display = 'none';
                     }
@@ -450,6 +531,18 @@ document.addEventListener('DOMContentLoaded', () => {
             questions = d.questions;
         }
 
+        // Check if all questions are answered (matching Luyen Nghe Chong Diec)
+        let unansweredCount = 0;
+        questions.forEach(q => {
+            if (!userAnswers[practiceId] || !userAnswers[practiceId][q.id]) {
+                unansweredCount++;
+            }
+        });
+        if (unansweredCount > 0) {
+            alert(`Bạn còn ${unansweredCount} câu chưa trả lời. Hãy hoàn thành tất cả để xem kết quả nhé!`);
+            return;
+        }
+
         let total = questions.length;
         let realScore = 0;
         
@@ -460,18 +553,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        const percent = Math.round((realScore / total) * 100);
-        let message = '';
-        if (percent >= 90) {
-            message = 'Xuất sắc! Tiếp tục phát huy nhé!';
-        } else if (percent >= 70) {
-            message = 'Khá tốt! Tiếp tục cố gắng nhé!';
-        } else if (percent >= 50) {
-            message = 'Làm tốt lắm! Hãy tiếp tục luyện tập nhé.';
-        } else if (percent > 0) {
-            message = 'Cố gắng thêm một chút nữa nhé! Rồi sẽ cải thiện thôi!';
+        const percentage = (realScore / total) * 100;
+        let message = "";
+        if (percentage === 0) {
+            message = "Ôi không, 0 điểm rồi kìa! Mau nghe lại và làm lại ngay nhé, nếu không, Miss Nguyệt đấm cậu đó!";
+        } else if (percentage >= 50) {
+            message = "Cậu đã làm tốt lắm. Tiếp tục cố gắng nhé! Miss Nguyệt khen cậu đó!";
         } else {
-            message = 'Cậu chính là Nobita đấy à?';
+            message = "Không sao đâu, miễn là cậu vẫn đang cố gắng! Kiên nhẫn thêm một chút nhé! Nếu không, Miss Nguyệt đấm cậu đó!";
         }
         
         document.getElementById('final-score').textContent = realScore;
@@ -498,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('restart-btn').addEventListener('click', () => {
+        if (!confirm('Bạn có chắc chắn muốn làm lại từ đầu? Toàn bộ kết quả hiện tại sẽ bị xóa.')) return;
         document.getElementById('results-overlay').classList.remove('active');
         isReviewMode = false;
         document.body.classList.remove('review-mode');

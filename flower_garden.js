@@ -883,15 +883,19 @@
     renderSpeakingVocabTabHtml() {
       const guide = root.VSTEP_SPEAKING_VOCAB_GUIDE || {};
       const p1 = guide.part1 || { formulaSteps: [], collocations: [] };
-      const p2 = guide.part2 || { formula: [] };
-      const p3 = guide.part3 || { discourseMarkers: [] };
+      const p2 = guide.part2 || { rules: [], formula: [] };
+      const p3 = guide.part3 || { formula: [], categories: [] };
 
       return `
         <div class="vstep-guide-wrap">
           <div class="vstep-guide-hero">
             <div class="hero-text">
-              <h4>🗣️ BẢNG TỪ VỰNG & CÔNG THỨC SPEAKING VSTEP THỰC CHIẾN</h4>
-              <p>Chiến thuật chuẩn từ website <a href="https://englishwithmsnguyet-dev.github.io/vstepspeakingpart1/" target="_blank" style="color:#0284C7; font-weight:700; text-decoration:underline;">vstepspeakingpart1</a>: Công thức phản xạ 3 bước, cụm từ tần suất và mẫu câu so sánh/bác bỏ.</p>
+              <h4>🗣️ HỆ THỐNG CÔNG THỨC & TỪ VỰNG SPEAKING VSTEP CỦA CÔ NGUYỆT</h4>
+              <p>Trích xuất chuẩn từ 3 dự án thực tế của Cô Nguyệt: 
+                <a href="https://englishwithmsnguyet-dev.github.io/vstepspeakingpart1/" target="_blank" style="color:#0284C7; font-weight:700; text-decoration:underline;">Speaking Part 1</a> • 
+                <a href="https://englishwithmsnguyet-dev.github.io/speaking-part2-b2level/" target="_blank" style="color:#0284C7; font-weight:700; text-decoration:underline;">Speaking Part 2</a> • 
+                <a href="https://englishwithmsnguyet-dev.github.io/speaking-part3-b2level/" target="_blank" style="color:#0284C7; font-weight:700; text-decoration:underline;">Speaking Part 3</a>
+              </p>
             </div>
             <button class="btn btn-primary btn-small" data-jump-cat="speaking-vocab">
               <i class="fa-solid fa-play"></i> Luyện Câu Hỏi Speaking (+10💧)
@@ -927,40 +931,70 @@
             </div>
           </div>
 
-          <!-- Part 2: Solution Discussion -->
+          <!-- Part 2: Solution Discussion (Chuẩn Cô Nguyệt) -->
           <div class="guide-box">
             <div class="guide-box-header" style="background:#EFF6FF; color:#1D4ED8;">
               <span class="box-badge" style="background:#2563EB; color:#fff;">Part 2</span>
               <h5>${p2.title}</h5>
             </div>
             <p class="guide-desc">${p2.overview}</p>
+
+            ${p2.rules && p2.rules.length ? `
+              <div class="section-sub-header mt-2"><i class="fa-solid fa-gem" style="color:#D97706;"></i> 4 Quy Tắc Vàng Phòng Thi Cần Nhớ (Cô Nguyệt):</div>
+              <div class="rules-grid mb-3" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px;">
+                ${p2.rules.map(r => `
+                  <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:12px; padding:10px 12px;">
+                    <b style="color:#0369A1; font-size:13px;"><i class="fa-solid fa-check-circle" style="color:#0284C7;"></i> ${r.name}</b>
+                    <p style="margin:4px 0 0; font-size:12px; color:#334155; line-height:1.4;">${r.desc}</p>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <div class="section-sub-header"><i class="fa-solid fa-diagram-project" style="color:#2563EB;"></i> Dàn Ý & Mẫu Câu Dẫn Dắt 3 Bước Chuẩn B2:</div>
             <div class="formula-steps">
-              ${p2.formula.map((f, idx) => `
+              ${(p2.formula || []).map((f, idx) => `
                 <div class="formula-step-card">
                   <h6><span class="step-num">${idx + 1}</span> ${f.step}</h6>
                   <ul class="step-phrases">
-                    ${f.phrases.map(p => `<li>"${p}"</li>`).join('')}
+                    ${f.phrases.map(p => `<li>${p}</li>`).join('')}
                   </ul>
                 </div>
               `).join('')}
             </div>
           </div>
 
-          <!-- Part 3: Topic Development -->
+          <!-- Part 3: Topic Development (Chuẩn Cô Nguyệt) -->
           <div class="guide-box">
             <div class="guide-box-header" style="background:#FDF2F8; color:#BE185D;">
               <span class="box-badge" style="background:#DB2777; color:#fff;">Part 3</span>
               <h5>${p3.title}</h5>
             </div>
             <p class="guide-desc">${p3.overview}</p>
-            <div class="markers-table">
-              ${p3.discourseMarkers.map(m => `
-                <div class="marker-row">
-                  <div class="marker-code"><b>${m.marker}</b></div>
-                  <div class="marker-use">${m.usage}</div>
+
+            <div class="section-sub-header"><i class="fa-solid fa-sitemap" style="color:#DB2777;"></i> Dàn Ý & Mẫu Câu Triển Khai Sơ Đồ Tư Duy 3 Bước:</div>
+            <div class="formula-steps">
+              ${(p3.formula || []).map((f, idx) => `
+                <div class="formula-step-card">
+                  <h6><span class="step-num">${idx + 1}</span> ${f.step}</h6>
+                  <ul class="step-phrases">
+                    ${f.phrases.map(p => `<li>${p}</li>`).join('')}
+                  </ul>
                 </div>
               `).join('')}
             </div>
+
+            ${p3.categories && p3.categories.length ? `
+              <div class="section-sub-header mt-3"><i class="fa-solid fa-layer-group" style="color:#BE185D;"></i> 6 Nhóm Dạng Đề Speaking Part 3 Thường Gặp (Cô Nguyệt):</div>
+              <div class="rules-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px;">
+                ${p3.categories.map(c => `
+                  <div style="background:#FFF1F2; border:1px solid #FECDD3; border-radius:12px; padding:10px 12px;">
+                    <b style="color:#9F1239; font-size:13px;">${c.id}. ${c.name}</b>
+                    <p style="margin:4px 0 0; font-size:12px; color:#4C0519; line-height:1.4;">${c.desc}</p>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
           </div>
         </div>
       `;

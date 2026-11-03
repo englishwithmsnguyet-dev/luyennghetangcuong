@@ -471,43 +471,82 @@
       ]
     },
     part2: {
-      title: "Speaking Part 2: Thảo Luận Giải Pháp (Solution Discussion)",
-      overview: "Cho 1 tình huống và 3 phương án. Công thức vàng 3 bước: Chốt phương án tốt nhất -> Chứng minh 2 lý do -> Bác bỏ 2 phương án còn lại.",
+      title: "Speaking Part 2: Thảo Luận Giải Pháp (Solution Discussion) — Chuẩn B2 Cô Nguyệt",
+      overview: "Cho 1 tình huống và 3 phương án lựa chọn. Áp dụng 4 Quy Tắc Vàng phòng thi và Dàn ý dẫn dắt 3 bước chuẩn của Cô Nguyệt (từ dự án speaking-part2-b2level).",
+      rules: [
+        { name: "1' Chuẩn bị quý giá", desc: "Xác định ngay chủ từ (I / We / He / She) và chọn phương án nào dễ nói & có nhiều từ vựng nhất." },
+        { name: "Không có đáp án sai", desc: "Giám khảo chấm khả năng lập luận và độ trôi chảy, không chấm việc bạn chọn đáp án nào." },
+        { name: "Bắt buộc nêu lý do loại", desc: "Phải nhắc đến và giải thích lý do loại bỏ 2 phương án còn lại để đạt trọn điểm Task Fulfillment." },
+        { name: "Chuẩn xác đại từ", desc: "Đề hỏi 'You and your family/friends' ➔ We/us/our; hỏi bạn bè/người thân ➔ He/She; hỏi riêng bạn ➔ I/me." }
+      ],
       formula: [
         {
-          step: "Bước 1: Chốt phương án tối ưu",
+          step: "Bước 1: Mở Bài (Introduction)",
           phrases: [
-            "Weighing all three alternatives, I firmly believe that [Option A] is the most viable solution.",
-            "In my perspective, among the three choices presented, [Option A] definitely stands out as the most optimal approach."
+            "A. Chọn cho bản thân (Subject = I): 'Well, if I had to choose [tình huống], I would go for [lựa chọn của mình].'",
+            "B. Đề xuất cho đối tượng khác / nhóm (Subject = We / He / She): 'Well, if [chủ từ] had to suggest [tình huống], [chủ từ] would recommend [lựa chọn phù hợp].'"
           ]
         },
         {
-          step: "Bước 2: Chứng minh 2 lý do bằng Bảng Lợi Ích",
+          step: "Bước 2: Thân Bài (Body - Nêu 2 lý do chọn & 2 lý do loại)",
           phrases: [
-            "First and foremost, it offers great [health / financial / time] benefits because...",
-            "In addition, another compelling advantage is that it helps participants develop useful skills."
+            "Lý do chọn 1: 'First of all, [lý do chọn 1].' ➔ Giải thích và mở rộng.",
+            "Lý do chọn 2: 'Secondly, [lý do chọn 2].' ➔ Giải thích và mở rộng.",
+            "Lý do loại 1: '[Chủ từ] wouldn’t choose / recommend [phương án không chọn 1] because [lý do không chọn 1].'",
+            "Lý do loại 2: 'As for [phương án không chọn 2], it’s less suitable because [lý do không chọn 2].'"
           ]
         },
         {
-          step: "Bước 3: Bác bỏ 2 phương án còn lại (Rebuttal Formula)",
+          step: "Bước 3: Kết Bài (Conclusion - Khẳng định lại lựa chọn)",
           phrases: [
-            "Turning to [Option B], although it seems tempting at first glance, its primary drawback lies in its prohibitive cost.",
-            "As for [Option C], I would rule it out immediately because it is far too time-consuming and impractical."
+            "'In short, I believe [lựa chọn] is the best choice for [đối tượng] in this situation.'"
           ]
         }
       ]
     },
     part3: {
-      title: "Speaking Part 3: Phát Triển Chủ Đề (Topic Development)",
-      overview: "Mở rộng sơ đồ mindmap 3 nhánh bằng giải thích, dẫn chứng và discourse markers liên kết học thuật.",
-      discourseMarkers: [
-        { marker: "It is widely acknowledged that...", usage: "Khẳng định một chân lý hoặc quan điểm được số đông đồng thuận" },
-        { marker: "It serves as a prime catalyst for...", usage: "Nhấn mạnh vai trò là chất xúc tác hàng đầu cho sự phát triển" },
-        { marker: "To substantiate this viewpoint,...", usage: "Đưa ra dẫn chứng thực tế hoặc số liệu minh họa cụ thể" },
-        { marker: "Another noteworthy dimension to consider is...", usage: "Chuyển sang một nhánh luận điểm mới trong mindmap" }
+      title: "Speaking Part 3: Phát Triển Chủ Đề (Topic Development) — Chuẩn B2 Cô Nguyệt",
+      overview: "Triển khai Sơ Đồ Tư Duy (Mindmap 4 hướng: 3 gợi ý có sẵn + 1 ý tưởng riêng) theo Dàn ý 3 bước và quy tắc trả lời câu hỏi mở rộng (từ dự án speaking-part3-b2level).",
+      formula: [
+        {
+          step: "Bước 1: Bắt Đầu (Giới thiệu lại chủ đề theo cách của mình)",
+          phrases: [
+            "Mẫu chung: 'There are some [dạng đề] of [chủ đề].' (VD: 'There are some benefits of online learning.')",
+            "Ngoại lệ Reasons: 'There are some reasons why [mệnh đề chính S+V].'",
+            "Ngoại lệ Ways: 'There are some ways for [đối tượng] to [mục đích].'",
+            "Ngoại lệ Factors: 'There are several factors to consider when [tình huống] / in order to [mục đích].'"
+          ]
+        },
+        {
+          step: "Bước 2: Phát Triển Các Ý (Triển khai từng gợi ý của đề)",
+          phrases: [
+            "Khung chuẩn 3 nhánh: 'One major [dạng đề] is that [nhánh 1]...' ➔ 'Another [dạng đề] is that [nhánh 2]...' ➔ 'One more [dạng đề] is that [nhánh 3]...'",
+            "Khung rút gọn: 'Firstly, [nhánh 1]...' ➔ 'Secondly, [nhánh 2]...' ➔ 'Finally / Furthermore, [nhánh 3]...'"
+          ]
+        },
+        {
+          step: "Bước 3: Kết Thúc (Tóm tắt quan điểm chính)",
+          phrases: [
+            "'In short, [chủ đề] has several clear [dạng đề].'"
+          ]
+        },
+        {
+          step: "Chuyển tiếp câu hỏi mở rộng (Follow-up Questions)",
+          phrases: [
+            "Câu chuyển ý: 'Now, I will answer some follow-up questions / further questions.'",
+            "Trả lời trực tiếp: 'Number 1: [Trả lời thẳng vào câu hỏi 1]...' (Lưu ý của Cô Nguyệt: Không đọc lại nguyên văn câu hỏi đề bài để tiết kiệm thời gian!)."
+          ]
+        }
+      ],
+      categories: [
+        { id: 1, name: "Lợi ích / Tác động tích cực", desc: "advantages, benefits, positive effects (online learning, reading books, teamwork...)" },
+        { id: 2, name: "Bất lợi / Tác động tiêu cực", desc: "disadvantages, drawbacks, negative effects (fast food, social media, big city life...)" },
+        { id: 3, name: "Lý do / Nguyên nhân", desc: "reasons, causes (reasons why people travel, reasons for obesity...)" },
+        { id: 4, name: "Cách thức / Phương pháp", desc: "ways, methods, solutions (ways to protect environment, improve English...)" },
+        { id: 5, name: "Đặc điểm / Phẩm chất", desc: "qualities, characteristics (good leader, great teacher, true friend...)" },
+        { id: 6, name: "Yếu tố cần cân nhắc", desc: "factors, criteria (factors when choosing a job, buying a house...)" }
       ]
-    }
-  };
+    }  };
 
   /**
    * 7 DẠNG THƯ VSTEP TASK 01 CỦA CÔ NGUYỆT
@@ -926,157 +965,276 @@
     "explain": "'public speaking skills' (kỹ năng nói trước đám đông) là kỹ năng mềm quan trọng, thường dùng khi nói về hoạt động tham gia CLB hoặc thuyết trình tại lớp."
   },
   {
-    "id": "sv-off-1",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B1-B2",
-    "topic": "Speaking Part 1 — Thành Ngữ Tần Suất",
-    "question": "Trong Speaking Part 1, thành ngữ nào mang nghĩa 'rất hiếm khi làm điều gì' giúp câu trả lời thêm sinh động và đạt điểm cao?",
-    "options": [
-      "once in a blue moon",
-      "hit the books",
-      "a real page-turner",
-      "right up my alley"
-    ],
-    "answer": 0,
-    "explain": "'once in a blue moon' = rất hiếm khi. Ví dụ: 'Because of my busy work, I only go swimming once in a blue moon.'"
+      "id": "sv-off-1",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B1-B2",
+      "topic": "Speaking Part 1 — Công Thức Phản Xạ Bảng Lợi Ích",
+      "question": "Trong Speaking Part 1, công thức phản xạ tự nhiên của Cô Nguyệt khi trả lời về sở thích hoặc hoạt động yêu thích là gì?",
+      "options": [
+          "Trả lời trực tiếp ➔ Nêu lý do bằng 'because it helps me + [Cụm Lợi Ích]' ➔ Mở rộng tần suất hoặc cảm xúc",
+          "Chỉ cần nói Yes hoặc No rồi im lặng chờ câu hỏi tiếp theo",
+          "Đọc lại nguyên văn câu hỏi của giám khảo và không đưa lý do",
+          "Dịch từng chữ tiếng Việt sang tiếng Anh theo ngữ pháp phức tạp"
+      ],
+      "answer": 0,
+      "explain": "Công thức phản xạ 3 bước của Cô Nguyệt: Trả lời trực tiếp ('Yes, definitely!') ➔ Nêu lý do bằng 'because it helps me + V-bare' gắn liền với Bảng Lợi Ích ➔ Mở rộng tần suất bằng các cụm thành ngữ tự nhiên!"
   },
   {
-    "id": "sv-off-2",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B1-B2",
-    "topic": "Speaking Part 1 — Cụm Từ 'Rất Đúng Sở Thích'",
-    "question": "Cụm thành ngữ nào diễn tả 'điều này hoàn toàn đúng với sở thích / gu của tôi'?",
-    "options": [
-      "It's right up my alley",
-      "It's once in a blue moon",
-      "It hits the books",
-      "It passes the time"
-    ],
-    "answer": 0,
-    "explain": "'It's right up my alley' là thành ngữ chuẩn bản xứ, có nghĩa là việc này rất hợp gu/sở thích của tôi."
+      "id": "sv-off-2",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B1-B2",
+      "topic": "Speaking Part 1 — Thành Ngữ Tần Suất",
+      "question": "Trong Speaking Part 1, thành ngữ nào mang nghĩa 'rất hiếm khi làm điều gì' giúp câu trả lời thêm sinh động và đạt điểm cao?",
+      "options": [
+          "once in a blue moon",
+          "hit the books",
+          "a real page-turner",
+          "right up my alley"
+      ],
+      "answer": 0,
+      "explain": "'once in a blue moon' = rất hiếm khi. Ví dụ: 'Because of my busy work, I only go swimming once in a blue moon.'"
   },
   {
-    "id": "sv-off-3",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 2 — Câu Chốt Phương Án Tối Ưu",
-    "question": "Trong Speaking Part 2, câu mở màn nào sau đây thể hiện việc cân nhắc kỹ lưỡng và chọn phương án tối ưu chuẩn band B2?",
-    "options": [
-      "Weighing all three alternatives, I firmly believe that Option A is the most viable solution.",
-      "I like Option A because it is good and cheap.",
-      "There are 3 options, I choose A.",
-      "Option A is my favourite answer."
-    ],
-    "answer": 0,
-    "explain": "'Weighing all three alternatives, I firmly believe that [Option] is the most viable solution' là câu mở đầu học thuật chuẩn mực trong giáo trình của Cô Nguyệt."
+      "id": "sv-off-3",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — Mở Bài Chọn Cho Bản Thân (Subject = I)",
+      "question": "Theo công thức chuẩn của Cô Nguyệt trong Speaking Part 2, khi tình huống hỏi về lựa chọn của chính bản thân mình (Subject = I), câu mở bài chuẩn band B2 là gì?",
+      "options": [
+          "Well, if I had to choose [tình huống], I would go for [lựa chọn của mình].",
+          "Weighing all three alternatives, I firmly believe that Option A is the most viable solution.",
+          "There are 3 options on the computer screen, I pick Option A.",
+          "I like Option A because it is cheap and good."
+      ],
+      "answer": 0,
+      "explain": "Công thức mở bài chuẩn B2 của Cô Nguyệt khi chọn cho bản thân: 'Well, if I had to choose [tình huống], I would go for [lựa chọn của mình]' (sử dụng câu điều kiện loại 2 giả định để tạo ấn tượng ngữ pháp tự nhiên!)."
   },
   {
-    "id": "sv-off-4",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 2 — Công Thức Bác Bỏ (Rebuttal)",
-    "question": "Khi cần bác bỏ phương án B vì quá đắt đỏ trong Speaking Part 2, câu nào thể hiện sự phản biện khéo léo nhất?",
-    "options": [
-      "Turning to Option B, although it seems tempting at first glance, its primary drawback lies in its prohibitive cost.",
-      "Option B is bad and ugly.",
-      "Nobody likes Option B because it is stupid.",
-      "I hate Option B."
-    ],
-    "answer": 0,
-    "explain": "Công thức nhượng bộ 'Although Option B seems tempting at first glance, its primary drawback lies in its prohibitive cost' vừa thừa nhận ưu điểm vừa chỉ ra lý do cốt lõi để loại bỏ."
+      "id": "sv-off-4",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — Mở Bài Đề Xuất Cho Nhóm/Người Khác",
+      "question": "Trong Speaking Part 2, khi đề bài yêu cầu đề xuất cho người khác hoặc nhóm (Subject = We / You / He / She), mẫu câu mở bài chuẩn của Cô Nguyệt là gì?",
+      "options": [
+          "Well, if [chủ từ] had to suggest [tình huống], [chủ từ] would recommend [lựa chọn phù hợp].",
+          "I think that they should choose Option A because I like it.",
+          "Nobody knows what to choose, so I suggest Option A.",
+          "It is mandatory to pick Option A for everyone."
+      ],
+      "answer": 0,
+      "explain": "Công thức mở bài chuẩn của Cô Nguyệt khi đề xuất: 'Well, if [chủ từ] had to suggest [tình huống], [chủ từ] would recommend [lựa chọn phù hợp]'. Ví dụ: 'Well, if we had to suggest a gift for our teacher, we would recommend a handbag.'"
   },
   {
-    "id": "sv-off-5",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B1-B2",
-    "topic": "Speaking Part 1 — Khen Sách Cực Hay",
-    "question": "Khi giám khảo hỏi về thói quen đọc sách, cụm từ nào mang nghĩa 'một cuốn sách quá lôi cuốn, hấp dẫn khiến người đọc không thể rời mắt'?",
-    "options": [
-      "a real page-turner",
-      "hit the nail on the head",
-      "under the weather",
-      "beat around the bush"
-    ],
-    "answer": 0,
-    "explain": "'a page-turner' = cuốn sách cực kỳ ly kỳ, lôi cuốn: 'The detective novel was a real page-turner, so I finished it in one sitting.'"
+      "id": "sv-off-5",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — 4 Quy Tắc Vàng (Bắt Buộc Nêu Lý Do Loại)",
+      "question": "Theo 4 Quy Tắc Vàng phòng thi Speaking Part 2 của Cô Nguyệt, điều nào sau đây là BẮT BUỘC để đạt trọn điểm tiêu chí Task Fulfillment?",
+      "options": [
+          "Phải nhắc đến và giải thích lý do loại bỏ 2 phương án còn lại",
+          "Phải chọn đúng đáp án duy nhất mà giám khảo đã định sẵn",
+          "Chỉ cần nói thật nhiều về phương án mình chọn và bỏ qua 2 phương án kia",
+          "Phải dùng từ vựng C2 siêu khó dù không nhớ rõ nghĩa"
+      ],
+      "answer": 0,
+      "explain": "Quy tắc vàng số 3 của Cô Nguyệt: Bắt buộc nêu lý do loại ('[Chủ từ] wouldn’t choose... because...' và 'As for..., it’s less suitable because...'). Trong VSTEP Speaking Part 2 không có đáp án đúng/sai, giám khảo chấm khả năng lập luận và độ trôi chảy!"
   },
   {
-    "id": "sv-off-6",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 2 — So Sánh Vượt Trội",
-    "question": "Trong Speaking Part 2, mẫu câu nào thể hiện lựa chọn tối ưu vượt trội hơn hẳn các lựa chọn còn lại?",
-    "options": [
-      "Option A stands out as a far superior choice in comparison with the others.",
-      "Option A is the same as Option B and C.",
-      "All options are bad so I pick randomly.",
-      "I cannot decide which one is better."
-    ],
-    "answer": 0,
-    "explain": "'Option A stands out as a far superior choice in comparison with the others' giúp giám khảo thấy rõ khả năng so sánh tương quan vượt trội."
+      "id": "sv-off-6",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — 4 Quy Tắc Vàng (Chuẩn Xác Đại Từ)",
+      "question": "Trong Speaking Part 2, đề bài: 'You and your family are planning a holiday...'. Theo Quy Tắc Vàng số 4 của Cô Nguyệt, đại từ nhân xưng cần dùng xuyên suốt bài nói là gì?",
+      "options": [
+          "We / us / our (Chúng tôi / chúng ta)",
+          "I / me / my (Chỉ nói về một mình bản thân)",
+          "They / them / their (Họ)",
+          "You / your (Bạn)"
+      ],
+      "answer": 0,
+      "explain": "Quy tắc vàng số 4 của Cô Nguyệt: Chuẩn xác đại từ! 'You and your family' / 'You and your friends' / 'Your class' phải dùng đại từ We/us/our để đảm bảo tính tự nhiên và chính xác theo ngữ cảnh đề bài."
   },
   {
-    "id": "sv-off-7",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 3 — Từ Nối Khởi Đầu Luận Điểm",
-    "question": "Trong Speaking Part 3, từ nối (discourse marker) nào trang trọng nhất để mở đầu cho luận điểm cốt lõi đầu tiên?",
-    "options": [
-      "First and foremost",
-      "By the way",
-      "Anyway",
-      "Like you know"
-    ],
-    "answer": 0,
-    "explain": "'First and foremost' = Trước hết và quan trọng nhất, là từ nối mở bài trang trọng giúp định hình cấu trúc nói mạch lạc."
+      "id": "sv-off-7",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — Thân Bài: Mẫu Câu Loại Bỏ 2 Phương Án",
+      "question": "Trong thân bài Speaking Part 2, bộ đôi mẫu câu chuẩn của Cô Nguyệt để nêu lý do loại bỏ 2 phương án còn lại là gì?",
+      "options": [
+          "'[Chủ từ] wouldn’t choose/recommend [phương án 1] because...' và 'As for [phương án 2], it’s less suitable because...'",
+          "'Option B is bad and Option C is terrible.'",
+          "'Turning to Option B, its primary drawback lies in its prohibitive cost.'",
+          "'I hate Option B and nobody likes Option C.'"
+      ],
+      "answer": 0,
+      "explain": "Bộ đôi mẫu câu loại bỏ kinh điển của Cô Nguyệt: '[Chủ từ] wouldn’t choose/recommend [phương án 1] because...' kết hợp với 'As for [phương án 2], it’s less suitable because...' giúp bài nói mạch lạc, chặt chẽ và không bị lặp cấu trúc."
   },
   {
-    "id": "sv-off-8",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B1",
-    "topic": "Speaking Part 1 — Thành Ngữ Ôn Thi Chăm Chỉ",
-    "question": "Cụm thành ngữ nào đồng nghĩa với 'bắt đầu học bài chăm chỉ, vùi đầu vào sách vở' cho kỳ thi VSTEP sắp tới?",
-    "options": [
-      "hit the books",
-      "hit the sack",
-      "bite the bullet",
-      "spill the beans"
-    ],
-    "answer": 0,
-    "explain": "'hit the books' = vùi đầu vào học: 'I have an exam next week, so it's time to hit the books.'"
+      "id": "sv-off-8",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — Kết Bài Khẳng Định Lựa Chọn Tối Ưu",
+      "question": "Theo công thức của Cô Nguyệt, câu kết bài ngắn gọn 1 câu để khẳng định lại lựa chọn tối ưu trong Speaking Part 2 là gì?",
+      "options": [
+          "In short, I believe [lựa chọn] is the best choice for [đối tượng] in this situation.",
+          "Finally, I have talked enough, thank you for listening.",
+          "That is all about my speaking part 2 test, goodbye examiner.",
+          "I hope my choice is the correct answer of the exam."
+      ],
+      "answer": 0,
+      "explain": "Mẫu câu kết bài chuẩn 1 câu của Cô Nguyệt: 'In short, I believe [lựa chọn] is the best choice for [đối tượng] in this situation.' giúp khép lại bài nói tự tin và trọn vẹn trong thời gian quy định."
   },
   {
-    "id": "sv-off-9",
-    "category": "speaking-vocab",
-    "categoryName": "🗣️ Từ Vựng Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 3 — Nêu Hệ Quả (Cause & Effect)",
-    "question": "Từ nối nào diễn tả mối quan hệ nhân - quả học thuật (hệ quả tất yếu) thích hợp nhất cho Speaking Part 3 và Writing?",
-    "options": [
-      "Consequently",
-      "Maybe",
-      "Or else",
-      "Kind of"
-    ],
-    "answer": 0,
-    "explain": "'Consequently' (= Do đó, kết quả là) thể hiện tư duy học thuật sắc sảo, nâng điểm tiêu chí Coherence and Fluency."
+      "id": "sv-off-9",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — 1' Chuẩn Bị Quý Giá",
+      "question": "Trong 1 phút chuẩn bị của phần thi Speaking Part 2, thí sinh nên làm gì theo Quy Tắc Vàng số 1 của Cô Nguyệt?",
+      "options": [
+          "Xác định ngay chủ từ (I/We/He/She) và chọn phương án nào dễ nói & có nhiều từ vựng nhất",
+          "Cố gắng viết thành một bài văn hoàn chỉnh ra giấy nháp",
+          "Ngồi im chờ hết 60 giây rồi mới bắt đầu nghĩ ý",
+          "Liên tục thay đổi lựa chọn vì sợ chọn sai đáp án"
+      ],
+      "answer": 0,
+      "explain": "Quy tắc vàng số 1 của Cô Nguyệt: 1' Chuẩn bị quý giá! Xác định ngay chủ từ (I / We / He / She) và chọn ngay phương án nào dễ nói nhất và có nhiều từ vựng nhất đối với mình."
+  },
+  {
+      "id": "sv-off-10",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 2 — Áp Dụng Tình Huống Thực Tế (Situation 01)",
+      "question": "Đề bài Situation 01: 'Your foreign teacher is going to leave Vietnam. Your class wants to choose a gift: a lotus picture, a Vietnamese coffee package, or a hand-made gift.' Mở bài nào chuẩn công thức Cô Nguyệt?",
+      "options": [
+          "Well, if we had to suggest a gift for our teacher, we would recommend a lotus picture.",
+          "Well, if I had to choose a gift for myself, I would go for coffee.",
+          "There are three gifts on the paper, my class wants Option 1.",
+          "I like handmade gifts because they are cheap."
+      ],
+      "answer": 0,
+      "explain": "'Your class' -> dùng đại từ We; chọn quà cho thầy giáo -> dùng mẫu câu đề xuất: 'Well, if we had to suggest a gift for our teacher, we would recommend [lựa chọn phù hợp]'."
+  },
+  {
+      "id": "sv-off-11",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — Mẫu Câu Mở Đầu Mindmap Chuẩn Trực Diện",
+      "question": "Trong Speaking Part 3, công thức mở đầu triển khai sơ đồ tư duy (Mindmap) chuẩn và trực diện nhất của Cô Nguyệt là gì?",
+      "options": [
+          "There are some [dạng đề] of [chủ đề]. (Ví dụ: 'There are some benefits of online learning.')",
+          "It is widely acknowledged that topic development is very difficult.",
+          "The computer screen shows a mindmap with three ideas.",
+          "Today I will talk about a topic that I do not know much about."
+      ],
+      "answer": 0,
+      "explain": "Công thức mở đầu Speaking Part 3 của Cô Nguyệt: 'There are some [dạng đề] of [chủ đề]'. Rất ngắn gọn, tự nhiên, chuẩn mực và đi thẳng vào trọng tâm đề bài!"
+  },
+  {
+      "id": "sv-off-12",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — Tinh Chỉnh Mở Đầu Với Reasons / Ways / Factors",
+      "question": "Khi ô ở giữa của sơ đồ tư duy Part 3 là dạng 'Reasons' (Lý do) hoặc 'Ways' (Cách thức), Cô Nguyệt tinh chỉnh mẫu câu mở đầu như thế nào?",
+      "options": [
+          "'There are some reasons why [S+V]' / 'There are some ways for [đối tượng] to [mục đích]'",
+          "'There are some reasons of...' và 'There are some ways of...'",
+          "'Reasons and ways are very important in our society.'",
+          "Giữ nguyên không thay đổi bất kỳ từ nào"
+      ],
+      "answer": 0,
+      "explain": "Quy tắc tinh chỉnh mở đầu của Cô Nguyệt: Với Reasons ➔ 'There are some reasons why [mệnh đề chính S+V]'; với Ways ➔ 'There are some ways for [đối tượng] to [mục đích]'; với Factors ➔ 'There are several factors to consider when...'"
+  },
+  {
+      "id": "sv-off-13",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — Khung Chuẩn Triển Khai 3 Nhánh Mindmap",
+      "question": "Theo giáo trình của Cô Nguyệt, khung mẫu câu chuẩn để lần lượt triển khai 3 nhánh trong sơ đồ tư duy Speaking Part 3 là gì?",
+      "options": [
+          "'One major [dạng đề] is that...', 'Another [dạng đề] is that...', 'One more [dạng đề] is that...'",
+          "'The first bubble is...', 'The second bubble is...', 'The third bubble is...'",
+          "'Idea 1 is good, Idea 2 is better, Idea 3 is best.'",
+          "'Branch A says that..., Branch B says that..., Branch C says that...'"
+      ],
+      "answer": 0,
+      "explain": "Khung chuẩn triển khai 3 nhánh của Cô Nguyệt: 'One major [dạng đề] is that [nhánh 1]...', 'Another [dạng đề] is that [nhánh 2]...', 'One more [dạng đề] is that [nhánh 3]...' (hoặc khung rút gọn: Firstly,... Secondly,... Finally,...)."
+  },
+  {
+      "id": "sv-off-14",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — Xử Lý Câu Hỏi Mở Rộng (Follow-up Questions)",
+      "question": "Khi chuyển sang phần trả lời câu hỏi mở rộng (Follow-up questions) trong Speaking Part 3, quy tắc của Cô Nguyệt là gì?",
+      "options": [
+          "Dùng câu nối ngắn: 'Now, I will answer some follow-up questions', sau đó trả lời trực tiếp từng câu, không đọc lại đề bài",
+          "Phải đọc to lại nguyên văn từng câu hỏi của đề bài rồi mới được trả lời",
+          "Bỏ qua câu hỏi mở rộng vì đã nói xong sơ đồ tư duy",
+          "Ngồi im suy nghĩ 30 giây rồi mới bắt đầu nói"
+      ],
+      "answer": 0,
+      "explain": "Quy tắc tiết kiệm thời gian quý giá của Cô Nguyệt: Câu chuyển ý ngắn gọn: 'Now, I will answer some follow-up questions / further questions' ➔ Trả lời trực tiếp: 'Number 1: [Nội dung trả lời]...'. Tuyệt đối không đọc lại nguyên văn câu hỏi đề bài!"
+  },
+  {
+      "id": "sv-off-15",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — 6 Nhóm Dạng Đề Thường Gặp",
+      "question": "Sơ đồ tư duy trong Speaking Part 3 của Cô Nguyệt được phân loại thành 6 nhóm dạng đề thường gặp nào?",
+      "options": [
+          "Lợi ích, Bất lợi, Lý do, Cách thức, Đặc điểm/Phẩm chất, Yếu tố cần cân nhắc",
+          "Thì quá khứ, Thì hiện tại, Thì tương lai, Câu bị động, Câu trực tiếp, Mệnh đề quan hệ",
+          "Nghe tin tức, Nghe hội thoại, Nghe thông báo, Viết thư, Viết luận, Đọc hiểu",
+          "Chào hỏi, Giới thiệu gia đình, Kể về bạn bè, Thời tiết, Mua sắm, Du lịch"
+      ],
+      "answer": 0,
+      "explain": "6 nhóm dạng đề Speaking Part 3 chuẩn của Cô Nguyệt: 1. Lợi ích (Benefits/Advantages); 2. Bất lợi (Drawbacks/Disadvantages); 3. Lý do (Reasons); 4. Cách thức (Ways); 5. Đặc điểm/Phẩm chất (Qualities/Characteristics); 6. Yếu tố (Factors)."
+  },
+  {
+      "id": "sv-off-16",
+      "category": "speaking-vocab",
+      "categoryName": "🗣️ Từ Vựng Speaking",
+      "skill": "Speaking",
+      "level": "B2",
+      "topic": "Speaking Part 3 — Xử Lý Nhánh Ý Tưởng Riêng (Your Own Idea)",
+      "question": "Trong sơ đồ tư duy Speaking Part 3, ngoài 3 gợi ý có sẵn, luôn có 1 nhánh 'Your own idea'. Học viên cần làm gì theo hướng dẫn của Cô Nguyệt?",
+      "options": [
+          "Tự đề xuất thêm 1 ý tưởng của bản thân và mở rộng bằng 1-2 câu giải thích/ví dụ",
+          "Bỏ qua nhánh này vì chỉ cần nói 3 nhánh có sẵn là đủ",
+          "Nói lại 1 trong 3 nhánh có sẵn để đỡ phải nghĩ ý mới",
+          "Đọc to cụm từ 'Your own idea' rồi chuyển sang kết bài"
+      ],
+      "answer": 0,
+      "explain": "Hướng dẫn của Cô Nguyệt: Nhánh 'Your own idea' là cơ hội vàng để bứt phá band B2/C1! Học viên tự đề xuất thêm 1 ý tưởng riêng (có thể vận dụng Bảng Lợi Ích) và mở rộng bằng 1-2 câu giải thích hoặc ví dụ thực tế."
   },
   {
     "id": "wl-off-1",
