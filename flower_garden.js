@@ -193,6 +193,7 @@
       this.loadState();
       this.checkDailyLoginReward();
       this.bindEvents();
+      this.initStudentNameWatcher();
       this.render();
       this.startAmbientDecay();
       if (typeof window !== 'undefined') {
@@ -319,6 +320,154 @@
         stage.addEventListener('click', (e) => {
           if (!e.target.closest('button')) {
             this.petPlant();
+          }
+        });
+      }
+    },
+
+    // ==========================================
+    // STUDENT NAME PERSONALIZATION ENGINE
+    // ==========================================
+    initStudentNameWatcher() {
+      if (typeof window === 'undefined') return;
+
+      // 1. Storage event listener (sync name across tabs or when login occurs)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'vstep_student_name' || e.key === 'vstep_user_session' || e.key === 'student_name') {
+          this.updateTitleWithStudentName();
+        }
+      });
+
+      // 2. DOM MutationObserver to detect async login name rendering
+      const candidateElements = [
+        document.getElementById('sidebar-user-name'),
+        document.getElementById('b-stat-student'),
+        document.querySelector('.user-name'),
+        document.querySelector('#user-display-name'),
+        document.querySelector('#current-user-name')
+      ].filter(Boolean);
+
+      if (window.MutationObserver && candidateElements.length > 0) {
+        const observer = new MutationObserver(() => {
+          this.updateTitleWithStudentName();
+        });
+        candidateElements.forEach(el => {
+          observer.observe(el, { childList: true, characterData: true, subtree: true });
+        });
+      }
+    },
+
+    getStudentName() {
+      // 1. Check custom name in flower garden state
+      if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
+        const s = this.cleanStudentName(this.state.studentName);
+        if (s && s !== 'Bạn') return s;
+      }
+
+      // 2. Check localStorage / sessionStorage
+      try {
+        const candidateKeys = ['vstep_student_name', 'student_name', 'studentName', 'userName', 'username'];
+        for (const k of candidateKeys) {
+          const val = localStorage.getItem(k) || sessionStorage.getItem(k);
+          if (val && typeof val === 'string') {
+            const s = this.cleanStudentName(val);
+            if (s && s !== 'Bạn') return s;
+          }
+        }
+
+        // Check JSON session in listening-mock-tests
+        const sessionStr = localStorage.getItem('vstep_user_session');
+        if (sessionStr) {
+          const parsed = JSON.parse(sessionStr);
+          if (parsed && parsed.name) {
+            const s = this.cleanStudentName(parsed.name);
+            if (s && s !== 'Bạn') return s;
+          }
+        }
+      } catch (e) {}
+
+      // 3. Check common DOM elements on the page
+      const selectors = [
+        '#sidebar-user-name',
+        '#b-stat-student',
+        '#student-name',
+        '.user-name',
+        '#user-display-name',
+        '#current-user-name'
+      ];
+      for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el && el.textContent) {
+          const s = this.cleanStudentName(el.textContent);
+          if (s && s !== 'Bạn') return s;
+        }
+      }
+
+      // 4. Default fallback: "Bạn"
+      return 'Bạn';
+    },
+
+    cleanStudentName(raw) {
+      if (!raw || typeof raw !== 'string') return '';
+      let s = raw.trim();
+      if (/^(học viên|hoc vien|học viên vstep|chưa nhập tên|chua nhap ten|ẩn danh|an danh|học viên ẩn danh)$/i.test(s)) return '';
+      
+      // If name has format "CB206 - Nguyễn Văn A" or "Nguyễn Văn A - CB206"
+      if (s.includes(' - ')) {
+        const parts = s.split(' - ').map(p => p.trim());
+        const namePart = parts.find(p => !/^[A-Z0-9]{2,6}$/i.test(p) && p.length > 2);
+        if (namePart) return namePart;
+      }
+      return s;
+    },
+
+    escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    },
+
+    setStudentName(newName) {
+      if (!newName || !newName.trim()) return;
+      const clean = this.cleanStudentName(newName);
+      if (!clean) return;
+      this.state.studentName = clean;
+      try {
+        localStorage.setItem('vstep_student_name', clean);
+        sessionStorage.setItem('vstep_student_name', clean);
+      } catch (e) {}
+      this.saveState();
+      this.updateTitleWithStudentName();
+      this.updateSpeechBubble(`Chào mừng ${clean} đến với Chậu Cỏ May Mắn! Chăm chỉ tích lũy nước nỗ lực mỗi ngày nhé! 🍀✨`);
+      if (typeof showToast === 'function') {
+        showToast(`🍀 Đã cập nhật tên chủ nhân Chậu Cỏ May Mắn: ${clean}!`);
+      }
+    },
+
+    updateTitleWithStudentName() {
+      const titleEl = document.getElementById('garden-title-heading') ||
+                      document.querySelector('.garden-header-row h3');
+      if (!titleEl) return;
+
+      const studentName = this.getStudentName();
+      
+      titleEl.innerHTML = `🍀 Chậu Cỏ 4 Lá May Mắn Của <span class="garden-student-name-tag" id="garden-student-name" title="Bấm để đổi tên học viên của bạn">${this.escapeHtml(studentName)} <i class="fa-solid fa-pen-to-square edit-name-pen-icon" style="font-size:12px; opacity:0.75; margin-left:3px;"></i></span>`;
+
+      // Attach click to edit student name
+      const nameTag = titleEl.querySelector('#garden-student-name');
+      if (nameTag && !nameTag.dataset.bound) {
+        nameTag.dataset.bound = 'true';
+        nameTag.style.cursor = 'pointer';
+        nameTag.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const current = studentName === 'Bạn' ? '' : studentName;
+          const entered = prompt('Nhập họ và tên học viên của bạn để khắc tên lên Chậu Cỏ May Mắn 🍀:', current);
+          if (entered !== null && entered.trim()) {
+            this.setStudentName(entered);
           }
         });
       }
@@ -457,9 +606,9 @@
       this.spawnParticles('✨', 3);
       if (this.state.progress < 100) {
         this.addProgress(5);
-        this.updateSpeechBubble('Cô Nguyệt nhẹ nhàng vuốt ve mầm cây, bé cỏ rung rinh thích thú! 🥰🌿');
+        this.updateSpeechBubble('Bạn nhẹ nhàng vuốt ve mầm cây, bé cỏ rung rinh thích thú! 🥰🌿');
       } else {
-        this.updateSpeechBubble('Cỏ 4 lá may mắn đã nở trọn vẹn rồi! Mau bấm "Thu hoạch" để đón thông điệp may mắn nha cô! 🍀✨');
+        this.updateSpeechBubble(`Cỏ 4 lá may mắn đã nở trọn vẹn rồi! Mau bấm "Thu hoạch" để đón thông điệp may mắn nhé ${this.getStudentName()}! 🍀✨`);
       }
       this.saveState();
       this.render();
@@ -486,7 +635,7 @@
     },
 
     triggerReadyToHarvest() {
-      this.updateSpeechBubble('Cỏ 4 Lá May Mắn đã bung nở tuyệt đẹp! Hãy bấm "Thu hoạch" để đón may mắn và nhận thông điệp ôn thi nhé cô Nguyệt! 🍀✨');
+      this.updateSpeechBubble(`Cỏ 4 Lá May Mắn đã bung nở tuyệt đẹp! Mau bấm "Thu hoạch" để đón nhận thông điệp ôn thi may mắn nhé ${this.getStudentName()}! 🍀✨`);
       if (typeof showToast === 'function') {
         showToast('🍀 Cỏ 4 Lá đã nở rộ! Bấm nút "Thu hoạch" để nhận thông điệp may mắn!');
       }
@@ -685,7 +834,7 @@
           <div class="modal-header">
             <div>
               <h3>🎯 ĐỐ VUI ÔN THI VSTEP THỰC CHIẾN</h3>
-              <p class="modal-subtext mb-0">Học Bảng Lợi Ích, Từ Vựng Speaking và Nhận Dạng Dạng Thư & Luận cùng Cô Nguyệt (+10💧 Nước Nỗ Lực)!</p>
+              <p class="modal-subtext mb-0">Học Bảng Lợi Ích, Từ Vựng Speaking và Nhận Dạng Dạng Thư & Luận chuẩn VSTEP B1-B2-C1 (+10💧 Nước Nỗ Lực)!</p>
             </div>
             <button class="modal-close-btn" id="btn-close-quiz-modal">&times;</button>
           </div>
@@ -696,13 +845,13 @@
               <span class="tab-icon">🎯</span> Luyện Đề (+10💧)
             </button>
             <button class="quiz-tab-btn" data-tab="benefits">
-              <span class="tab-icon">📊</span> Bảng Lợi Ích (Cô Nguyệt)
+              <span class="tab-icon">📊</span> Bảng Lợi Ích (Tra Cứu)
             </button>
             <button class="quiz-tab-btn" data-tab="speaking">
-              <span class="tab-icon">🗣️</span> Từ Vựng Speaking
+              <span class="tab-icon">🗣️</span> Từ Vựng Speaking (Tra Cứu)
             </button>
             <button class="quiz-tab-btn" data-tab="writing">
-              <span class="tab-icon">✍️</span> 7 Dạng Thư & 4 Dạng Luận
+              <span class="tab-icon">✍️</span> 7 Dạng Thư & 4 Dạng Luận (Tra Cứu)
             </button>
           </div>
 
@@ -711,7 +860,7 @@
             <!-- Category Filter Pills -->
             <div class="quiz-filter-bar" id="quiz-filter-bar">
               <button class="quiz-filter-pill active" data-cat="all">🌟 Tất cả</button>
-              <button class="quiz-filter-pill" data-cat="benefit-matrix">📊 Bảng Lợi Ích (64 Cụm)</button>
+              <button class="quiz-filter-pill" data-cat="benefit-matrix">📊 Bảng Lợi Ích</button>
               <button class="quiz-filter-pill" data-cat="speaking-vocab">🗣️ Từ Vựng Speaking</button>
               <button class="quiz-filter-pill" data-cat="writing-letter">✉️ 7 Dạng Thư Task 1</button>
               <button class="quiz-filter-pill" data-cat="writing-essay">📝 4 Dạng Luận Task 2</button>
@@ -723,14 +872,14 @@
 
             <div class="quiz-footer-actions">
               <div class="quiz-footer-left">
-                <button class="btn btn-secondary btn-small" id="btn-quiz-reset-deck" title="Làm mới tiến độ để làm lại từ đầu">
-                  <i class="fa-solid fa-rotate-left"></i> Làm lại từ đầu
+                <button class="btn btn-secondary btn-small" id="btn-quiz-reset-deck" title="Làm mới tiến độ để làm lại từ đầu" style="background:#FFFFFF !important; color:#1E293B !important; border:1.5px solid #CBD5E1 !important; font-weight:700 !important;">
+                  <i class="fa-solid fa-rotate-left" style="color:#2563EB !important; margin-right:4px;"></i> Làm lại từ đầu
                 </button>
-                <button class="btn btn-secondary btn-small" id="btn-quiz-next">
-                  <i class="fa-solid fa-arrows-rotate"></i> Đổi câu hỏi khác
+                <button class="btn btn-secondary btn-small" id="btn-quiz-next" style="background:#FFFFFF !important; color:#1E293B !important; border:1.5px solid #CBD5E1 !important; font-weight:700 !important;">
+                  <i class="fa-solid fa-arrows-rotate" style="color:#059669 !important; margin-right:4px;"></i> Đổi câu hỏi khác
                 </button>
               </div>
-              <button class="btn btn-primary btn-small" id="btn-quiz-done">
+              <button class="btn btn-primary btn-small" id="btn-quiz-done" style="background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important; color:#FFFFFF !important; font-weight:700 !important;">
                 <i class="fa-solid fa-seedling"></i> Về Chậu Cây Cỏ May Mắn
               </button>
             </div>
@@ -1470,7 +1619,7 @@
         this.spawnParticles('💧', 8);
         const msg = `🎉 Điểm danh thành công! +${bonus}💧 Nước Nỗ Lực (Chuỗi ${streak} ngày chuyên cần) 🍀`;
         if (typeof showToast === 'function') showToast(msg);
-        this.updateSpeechBubble(`Điểm danh đăng nhập thành công: +${bonus}💧 Nước Nỗ Lực! Chúc cô Nguyệt một ngày làm việc tuyệt vời! 🌟`);
+        this.updateSpeechBubble(`Điểm danh đăng nhập thành công: +${bonus}💧 Nước Nỗ Lực! Chúc ${this.getStudentName()} một ngày học tập tuyệt vời và tràn đầy năng lượng! 🌟`);
         const countEl = modal ? modal.querySelector('#earn-modal-water-count') : null;
         if (countEl) countEl.textContent = this.state.waterDrops;
       }
@@ -1514,7 +1663,7 @@
               <span class="gardener-title-badge" id="gardener-title-badge">🌱 Người Gieo Mầm Hạnh Phúc</span>
               <span class="total-harvested-badge">Tổng: <b id="basket-total-count">0</b> cành may mắn</span>
             </div>
-            <p class="modal-subtext">Mỗi cành cỏ 4 lá may mắn được cô Nguyệt vun trồng là một điều ước tốt lành gửi đến lớp học:</p>
+            <p class="modal-subtext">Mỗi cành cỏ 4 lá may mắn được ${this.getStudentName()} vun trồng là một niềm tin gửi gắm tới mục tiêu kỳ thi VSTEP:</p>
             <div class="garden-basket-grid" id="garden-basket-grid"></div>
           </div>
 
@@ -1652,6 +1801,9 @@
       };
       const p = Math.round(this.state.progress || 0);
 
+      // 0. Update Garden Header with Student's Name
+      this.updateTitleWithStudentName();
+
       // 1. Render Living Clover Pot Artwork
       const potWrapper = document.getElementById('garden-pot-wrapper');
       const targetStage = typeof root.getCloverStage === 'function'
@@ -1781,7 +1933,7 @@
     },
 
     triggerBloomCelebration() {
-      this.updateSpeechBubble('WOOHOO! 🍀 Cỏ 4 Lá May Mắn đã nở rộ tuyệt đẹp! Chúc cô Nguyệt và các bạn luôn ngập tràn niềm vui và may mắn! 🌟💚');
+      this.updateSpeechBubble(`WOOHOO! 🍀 Cỏ 4 Lá May Mắn đã nở rộ tuyệt đẹp! Chúc ${this.getStudentName()} luôn tự tin, may mắn và đạt kết quả thi thật cao! 🌟💚`);
       this.spawnParticles('🍀', 8);
       this.spawnParticles('✨', 8);
       this.spawnParticles('🌟', 6);

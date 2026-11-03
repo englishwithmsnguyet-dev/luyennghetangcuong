@@ -2629,3 +2629,70 @@
     border-color: #FECACA !important;
     transform: rotate(90deg) !important;
 }
+
+/* ========================================================
+   STUDENT NAME PERSONALIZATION & QUIZ ACTION BUTTON STYLES
+   ======================================================== */
+.garden-student-name-tag {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    color: #BE185D !important;
+    background: rgba(244, 114, 182, 0.12) !important;
+    padding: 2px 8px !important;
+    border-radius: 8px !important;
+    border: 1px dashed rgba(190, 24, 93, 0.45) !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+.garden-student-name-tag:hover {
+    background: rgba(244, 114, 182, 0.25) !important;
+    color: #9D174D !important;
+    border-color: #BE185D !important;
+    transform: translateY(-1px) scale(1.03) !important;
+    box-shadow: 0 2px 8px rgba(190, 24, 93, 0.15) !important;
+}
+
+.edit-name-pen-icon {
+    font-size: 11px !important;
+    color: #BE185D !important;
+    opacity: 0.75 !important;
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    margin-left: 2px !important;
+}
+
+.garden-student-name-tag:hover .edit-name-pen-icon {
+    opacity: 1 !important;
+    transform: scale(1.2) rotate(15deg) !important;
+}
+
+/* Quiz modal footer button contrast safety net */
+.quiz-footer-actions #btn-quiz-reset-deck,
+.quiz-footer-actions #btn-quiz-next {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: 1.5px solid #CBD5E1 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.quiz-footer-actions #btn-quiz-reset-deck:hover,
+.quiz-footer-actions #btn-quiz-next:hover {
+    background: #F1F5F9 !important;
+    color: #0F172A !important;
+    border-color: #94A3B8 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.quiz-footer-actions #btn-quiz-reset-deck i {
+    color: #2563EB !important;
+}
+
+.quiz-footer-actions #btn-quiz-next i {
+    color: #059669 !important;
+}
+
