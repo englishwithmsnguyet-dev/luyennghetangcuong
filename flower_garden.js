@@ -1035,13 +1035,15 @@
           </div>
 
           <div class="harvest-modal-actions">
-            <button class="btn btn-secondary btn-small" id="btn-copy-harvest-quote">
-              <i class="fa-solid fa-copy"></i> Sao chép lời chúc
-            </button>
-            <button class="btn btn-secondary btn-small" id="btn-view-all-quotes">
-              <i class="fa-solid fa-book-bookmark"></i> Xem Giỏ Lời Chúc (<b><span id="harvest-total-quotes-btn">1</span></b>)
-            </button>
-            <button class="btn btn-primary" id="btn-plant-next-clover">
+            <div class="harvest-actions-row-secondary">
+              <button class="harvest-action-btn btn-harvest-copy" id="btn-copy-harvest-quote" title="Sao chép câu danh ngôn hôm nay vào bộ nhớ tạm">
+                <i class="fa-solid fa-copy"></i> Sao chép lời chúc
+              </button>
+              <button class="harvest-action-btn btn-harvest-basket" id="btn-view-all-quotes" title="Mở kho lưu trữ các lời chúc bạn đã thu hoạch">
+                <i class="fa-solid fa-book-bookmark"></i> Xem Giỏ Lời Chúc (<b><span id="harvest-total-quotes-btn">1</span></b>)
+              </button>
+            </div>
+            <button class="harvest-action-btn btn-harvest-next" id="btn-plant-next-clover" title="Bắt đầu ươm mầm cành cỏ 4 lá mới">
               <i class="fa-solid fa-seedling"></i> Vun trồng mầm cỏ tiếp theo 🌱
             </button>
           </div>

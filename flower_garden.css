@@ -3,6 +3,7 @@
    Gói giao diện độc lập - Tương thích 100% với mọi website của Cô Nguyệt
    ========================================================================== */
 
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
 
 /* ==========================================================================
@@ -10,35 +11,49 @@
    Guarantees 100% native Vietnamese diacritic rendering without glitches
    ========================================================================== */
 .garden-container,
-.garden-container *,
+.garden-container *:not(i):not([class*="fa-"]),
 .daily-quote-card,
-.daily-quote-card *,
+.daily-quote-card *:not(i):not([class*="fa-"]),
 .garden-modal,
-.garden-modal *,
+.garden-modal *:not(i):not([class*="fa-"]),
 .vstep-hub-card,
-.vstep-hub-card *,
+.vstep-hub-card *:not(i):not([class*="fa-"]),
 .garden-quiz-card,
-.garden-quiz-card *,
+.garden-quiz-card *:not(i):not([class*="fa-"]),
 .garden-basket-modal,
-.garden-basket-modal *,
+.garden-basket-modal *:not(i):not([class*="fa-"]),
 .harvest-celebration-card,
-.harvest-celebration-card *,
+.harvest-celebration-card *:not(i):not([class*="fa-"]),
 .garden-speech-bubble,
-.garden-speech-bubble *,
+.garden-speech-bubble *:not(i):not([class*="fa-"]),
 .quiz-question-box,
-.quiz-question-box *,
+.quiz-question-box *:not(i):not([class*="fa-"]),
 .quiz-option-btn,
-.quiz-option-btn *,
+.quiz-option-btn *:not(i):not([class*="fa-"]),
 .quiz-prompt,
 .quiz-modal-tabs,
 .quiz-tab-btn,
 .quiz-filter-pill,
 .quiz-badge,
 .quiz-feedback-box,
-.quiz-feedback-box * {
+.quiz-feedback-box *:not(i):not([class*="fa-"]) {
     font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Explicitly preserve Font Awesome font family so icons never glitch */
+.garden-container i,
+.garden-modal i,
+.daily-quote-card i,
+.vstep-hub-card i,
+[class*="fa-"],
+.fa-solid,
+.fa-regular,
+.fa-brands {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "FontAwesome" !important;
+    font-style: normal !important;
+    display: inline-block !important;
 }
 
 /* ==========================================
@@ -1094,11 +1109,158 @@
     padding-top: 8px;
     border-top: 1px dashed #E5E7EB;
 }
+/* ==========================================================================
+   HARVEST CELEBRATION MODAL ACTIONS (CÁC NÚT ĐIỀU HƯỚNG THU HOẠCH CAO CẤP)
+   ========================================================================== */
 .harvest-modal-actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1.5px dashed #E2E8F0;
+}
+
+.harvest-actions-row-secondary {
+    display: flex;
+    gap: 10px;
+    width: 100%;
     justify-content: center;
+}
+
+.harvest-actions-row-secondary .harvest-action-btn {
+    flex: 1;
+    max-width: 220px;
+}
+
+.harvest-action-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    padding: 11px 20px !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    outline: none !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    user-select: none !important;
+}
+
+.harvest-action-btn i {
+    font-size: 14px !important;
+    line-height: 1 !important;
+}
+
+.harvest-action-btn:hover {
+    transform: translateY(-2px) !important;
+}
+
+.harvest-action-btn:active {
+    transform: translateY(1px) !important;
+}
+
+/* 1. Nút Sao Chép Lời Chúc (Secondary Neutral Soft) */
+.harvest-action-btn.btn-harvest-copy {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: 1.5px solid #CBD5E1 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+.harvest-action-btn.btn-harvest-copy i {
+    color: #2563EB !important;
+}
+.harvest-action-btn.btn-harvest-copy:hover {
+    background: #F8FAFC !important;
+    border-color: #94A3B8 !important;
+    color: #0F172A !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09) !important;
+}
+
+/* 2. Nút Xem Giỏ Lời Chúc (Secondary Emerald Soft) */
+.harvest-action-btn.btn-harvest-basket {
+    background: #F0FDF4 !important;
+    color: #166534 !important;
+    border: 1.5px solid #86EFAC !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08) !important;
+}
+.harvest-action-btn.btn-harvest-basket i {
+    color: #059669 !important;
+}
+.harvest-action-btn.btn-harvest-basket:hover {
+    background: #DCFCE7 !important;
+    border-color: #4ADE80 !important;
+    color: #14532D !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16) !important;
+}
+
+/* 3. Nút Vun Trồng Mầm Cỏ Tiếp Theo (Primary CTA Gradient) */
+.harvest-action-btn.btn-harvest-next {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    color: #FFFFFF !important;
+    border: 1.5px solid #059669 !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.2px !important;
+}
+.harvest-action-btn.btn-harvest-next i {
+    color: #A7F3D0 !important;
+}
+.harvest-action-btn.btn-harvest-next:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+}
+
+/* Generic Fallback Button Styles for All Garden Modals */
+.garden-modal .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, sans-serif !important;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.garden-modal .btn-small {
+    padding: 8px 14px;
+    font-size: 12.5px;
+}
+
+.garden-modal .btn-primary {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3) !important;
+}
+
+.garden-modal .btn-primary:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4) !important;
+}
+
+.garden-modal .btn-secondary {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    border: 1.5px solid #CBD5E1 !important;
+}
+
+.garden-modal .btn-secondary:hover {
+    background: #F8FAFC !important;
+    border-color: #94A3B8 !important;
 }
 
 /* Mini-Quiz & Garden Modals */
