@@ -534,40 +534,46 @@
 /* Garden Actions Layout (No Overlap) */
 .garden-actions-container {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
     margin-top: 12px;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
 }
 .garden-care-row {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    flex-wrap: wrap;
-    box-sizing: border-box;
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    box-sizing: border-box !important;
 }
 .garden-care-row.hidden,
 .garden-harvest-row.hidden,
-.garden-quiz-row.hidden {
+.garden-quiz-row.hidden,
+.garden-btn.hidden {
     display: none !important;
 }
 .garden-care-row .garden-btn {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 0;
-    max-width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 10px 8px;
-    border-radius: 14px;
-    white-space: nowrap;
+    flex: 1 1 120px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 10px 8px !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    box-sizing: border-box;
+    box-sizing: border-box !important;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@media (max-width: 360px) {
+    .garden-care-row .garden-btn {
+        flex: 1 1 100% !important;
+    }
 }
 .action-cost-tag,
 .action-gain-tag {
@@ -2320,4 +2326,218 @@
 }
 .thesis-highlight b {
     color: #047857;
+}
+
+/* ==========================================================================
+   DAILY MOTIVATION QUOTE CARD ("THÔNG ĐIỆP HÔM NAY")
+   ========================================================================== */
+.daily-info-card,
+.daily-quote-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 55%, #FFF5F5 100%) !important;
+    border: 1.5px solid #FBCFE8 !important;
+    border-radius: 20px !important;
+    padding: 18px 24px !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+    max-width: 680px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-shadow: 0 4px 18px rgba(244, 114, 182, 0.12) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease !important;
+}
+.daily-info-card:hover,
+.daily-quote-card:hover {
+    box-shadow: 0 6px 22px rgba(244, 114, 182, 0.2) !important;
+}
+.daily-info-card::before,
+.daily-quote-card::before {
+    content: "“" !important;
+    position: absolute !important;
+    right: 20px !important;
+    bottom: -15px !important;
+    font-size: 110px !important;
+    line-height: 1 !important;
+    font-family: Georgia, serif !important;
+    color: #FCE7F3 !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+}
+.daily-info-top,
+.daily-quote-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 12px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+.daily-info-badge,
+.daily-quote-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    color: #BE185D !important;
+    background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%) !important;
+    border: 1px solid #FBCFE8 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 2px 4px rgba(219, 39, 119, 0.08) !important;
+}
+.btn-refresh-quote,
+.daily-quote-refresh {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 12px !important;
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #6B7280 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+}
+.btn-refresh-quote:hover,
+.daily-quote-refresh:hover {
+    color: #BE185D !important;
+    border-color: #FBCFE8 !important;
+    background: #FDF2F8 !important;
+    transform: translateY(-1px) !important;
+}
+.daily-info-content {
+    position: relative !important;
+    z-index: 1 !important;
+    margin-bottom: 8px !important;
+}
+.daily-quote-en,
+.daily-quote-text {
+    font-size: 16.5px !important;
+    font-weight: 700 !important;
+    color: #1F2937 !important;
+    line-height: 1.5 !important;
+    margin: 0 0 6px 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+.daily-quote-vi {
+    font-size: 14.5px !important;
+    color: #4B5563 !important;
+    line-height: 1.5 !important;
+    margin: 0 0 10px 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+.daily-quote-vi em {
+    font-style: italic !important;
+    color: #6B7280 !important;
+}
+.daily-info-footer,
+.daily-quote-signature {
+    position: relative !important;
+    z-index: 1 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #E11D48 !important;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    gap: 4px !important;
+}
+.heart-pulse {
+    display: inline-block !important;
+    animation: pulseHeart 1.6s infinite ease-in-out !important;
+}
+@keyframes pulseHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+/* ==========================================================================
+   MODAL CARD & HEADER RESILIENCE (DARK/LIGHT THEME COMPATIBILITY)
+   ========================================================================== */
+.garden-modal.modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    z-index: 999999 !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+}
+.garden-modal.modal-overlay.active {
+    display: flex !important;
+}
+.garden-modal .modal-card {
+    background: #FFFFFF !important;
+    color: #1F2937 !important;
+    border-radius: 24px !important;
+    padding: 24px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    position: relative !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    border: 1px solid #E5E7EB !important;
+    box-sizing: border-box !important;
+}
+.garden-modal .modal-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 16px !important;
+    position: relative !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+.garden-modal .modal-header h3 {
+    margin: 0 !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #111827 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+.garden-modal .modal-close-btn {
+    position: static !important;
+    margin-left: auto !important;
+    background: #F3F4F6 !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    color: #6B7280 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+.garden-modal .modal-close-btn:hover {
+    background: #FEE2E2 !important;
+    color: #EF4444 !important;
+    border-color: #FECACA !important;
+    transform: rotate(90deg) !important;
 }

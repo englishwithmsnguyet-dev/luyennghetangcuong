@@ -1222,6 +1222,50 @@
     },
 
     createEarnWaterModalDom() {
+      const isClassesSite = !!document.getElementById('class-list') || !!document.querySelector('.random-picker-container');
+
+      const methods3and4Html = isClassesSite ? `
+            <!-- 3. Random Picker -->
+            <div class="earn-method-item" id="earn-action-picker" role="button" tabindex="0" title="Bấm để mở Gọi Tên Trả Bài & Vòng Quay">
+              <div class="earn-icon-wrap" style="background:#FFFBEB; color:#D97706;">🎲</div>
+              <div class="earn-info">
+                <h4>GỌI TÊN TRẢ BÀI & VÒNG QUAY LỚP HỌC</h4>
+                <p>Học viên được gọi tên và trả lời tốt / xuất sắc tích lũy <b>+5💧 ~ +10💧</b> Nước Nỗ Lực.</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Đến quay</span>
+            </div>
+
+            <!-- 4. Class Attendance & Lesson Logging -->
+            <div class="earn-method-item" id="earn-action-attendance" role="button" tabindex="0" title="Bấm để chọn lớp điểm danh & ghi nhật ký">
+              <div class="earn-icon-wrap" style="background:#FDF2F8; color:#DB2777;">📝</div>
+              <div class="earn-info">
+                <h4>ĐIỂM DANH & LƯU NHẬT KÝ LỚP HỌC</h4>
+                <p>Cô giáo ghi nhận sĩ số điểm danh và lưu bài học nhận ngay <b>+10💧</b> Nước Nỗ Lực.</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Vào lớp</span>
+            </div>
+      ` : `
+            <!-- 3. Listening Practice Completion -->
+            <div class="earn-method-item" id="earn-action-practice" role="button" tabindex="0" title="Bấm để chuyển tới làm bài luyện nghe VSTEP">
+              <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎧</div>
+              <div class="earn-info">
+                <h4>LUYỆN TẬP BÀI THI NGHE VSTEP</h4>
+                <p>Hoàn thành và nộp bài luyện nghe VSTEP nhận ngay <b>+10💧 ~ +20💧</b> Nước Nỗ Lực.</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-headphones"></i> Luyện ngay</span>
+            </div>
+
+            <!-- 4. High Score & Accuracy Reward -->
+            <div class="earn-method-item" id="earn-action-highscore" role="button" tabindex="0" title="Bấm để xem danh sách bài kiểm tra và làm bài">
+              <div class="earn-icon-wrap" style="background:#FEF3C7; color:#D97706;">⭐</div>
+              <div class="earn-info">
+                <h4>LÀM BÀI ĐẠT ĐIỂM SỐ TỐT</h4>
+                <p>Mỗi câu trả lời chính xác được tích lũy <b>+2💧 Nước Nỗ Lực</b> giúp cỏ 4 lá mau lớn!</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-star"></i> Xem bài test</span>
+            </div>
+      `;
+
       const modal = document.createElement('div');
       modal.className = 'modal-overlay garden-modal';
       modal.id = 'garden-earn-water-modal';
@@ -1259,25 +1303,7 @@
               <span class="earn-action-badge action-primary"><i class="fa-solid fa-play"></i> Luyện ngay</span>
             </div>
 
-            <!-- 3. Random Picker -->
-            <div class="earn-method-item" id="earn-action-picker" role="button" tabindex="0" title="Bấm để mở Gọi Tên Trả Bài & Vòng Quay">
-              <div class="earn-icon-wrap" style="background:#FFFBEB; color:#D97706;">🎲</div>
-              <div class="earn-info">
-                <h4>GỌI TÊN TRẢ BÀI & VÒNG QUAY LỚP HỌC</h4>
-                <p>Học viên được gọi tên và trả lời tốt / xuất sắc tích lũy <b>+5💧 ~ +10💧</b> Nước Nỗ Lực.</p>
-              </div>
-              <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Đến quay</span>
-            </div>
-
-            <!-- 4. Class Attendance & Lesson Logging -->
-            <div class="earn-method-item" id="earn-action-attendance" role="button" tabindex="0" title="Bấm để chọn lớp điểm danh & ghi nhật ký">
-              <div class="earn-icon-wrap" style="background:#FDF2F8; color:#DB2777;">📝</div>
-              <div class="earn-info">
-                <h4>ĐIỂM DANH & LƯU NHẬT KÝ LỚP HỌC</h4>
-                <p>Cô giáo ghi nhận sĩ số điểm danh và lưu bài học nhận ngay <b>+10💧</b> Nước Nỗ Lực.</p>
-              </div>
-              <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Vào lớp</span>
-            </div>
+            ${methods3and4Html}
           </div>
 
           <div class="earn-modal-actions">
@@ -1305,39 +1331,79 @@
         this.openQuizModal();
       });
 
-      // Item 3: Click to Open Random Picker on Home View
-      modal.querySelector('#earn-action-picker').addEventListener('click', () => {
-        modal.classList.remove('active');
-        if (typeof showHomeView === 'function') showHomeView();
-        setTimeout(() => {
-          const picker = document.querySelector('.random-picker-container');
-          if (picker) {
-            picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            picker.classList.remove('pulse-glow');
-            void picker.offsetWidth;
-            picker.classList.add('pulse-glow');
-            setTimeout(() => picker.classList.remove('pulse-glow'), 2000);
+      // Item 3 (Classes): Click to Open Random Picker on Home View
+      const itemPicker = modal.querySelector('#earn-action-picker');
+      if (itemPicker) {
+        itemPicker.addEventListener('click', () => {
+          modal.classList.remove('active');
+          if (typeof showHomeView === 'function') showHomeView();
+          setTimeout(() => {
+            const picker = document.querySelector('.random-picker-container');
+            if (picker) {
+              picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              picker.classList.remove('pulse-glow');
+              void picker.offsetWidth;
+              picker.classList.add('pulse-glow');
+              setTimeout(() => picker.classList.remove('pulse-glow'), 2000);
+            }
+          }, 150);
+          if (typeof showToast === 'function') {
+            showToast('🎲 Đã chuyển tới Gọi Tên Trả Bài! Hãy chọn lớp và quay số để học viên trả lời nhận +5💧 ~ +10💧 Nước Tưới!');
           }
-        }, 150);
-        if (typeof showToast === 'function') {
-          showToast('🎲 Đã chuyển tới Gọi Tên Trả Bài! Hãy chọn lớp và quay số để học viên trả lời nhận +5💧 ~ +10💧 Nước Tưới!');
-        }
-      });
+        });
+      }
 
-      // Item 4: Click to Navigate to Attendance / Class Logging
-      modal.querySelector('#earn-action-attendance').addEventListener('click', () => {
-        modal.classList.remove('active');
-        const sidebarList = document.getElementById('class-list');
-        if (sidebarList) {
-          sidebarList.classList.remove('pulse-glow');
-          void sidebarList.offsetWidth;
-          sidebarList.classList.add('pulse-glow');
-          setTimeout(() => sidebarList.classList.remove('pulse-glow'), 2000);
-        }
-        if (typeof showToast === 'function') {
-          showToast('📝 Hãy chọn một lớp học ở danh sách bên trái để điểm danh và lưu bài học (+10💧 Nước Tưới)!');
-        }
-      });
+      // Item 4 (Classes): Click to Navigate to Attendance / Class Logging
+      const itemAttendance = modal.querySelector('#earn-action-attendance');
+      if (itemAttendance) {
+        itemAttendance.addEventListener('click', () => {
+          modal.classList.remove('active');
+          const sidebarList = document.getElementById('class-list');
+          if (sidebarList) {
+            sidebarList.classList.remove('pulse-glow');
+            void sidebarList.offsetWidth;
+            sidebarList.classList.add('pulse-glow');
+            setTimeout(() => sidebarList.classList.remove('pulse-glow'), 2000);
+          }
+          if (typeof showToast === 'function') {
+            showToast('📝 Hãy chọn một lớp học ở danh sách bên trái để điểm danh và lưu bài học (+10💧 Nước Tưới)!');
+          }
+        });
+      }
+
+      // Item 3 (Practice / Listening sites): Go to practice section
+      const itemPractice = modal.querySelector('#earn-action-practice');
+      if (itemPractice) {
+        itemPractice.addEventListener('click', () => {
+          modal.classList.remove('active');
+          if (window.app && typeof window.app.switchView === 'function') {
+            window.app.switchView('part1');
+          } else {
+            const target = document.querySelector('#active-day-content, .parts-grid, #view-dashboard, .dashboard-hero, .test-list, main');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          if (typeof showToast === 'function') {
+            showToast('🎧 Hãy hoàn thành bài nghe để nhận +10💧 ~ +20💧 Nước Nỗ Lực nhé!');
+          }
+        });
+      }
+
+      // Item 4 (Practice / Listening sites): View tests for high score
+      const itemHighScore = modal.querySelector('#earn-action-highscore');
+      if (itemHighScore) {
+        itemHighScore.addEventListener('click', () => {
+          modal.classList.remove('active');
+          if (window.app && typeof window.app.switchView === 'function') {
+            window.app.switchView('part1');
+          } else {
+            const target = document.querySelector('#active-day-content, .parts-grid, #view-dashboard, .dashboard-hero, .test-list, main');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          if (typeof showToast === 'function') {
+            showToast('⭐ Chúc bạn làm bài đạt điểm cao để gặt hái thật nhiều Nước Nỗ Lực!');
+          }
+        });
+      }
 
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
