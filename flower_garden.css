@@ -2786,4 +2786,275 @@
     }
 }
 
+/* ========================================================
+   ENHANCED BASKET SHOWCASE MODAL (HIỂN THỊ ĐỀU & ĐẸP)
+   ======================================================== */
+.garden-basket-modal-card {
+    max-width: 580px !important;
+    width: 92% !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16) !important;
+}
+
+#garden-basket-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+/* 1. Hero Showcase Card */
+.basket-hero-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%) !important;
+    border: 1.5px solid #86EFAC !important;
+    border-radius: 16px !important;
+    padding: 14px 16px !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.08) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.basket-hero-icon-wrap {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #BBF7D0 !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.12) !important;
+    flex-shrink: 0 !important;
+}
+
+.basket-hero-img {
+    width: 52px !important;
+    height: 52px !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15)) !important;
+}
+
+.basket-hero-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.basket-hero-badge {
+    display: inline-block !important;
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    color: #047857 !important;
+    background: rgba(16, 185, 129, 0.18) !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+    margin-bottom: 4px !important;
+}
+
+.basket-hero-title {
+    margin: 0 0 4px 0 !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #065F46 !important;
+    line-height: 1.25 !important;
+}
+
+.basket-hero-quote {
+    margin: 0 0 8px 0 !important;
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+    color: #047857 !important;
+}
+
+.basket-hero-harvest-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #FFFFFF !important;
+    border: 1px solid #86EFAC !important;
+    padding: 3px 10px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #065F46 !important;
+}
+
+/* 2. Symmetrical 3-Column Stats Row */
+.basket-stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.basket-mini-stat {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    border: 1.5px solid transparent !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+.basket-mini-stat.stat-clover {
+    background: #F0FDF4 !important;
+    border-color: #BBF7D0 !important;
+}
+.basket-mini-stat.stat-water {
+    background: #F0F9FF !important;
+    border-color: #BAE6FD !important;
+}
+.basket-mini-stat.stat-streak {
+    background: #FFFBEB !important;
+    border-color: #FDE68A !important;
+}
+
+.mini-stat-icon {
+    font-size: 24px !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.mini-stat-info {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+.mini-stat-num {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+}
+
+.stat-clover .mini-stat-num { color: #047857 !important; }
+.stat-water .mini-stat-num { color: #0284C7 !important; }
+.stat-streak .mini-stat-num { color: #D97706 !important; }
+
+.mini-stat-label {
+    font-size: 11px !important;
+    color: #64748B !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+}
+
+/* 3. Milestone Progression Box */
+.basket-milestone-box {
+    background: #FFFFFF !important;
+    border: 1.5px solid #F1F5F9 !important;
+    border-radius: 16px !important;
+    padding: 12px 14px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.milestone-box-head {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.milestone-head-left {
+    font-weight: 700 !important;
+    color: #334155 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.milestone-head-right {
+    font-size: 11.5px !important;
+    color: #059669 !important;
+    font-weight: 600 !important;
+}
+
+.milestone-track {
+    width: 100% !important;
+    height: 8px !important;
+    background: #F1F5F9 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    margin-bottom: 10px !important;
+}
+
+.milestone-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%) !important;
+    border-radius: 6px !important;
+    transition: width 0.5s ease !important;
+}
+
+.milestone-tiers {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+    text-align: center !important;
+}
+
+.tier-step {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 3px !important;
+    padding: 6px 2px !important;
+    border-radius: 8px !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    font-size: 11px !important;
+}
+
+.tier-step.done {
+    background: #ECFDF5 !important;
+    border-color: #A7F3D0 !important;
+    color: #047857 !important;
+}
+
+.tier-bullet {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: #E2E8F0 !important;
+    color: #64748B !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.tier-step.done .tier-bullet {
+    background: #10B981 !important;
+    color: #FFFFFF !important;
+}
+
+.tier-name {
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+}
+
+.tier-req {
+    font-size: 9.5px !important;
+    color: #94A3B8 !important;
+}
+
+.tier-step.done .tier-req {
+    color: #059669 !important;
+    font-weight: 600 !important;
+}
+
 

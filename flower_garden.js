@@ -221,6 +221,8 @@
           setTimeout(() => this.harvest(), 400);
         } else if (hash === '#earn-water') {
           setTimeout(() => this.openEarnWaterModal(), 300);
+        } else if (hash === '#basket' || hash === '#basket-test') {
+          setTimeout(() => this.openBasketModal(), 300);
         } else if (hash === '#wilted' || hash === '#wilt-test') {
           // Dedicated debug hash for testing wilted plant state
           this.state.lastWateredDate = '2026-01-01';
@@ -841,7 +843,7 @@
           <button class="modal-close-btn" id="btn-close-harvest-modal">&times;</button>
           <div class="harvest-celebration-head">
             <div class="harvest-clover-sparkle-halo">
-              ${(typeof root !== 'undefined' && typeof root.renderHarvestCelebrationSvg === 'function') ? root.renderHarvestCelebrationSvg() : '<img src="assets/garden/clover_stage_4.png" alt="Cỏ 4 Lá May Mắn Nở Hoa" class="harvest-clover-img" />'}
+              <img src="assets/garden/clover_stage_4.png" alt="Cỏ 4 Lá May Mắn Nở Hoa" class="harvest-clover-img" />
             </div>
             <span class="harvest-pill-badge" id="harvest-pill-badge">🍀 CÀNH CỎ 4 LÁ THỨ #1 ĐÃ BỪNG NỞ!</span>
             <h3 class="harvest-main-title">THÔNG ĐIỆP HÔM NAY</h3>
@@ -1760,6 +1762,11 @@
         modal = this.createBasketModalDom();
         document.body.appendChild(modal);
       }
+      // Always update dynamic student name in subtext when opened
+      const subtext = modal.querySelector('#basket-modal-subtext');
+      if (subtext) {
+        subtext.innerHTML = `Mỗi cành cỏ 4 lá may mắn được <b>${this.escapeHtml(this.getStudentName())}</b> vun trồng là một niềm tin gửi gắm tới mục tiêu kỳ thi VSTEP:`;
+      }
       this.switchBasketTab(activeTab);
       modal.classList.add('active');
     },
@@ -1769,7 +1776,7 @@
       modal.className = 'modal-overlay garden-modal';
       modal.id = 'garden-basket-modal';
       modal.innerHTML = `
-        <div class="modal-card garden-modal-card">
+        <div class="modal-card garden-modal-card garden-basket-modal-card">
           <div class="modal-header">
             <h3>🧺 Bộ Sưu Tập Cỏ 4 Lá & Động Lực Ôn Thi</h3>
             <button class="modal-close-btn" id="btn-close-basket-modal">&times;</button>
@@ -1787,9 +1794,9 @@
           <div class="basket-tab-content" id="basket-content-stats">
             <div class="garden-title-badge-wrap">
               <span class="gardener-title-badge" id="gardener-title-badge">🌱 Người Gieo Mầm Hạnh Phúc</span>
-              <span class="total-harvested-badge">Tổng: <b id="basket-total-count">0</b> cành may mắn</span>
+              <span class="total-harvested-badge">Tổng gặt hái: <b id="basket-total-count">0</b> cành 🍀</span>
             </div>
-            <p class="modal-subtext">Mỗi cành cỏ 4 lá may mắn được ${this.getStudentName()} vun trồng là một niềm tin gửi gắm tới mục tiêu kỳ thi VSTEP:</p>
+            <p class="modal-subtext" id="basket-modal-subtext">Mỗi cành cỏ 4 lá may mắn được <b>${this.escapeHtml(this.getStudentName())}</b> vun trồng là một niềm tin gửi gắm tới mục tiêu kỳ thi VSTEP:</p>
             <div class="garden-basket-grid" id="garden-basket-grid"></div>
           </div>
 
@@ -1841,38 +1848,132 @@
       if (!grid) return;
 
       const total = this.state.harvestCount || 0;
+      const quotes = this.state.harvestedQuotes || [];
       if (totalCount) totalCount.textContent = total;
-      if (quotesCount) quotesCount.textContent = (this.state.harvestedQuotes || []).length;
+      if (quotesCount) quotesCount.textContent = quotes.length;
 
-      if (titleBadge) {
-        if (total >= 20) titleBadge.textContent = '👑 Nàng Tiên Cỏ May Mắn';
-        else if (total >= 10) titleBadge.textContent = '🌟 Bàn Tay Gieo Phép Màu';
-        else if (total >= 5) titleBadge.textContent = '🍀 Vườn Ươm May Mắn';
-        else titleBadge.textContent = '🌱 Người Gieo Mầm Hạnh Phúc';
+      // 1. Calculate Titles & Milestone Progression
+      let currentTitle = '🌱 Người Gieo Mầm Hạnh Phúc';
+      let nextMilestoneText = '';
+      let progressPercent = 0;
+
+      if (total >= 20) {
+        currentTitle = '👑 Nàng Tiên Cỏ May Mắn';
+        nextMilestoneText = '🌟 Đã đạt cấp bậc cao nhất!';
+        progressPercent = 100;
+      } else if (total >= 10) {
+        currentTitle = '🌟 Bàn Tay Gieo Phép Màu';
+        nextMilestoneText = `Cần thêm ${20 - total} cành để đạt "👑 Nàng Tiên Cỏ May Mắn"`;
+        progressPercent = Math.round(((total - 10) / 10) * 100);
+      } else if (total >= 5) {
+        currentTitle = '🍀 Vườn Ươm May Mắn';
+        nextMilestoneText = `Cần thêm ${10 - total} cành để đạt "🌟 Bàn Tay Gieo Phép Màu"`;
+        progressPercent = Math.round(((total - 5) / 5) * 100);
+      } else if (total >= 1) {
+        currentTitle = '🌱 Người Gieo Mầm Hạnh Phúc';
+        nextMilestoneText = `Cần thêm ${5 - total} cành để đạt "🍀 Vườn Ươm May Mắn"`;
+        progressPercent = Math.round((total / 5) * 100);
+      } else {
+        currentTitle = '🌱 Tập Sự Gieo Mầm';
+        nextMilestoneText = 'Thu hoạch cành đầu tiên để đạt "🌱 Người Gieo Mầm Hạnh Phúc"';
+        progressPercent = 15;
       }
 
-      grid.innerHTML = '';
-      const flower = (root.FLOWER_CATALOG && root.FLOWER_CATALOG.clover) || {
-        name: 'Cỏ 4 Lá May Mắn',
-        icon: '🍀',
-        meaning: 'May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu.',
-        bgGlow: 'rgba(16, 185, 129, 0.25)'
-      };
+      if (titleBadge) {
+        titleBadge.textContent = currentTitle;
+      }
 
-      const item = document.createElement('div');
-      item.className = 'basket-item collected';
-      item.innerHTML = `
-        <div class="basket-item-icon" style="background: ${flower.bgGlow}; font-size: 2.2rem;">${flower.icon}</div>
-        <div class="basket-item-info">
-          <h4>${flower.name}</h4>
-          <span class="basket-item-count">Đã thu hoạch: <b>${total}</b> cành may mắn</span>
-          <p style="font-size: 0.85rem; color: #047857; margin-top: 4px;">"${flower.meaning}"</p>
-          <div style="margin-top:6px; font-size:0.8rem; color:#065F46;">
-            💧 Nước Nỗ Lực hiện có: <b>${this.state.waterDrops} giọt</b> | Chuỗi đăng nhập: <b>${this.state.loginStreak || 1} ngày</b>
+      const studentName = this.getStudentName();
+
+      // 2. Render Full-Width, Balanced, Harmonious Layout
+      grid.innerHTML = `
+        <!-- A. Hero Showcase Card -->
+        <div class="basket-hero-card">
+          <div class="basket-hero-icon-wrap">
+            <img src="assets/garden/clover_stage_4.png" class="basket-hero-img" alt="Cỏ 4 Lá May Mắn VSTEP">
+          </div>
+          <div class="basket-hero-content">
+            <div class="basket-hero-badge">🍀 BỘ SƯU TẬP VSTEP CHUẨN</div>
+            <h4 class="basket-hero-title">Cỏ 4 Lá May Mắn VSTEP</h4>
+            <p class="basket-hero-quote">
+              "May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu. Món quà diệu kỳ tiếp lửa cho <b>${this.escapeHtml(studentName)}</b> tự tin chinh phục chứng chỉ VSTEP B1-B2-C1!"
+            </p>
+            <div class="basket-hero-harvest-badge">
+              <i class="fa-solid fa-clover" style="color:#059669;"></i> Đã thu hoạch thành công: <b>${total} cành may mắn</b>
+            </div>
           </div>
         </div>
+
+        <!-- B. Symmetrical 3-Column Stats Grid -->
+        <div class="basket-stats-row">
+          <div class="basket-mini-stat stat-clover">
+            <div class="mini-stat-icon">🍀</div>
+            <div class="mini-stat-info">
+              <span class="mini-stat-num">${total} cành</span>
+              <span class="mini-stat-label">Đã Thu Hoạch</span>
+            </div>
+          </div>
+          <div class="basket-mini-stat stat-water">
+            <div class="mini-stat-icon">💧</div>
+            <div class="mini-stat-info">
+              <span class="mini-stat-num">${this.state.waterDrops} giọt</span>
+              <span class="mini-stat-label">Nước Nỗ Lực</span>
+            </div>
+          </div>
+          <div class="basket-mini-stat stat-streak">
+            <div class="mini-stat-icon">🔥</div>
+            <div class="mini-stat-info">
+              <span class="mini-stat-num">${this.state.loginStreak || 1} ngày</span>
+              <span class="mini-stat-label">Ngày Chuyên Cần</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- C. Milestone Progression Box -->
+        <div class="basket-milestone-box">
+          <div class="milestone-box-head">
+            <span class="milestone-head-left"><i class="fa-solid fa-medal" style="color:#F59E0B;"></i> Lộ Trình Nâng Cấp Danh Hiệu</span>
+            <span class="milestone-head-right">${nextMilestoneText}</span>
+          </div>
+          <div class="milestone-track">
+            <div class="milestone-fill" style="width: ${progressPercent}%;"></div>
+          </div>
+          <div class="milestone-tiers">
+            <div class="tier-step ${total >= 1 ? 'done' : 'next'}">
+              <span class="tier-bullet">${total >= 1 ? '✓' : '1'}</span>
+              <span class="tier-name">Gieo Mầm</span>
+              <span class="tier-req">1 cành</span>
+            </div>
+            <div class="tier-step ${total >= 5 ? 'done' : (total >= 1 ? 'next' : '')}">
+              <span class="tier-bullet">${total >= 5 ? '✓' : '5'}</span>
+              <span class="tier-name">Vườn Ươm</span>
+              <span class="tier-req">5 cành</span>
+            </div>
+            <div class="tier-step ${total >= 10 ? 'done' : (total >= 5 ? 'next' : '')}">
+              <span class="tier-bullet">${total >= 10 ? '✓' : '10'}</span>
+              <span class="tier-name">Phép Màu</span>
+              <span class="tier-req">10 cành</span>
+            </div>
+            <div class="tier-step ${total >= 20 ? 'done' : (total >= 10 ? 'next' : '')}">
+              <span class="tier-bullet">${total >= 20 ? '✓' : '20'}</span>
+              <span class="tier-name">Nàng Tiên</span>
+              <span class="tier-req">20 cành</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- D. Direct Shortcut to Quotes Archive -->
+        <button class="btn btn-primary w-100" id="btn-shortcut-view-quotes" style="padding:11px 16px; font-size:13px; font-weight:700; border-radius:12px; background:linear-gradient(135deg, #059669 0%, #047857 100%) !important; color:#FFFFFF !important; border:none !important; cursor:pointer; box-shadow:0 3px 10px rgba(5,150,105,0.25);">
+          <i class="fa-solid fa-scroll"></i> Mở Kho Tàng Động Lực Ôn Thi (${quotes.length} Thông Điệp) &rarr;
+        </button>
       `;
-      grid.appendChild(item);
+
+      const btnShortcut = grid.querySelector('#btn-shortcut-view-quotes');
+      if (btnShortcut) {
+        btnShortcut.addEventListener('click', () => {
+          this.switchBasketTab(1);
+        });
+      }
     },
 
     renderQuotesArchive() {

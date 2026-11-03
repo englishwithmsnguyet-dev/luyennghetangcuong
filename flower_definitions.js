@@ -19,8 +19,8 @@
       "color": "#10B981",
       "accentColor": "#059669",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(254, 240, 138, 0.55) 0%, rgba(52, 211, 153, 0.24) 45%, transparent 76%)",
-      "meaning": "May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu. Món quà diệu kỳ tiếp lửa cho học viên chinh phục chứng chỉ VSTEP B1-B2-C1 cùng cô Nguyệt!",
-      "quote": "Bé cỏ 4 lá mang đến vạn sự may mắn và mọi điều ước thành hiện thực cho cô Nguyệt! 🍀🌟",
+      "meaning": "May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu. Món quà diệu kỳ tiếp lửa cho học viên tự tin chinh phục chứng chỉ VSTEP B1-B2-C1!",
+      "quote": "Bé cỏ 4 lá mang đến vạn sự may mắn, bình an và kết quả thi cử rực rỡ nhất! 🍀🌟",
       "growthDifficulty": "Hiếm có"
     }
   };
@@ -1586,340 +1586,6 @@
    * Renders the lifelike painterly potted clover stage with grounded shadow,
    * bottom-anchored organic wind sway, and synchronized morning dewdrop glints.
    */
-  function renderLuckyCloverSvg(stage) {
-    const potDefs = `
-      <defs>
-        <linearGradient id="cloverPotGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#C2410C"/>
-          <stop offset="28%" stop-color="#EA580C"/>
-          <stop offset="65%" stop-color="#F97316"/>
-          <stop offset="100%" stop-color="#9A3412"/>
-        </linearGradient>
-        <linearGradient id="cloverRimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#C2410C"/>
-          <stop offset="35%" stop-color="#FB923C"/>
-          <stop offset="70%" stop-color="#EA580C"/>
-          <stop offset="100%" stop-color="#9A3412"/>
-        </linearGradient>
-        <radialGradient id="cloverSoilGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#4E342E"/>
-          <stop offset="70%" stop-color="#3E2723"/>
-          <stop offset="100%" stop-color="#271810"/>
-        </radialGradient>
-        <radialGradient id="cloverCrestGrad" cx="40%" cy="35%" r="60%">
-          <stop offset="0%" stop-color="#FEF08A"/>
-          <stop offset="70%" stop-color="#F59E0B"/>
-          <stop offset="100%" stop-color="#D97706"/>
-        </radialGradient>
-        <radialGradient id="cloverGreenA" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stop-color="#34D399"/>
-          <stop offset="45%" stop-color="#10B981"/>
-          <stop offset="85%" stop-color="#059669"/>
-          <stop offset="100%" stop-color="#047857"/>
-        </radialGradient>
-        <radialGradient id="cloverGreenB" cx="45%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#10B981"/>
-          <stop offset="55%" stop-color="#059669"/>
-          <stop offset="88%" stop-color="#047857"/>
-          <stop offset="100%" stop-color="#064E3B"/>
-        </radialGradient>
-        <radialGradient id="cloverSunHalo" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.55"/>
-          <stop offset="60%" stop-color="#6EE7B7" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
-        </radialGradient>
-        <filter id="cloverGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#F59E0B" flood-opacity="0.5"/>
-        </filter>
-      </defs>
-    `;
-
-    const potBody = `
-      <!-- Base Contact Shadow -->
-      <ellipse cx="120" cy="208" rx="64" ry="10" fill="rgba(50, 25, 10, 0.28)"/>
-      <ellipse cx="120" cy="208" rx="42" ry="5" fill="rgba(30, 15, 5, 0.20)"/>
-
-      <!-- Ceramic Terracotta Pot Body -->
-      <path d="M 52 144 C 55 186 74 205 82 206 L 158 206 C 166 205 185 186 188 144 Z"
-            fill="url(#cloverPotGrad)" stroke="#8C2C08" stroke-width="2.5"/>
-
-      <!-- Pot Highlights & Depth -->
-      <path d="M 64 150 C 67 182 82 198 88 202 L 96 202 C 86 196 74 180 72 150 Z"
-            fill="#FFFFFF" opacity="0.18"/>
-      <path d="M 176 150 C 173 182 158 198 152 202 L 144 202 C 154 196 166 180 168 150 Z"
-            fill="#5C1D06" opacity="0.30"/>
-
-      <!-- Pot Rim -->
-      <path d="M 46 136 C 46 132 49 130 54 130 L 186 130 C 191 130 194 132 194 136 L 192 146 C 192 150 188 152 184 152 L 56 152 C 52 152 48 150 48 146 Z"
-            fill="url(#cloverRimGrad)" stroke="#8C2C08" stroke-width="2"/>
-      <line x1="52" y1="133" x2="188" y2="133" stroke="#FFA07A" stroke-width="1.8" opacity="0.75" stroke-linecap="round"/>
-
-      <!-- Dark Fertile Potting Soil -->
-      <ellipse cx="120" cy="138" rx="64" ry="11" fill="url(#cloverSoilGrad)"/>
-      <ellipse cx="120" cy="138" rx="58" ry="8" fill="#24140A" opacity="0.85"/>
-      <circle cx="95" cy="137" r="1.5" fill="#5D4037" opacity="0.7"/>
-      <circle cx="140" cy="139" r="1.2" fill="#5D4037" opacity="0.7"/>
-      <circle cx="112" cy="141" r="1.4" fill="#6D4C41" opacity="0.6"/>
-
-      <!-- Golden Lucky Clover Emblem -->
-      <g transform="translate(120, 175)">
-        <circle cx="0" cy="0" r="15" fill="url(#cloverCrestGrad)" stroke="#F59E0B" stroke-width="1.5" filter="url(#cloverGlow)"/>
-        <circle cx="0" cy="0" r="12" fill="#FEF3C7" opacity="0.9"/>
-        <g transform="scale(0.38) translate(0, -6)">
-          <path d="M 0 0 C -8 -12 -16 -6 -10 3 C -5 10 0 13 0 13 C 0 13 5 10 10 3 C 16 -6 8 -12 0 0 Z" fill="#059669" transform="rotate(0) translate(0,-8)"/>
-          <path d="M 0 0 C -8 -12 -16 -6 -10 3 C -5 10 0 13 0 13 C 0 13 5 10 10 3 C 16 -6 8 -12 0 0 Z" fill="#10B981" transform="rotate(90) translate(0,-8)"/>
-          <path d="M 0 0 C -8 -12 -16 -6 -10 3 C -5 10 0 13 0 13 C 0 13 5 10 10 3 C 16 -6 8 -12 0 0 Z" fill="#047857" transform="rotate(180) translate(0,-8)"/>
-          <path d="M 0 0 C -8 -12 -16 -6 -10 3 C -5 10 0 13 0 13 C 0 13 5 10 10 3 C 16 -6 8 -12 0 0 Z" fill="#34D399" transform="rotate(270) translate(0,-8)"/>
-          <circle cx="0" cy="0" r="2.5" fill="#F59E0B"/>
-        </g>
-      </g>
-    `;
-
-    let plantMarkup = '';
-
-    if (stage === 1) {
-      plantMarkup = `
-        <path d="M 120 138 Q 119 122 116 102" fill="none" stroke="#22C55E" stroke-width="4.5" stroke-linecap="round"/>
-        <path d="M 117 106 Q 106 94 92 92" fill="none" stroke="#22C55E" stroke-width="3.2" stroke-linecap="round"/>
-        <path d="M 117 106 Q 128 92 142 90" fill="none" stroke="#4ADE80" stroke-width="3.2" stroke-linecap="round"/>
-        <g transform="translate(90, 91) rotate(-35) scale(0.68)">
-          <path d="M 0 0 C -16 -24 -32 -10 -20 6 C -10 18 0 22 0 22 C 0 22 10 18 20 6 C 32 -10 16 -24 0 0 Z"
-                fill="#22C55E" stroke="#16A34A" stroke-width="1.2"/>
-          <path d="M -12 -2 C -6 -10 0 -12 0 -12 C 0 -12 6 -10 12 -2" fill="none" stroke="#BBF7D0" stroke-width="2.5" opacity="0.6"/>
-          <circle cx="2" cy="-6" r="2.2" fill="#FFFFFF" opacity="0.9"/>
-          <circle cx="2.6" cy="-6.6" r="0.8" fill="#FFFFFF"/>
-        </g>
-        <g transform="translate(144, 89) rotate(42) scale(0.72)">
-          <path d="M 0 0 C -16 -24 -32 -10 -20 6 C -10 18 0 22 0 22 C 0 22 10 18 20 6 C 32 -10 16 -24 0 0 Z"
-                fill="#4ADE80" stroke="#16A34A" stroke-width="1.2"/>
-          <path d="M -12 -2 C -6 -10 0 -12 0 -12 C 0 -12 6 -10 12 -2" fill="none" stroke="#DCFCE7" stroke-width="2.5" opacity="0.7"/>
-          <circle cx="-3" cy="-5" r="1.8" fill="#FFFFFF" opacity="0.85"/>
-        </g>
-        <path d="M 117 104 Q 118 90 120 84" fill="none" stroke="#86EFAC" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="120" cy="83" r="3.2" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-      `;
-    } else if (stage === 2) {
-      plantMarkup = `
-        <path d="M 115 138 Q 102 126 95 116" fill="none" stroke="#22C55E" stroke-width="2.8" stroke-linecap="round"/>
-        <g transform="translate(93, 114) rotate(-40) scale(0.48)">
-          <path d="M 0 0 C -16 -24 -32 -10 -20 6 C -10 18 0 22 0 22 C 0 22 10 18 20 6 C 32 -10 16 -24 0 0 Z" fill="#34D399" stroke="#059669" stroke-width="1"/>
-        </g>
-        <path d="M 120 138 Q 124 105 118 72" fill="none" stroke="#15803D" stroke-width="4.2" stroke-linecap="round"/>
-        <g transform="translate(118, 70)">
-          <g transform="rotate(0) translate(0, -22) scale(0.85)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.3"/>
-            <path d="M -15 -4 C -7 -14 0 -16 0 -16 C 0 -16 7 -14 15 -4" fill="none" stroke="#D1FAE5" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
-            <circle cx="3" cy="-7" r="2.2" fill="#FFFFFF" opacity="0.9"/>
-          </g>
-          <g transform="rotate(-115) translate(0, -20) scale(0.82)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#047857" stroke-width="1.3"/>
-            <path d="M -15 -4 C -7 -14 0 -16 0 -16 C 0 -16 7 -14 15 -4" fill="none" stroke="#D1FAE5" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
-          </g>
-          <g transform="rotate(115) translate(0, -20) scale(0.84)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.3"/>
-            <path d="M -15 -4 C -7 -14 0 -16 0 -16 C 0 -16 7 -14 15 -4" fill="none" stroke="#D1FAE5" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
-            <circle cx="-3" cy="-6" r="2.0" fill="#FFFFFF" opacity="0.85"/>
-          </g>
-          <circle cx="0" cy="0" r="3.2" fill="#047857"/>
-        </g>
-      `;
-    } else if (stage === 3) {
-      plantMarkup = `
-        <path d="M 118 138 Q 98 112 82 82" fill="none" stroke="#15803D" stroke-width="3.8" stroke-linecap="round"/>
-        <g transform="translate(80, 80) scale(0.76)">
-          <g transform="rotate(0) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.2"/>
-            <path d="M -15 -4 C -7 -14 0 -16 0 -16 C 0 -16 7 -14 15 -4" fill="none" stroke="#A7F3D0" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-          </g>
-          <g transform="rotate(-115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#065F46" stroke-width="1.2"/>
-          </g>
-        </g>
-        <path d="M 122 138 Q 142 110 158 84" fill="none" stroke="#16A34A" stroke-width="3.6" stroke-linecap="round"/>
-        <g transform="translate(160, 82) scale(0.74)">
-          <g transform="rotate(5) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.2"/>
-            <path d="M -15 -4 C -7 -14 0 -16 0 -16 C 0 -16 7 -14 15 -4" fill="none" stroke="#D1FAE5" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
-          </g>
-          <g transform="rotate(-110) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(120) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#047857" stroke-width="1.2"/>
-          </g>
-        </g>
-        <path d="M 120 138 Q 121 95 119 55" fill="none" stroke="#15803D" stroke-width="4.5" stroke-linecap="round"/>
-        <g transform="translate(119, 52) scale(0.92)">
-          <g transform="rotate(0) translate(0, -24)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4" fill="none" stroke="#ECFDF5" stroke-width="3.2" stroke-linecap="round" opacity="0.8"/>
-            <circle cx="4" cy="-8" r="2.5" fill="#FFFFFF" opacity="0.95"/>
-            <circle cx="4.8" cy="-8.8" r="0.9" fill="#FFFFFF"/>
-          </g>
-          <g transform="rotate(-118) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4" fill="none" stroke="#ECFDF5" stroke-width="3.2" stroke-linecap="round" opacity="0.8"/>
-          </g>
-          <g transform="rotate(118) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4" fill="none" stroke="#ECFDF5" stroke-width="3.2" stroke-linecap="round" opacity="0.8"/>
-            <circle cx="-3" cy="-7" r="2.0" fill="#FFFFFF" opacity="0.85"/>
-          </g>
-          <circle cx="0" cy="0" r="3.5" fill="#047857"/>
-        </g>
-      `;
-    } else {
-      // Stage 4: 4-LEAF CLOVER BLOOM!
-      plantMarkup = `
-        <circle cx="120" cy="58" r="62" fill="url(#cloverSunHalo)" opacity="0.85"/>
-        <path d="M 116 138 Q 92 115 72 88" fill="none" stroke="#15803D" stroke-width="3.5" stroke-linecap="round"/>
-        <g transform="translate(70, 86) scale(0.62) rotate(-25)">
-          <g transform="rotate(0) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(-115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.2"/>
-          </g>
-        </g>
-        <path d="M 124 138 Q 146 112 168 90" fill="none" stroke="#16A34A" stroke-width="3.5" stroke-linecap="round"/>
-        <g transform="translate(170, 88) scale(0.62) rotate(25)">
-          <g transform="rotate(0) translate(0, -22)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(-115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.2"/>
-          </g>
-          <g transform="rotate(115) translate(0, -20)">
-            <path d="M 0 0 C -18 -28 -38 -12 -24 8 C -12 24 0 28 0 28 C 0 28 12 24 24 8 C 38 -12 18 -28 0 0 Z" fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.2"/>
-          </g>
-        </g>
-        <path d="M 120 138 Q 121 95 120 58" fill="none" stroke="#15803D" stroke-width="5.0" stroke-linecap="round"/>
-        <g transform="translate(120, 56) scale(0.98)">
-          <!-- Leaf 1: NORTH (Faith - Niềm tin) -->
-          <g transform="rotate(0) translate(0, -26)">
-            <path d="M 0 0 C -19 -29 -39 -13 -25 9 C -12 25 0 29 0 29 C 0 29 12 25 25 9 C 39 -13 19 -29 0 0 Z"
-                  fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4"
-                  fill="none" stroke="#ECFDF5" stroke-width="3.5" stroke-linecap="round" opacity="0.82"/>
-            <line x1="0" y1="25" x2="0" y2="-10" stroke="#ECFDF5" stroke-width="1.2" opacity="0.75"/>
-            <circle cx="5" cy="-8" r="2.8" fill="#FFFFFF" opacity="0.95"/>
-            <circle cx="5.8" cy="-8.8" r="1" fill="#FFFFFF"/>
-          </g>
-          <!-- Leaf 2: EAST (Hope - Hy vọng) -->
-          <g transform="rotate(90) translate(0, -26)">
-            <path d="M 0 0 C -19 -29 -39 -13 -25 9 C -12 25 0 29 0 29 C 0 29 12 25 25 9 C 39 -13 19 -29 0 0 Z"
-                  fill="url(#cloverGreenB)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4"
-                  fill="none" stroke="#ECFDF5" stroke-width="3.5" stroke-linecap="round" opacity="0.82"/>
-            <line x1="0" y1="25" x2="0" y2="-10" stroke="#ECFDF5" stroke-width="1.2" opacity="0.75"/>
-            <circle cx="-4" cy="-8" r="2.2" fill="#FFFFFF" opacity="0.9"/>
-          </g>
-          <!-- Leaf 3: SOUTH (Love - Tình yêu) -->
-          <g transform="rotate(180) translate(0, -26)">
-            <path d="M 0 0 C -19 -29 -39 -13 -25 9 C -12 25 0 29 0 29 C 0 29 12 25 25 9 C 39 -13 19 -29 0 0 Z"
-                  fill="url(#cloverGreenB)" stroke="#065F46" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4"
-                  fill="none" stroke="#ECFDF5" stroke-width="3.5" stroke-linecap="round" opacity="0.82"/>
-            <line x1="0" y1="25" x2="0" y2="-10" stroke="#ECFDF5" stroke-width="1.2" opacity="0.75"/>
-          </g>
-          <!-- Leaf 4: WEST (LUCK - May mắn! The 4th Leaf!) -->
-          <g transform="rotate(270) translate(0, -26)">
-            <path d="M 0 0 C -19 -29 -39 -13 -25 9 C -12 25 0 29 0 29 C 0 29 12 25 25 9 C 39 -13 19 -29 0 0 Z"
-                  fill="url(#cloverGreenA)" stroke="#047857" stroke-width="1.4"/>
-            <path d="M -16 -4 C -8 -15 0 -17 0 -17 C 0 -17 8 -15 16 -4"
-                  fill="none" stroke="#ECFDF5" stroke-width="3.5" stroke-linecap="round" opacity="0.82"/>
-            <line x1="0" y1="25" x2="0" y2="-10" stroke="#ECFDF5" stroke-width="1.2" opacity="0.75"/>
-            <circle cx="4" cy="-7" r="2.4" fill="#FFFFFF" opacity="0.9"/>
-            <circle cx="4.7" cy="-7.7" r="0.8" fill="#FFFFFF"/>
-          </g>
-          <circle cx="0" cy="0" r="4.5" fill="#F59E0B" stroke="#047857" stroke-width="1.2"/>
-          <circle cx="0" cy="0" r="2.5" fill="#FEF3C7"/>
-        </g>
-        <g transform="translate(186, 26)" class="clover-sun-butterfly-path">
-          <g class="clover-bfly-bob">
-            <g class="clover-bfly-wing-l">
-              <path d="M 0 0 C -8 -10 -12 -2 -3 4 C -9 10 -2 12 0 3 Z" fill="#FDE68A" stroke="#B45309" stroke-width="0.8"/>
-              <circle cx="-4" cy="2" r="1.5" fill="#F59E0B" opacity="0.85"/>
-            </g>
-            <g class="clover-bfly-wing-r">
-              <path d="M 0 0 C 8 -10 12 -2 3 4 C 9 10 2 12 0 3 Z" fill="#FDE68A" stroke="#B45309" stroke-width="0.8"/>
-              <circle cx="4" cy="2" r="1.5" fill="#F59E0B" opacity="0.85"/>
-            </g>
-            <ellipse cx="0" cy="2" rx="1.0" ry="3.5" fill="#78350F"/>
-          </g>
-        </g>
-        <g fill="#FFFFFF" opacity="0.95">
-          <path d="M 58 35 Q 58 41 52 41 Q 58 41 58 47 Q 58 41 64 41 Q 58 41 58 35 Z" filter="url(#cloverGlow)"/>
-          <path d="M 178 72 Q 178 77 173 77 Q 178 77 178 82 Q 178 77 183 77 Q 178 77 178 72 Z" filter="url(#cloverGlow)"/>
-          <path d="M 68 88 Q 68 92 64 92 Q 68 92 68 96 Q 68 92 72 92 Q 68 92 68 88 Z" filter="url(#cloverGlow)"/>
-        </g>
-      `;
-    }
-
-    return `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" class="clover-pot-svg" width="100%" height="100%">
-        ${potDefs}
-        ${plantMarkup}
-        ${potBody}
-      </svg>
-    `;
-  }
-
-  function renderHarvestCelebrationSvg() {
-    return `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="harvest-clover-svg" width="95" height="95">
-        <defs>
-          <radialGradient id="hCloverGradA" cx="50%" cy="40%" r="65%">
-            <stop offset="0%" stop-color="#34D399"/>
-            <stop offset="45%" stop-color="#10B981"/>
-            <stop offset="85%" stop-color="#059669"/>
-            <stop offset="100%" stop-color="#047857"/>
-          </radialGradient>
-          <radialGradient id="hCloverGradB" cx="45%" cy="35%" r="65%">
-            <stop offset="0%" stop-color="#10B981"/>
-            <stop offset="55%" stop-color="#059669"/>
-            <stop offset="88%" stop-color="#047857"/>
-            <stop offset="100%" stop-color="#064E3B"/>
-          </radialGradient>
-        </defs>
-        <g transform="translate(60, 60) scale(1.15)">
-          <g transform="rotate(0) translate(0, -18)">
-            <path d="M 0 0 C -14 -22 -28 -10 -18 7 C -9 18 0 21 0 21 C 0 21 9 18 18 7 C 28 -10 14 -22 0 0 Z" fill="url(#hCloverGradA)" stroke="#047857" stroke-width="1.1"/>
-            <path d="M -12 -3 C -6 -11 0 -13 0 -13 C 0 -13 6 -11 12 -3" fill="none" stroke="#ECFDF5" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
-            <circle cx="3" cy="-6" r="1.8" fill="#FFFFFF" opacity="0.95"/>
-          </g>
-          <g transform="rotate(90) translate(0, -18)">
-            <path d="M 0 0 C -14 -22 -28 -10 -18 7 C -9 18 0 21 0 21 C 0 21 9 18 18 7 C 28 -10 14 -22 0 0 Z" fill="url(#hCloverGradB)" stroke="#047857" stroke-width="1.1"/>
-            <path d="M -12 -3 C -6 -11 0 -13 0 -13 C 0 -13 6 -11 12 -3" fill="none" stroke="#ECFDF5" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
-          </g>
-          <g transform="rotate(180) translate(0, -18)">
-            <path d="M 0 0 C -14 -22 -28 -10 -18 7 C -9 18 0 21 0 21 C 0 21 9 18 18 7 C 28 -10 14 -22 0 0 Z" fill="url(#hCloverGradB)" stroke="#065F46" stroke-width="1.1"/>
-            <path d="M -12 -3 C -6 -11 0 -13 0 -13 C 0 -13 6 -11 12 -3" fill="none" stroke="#ECFDF5" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
-          </g>
-          <g transform="rotate(270) translate(0, -18)">
-            <path d="M 0 0 C -14 -22 -28 -10 -18 7 C -9 18 0 21 0 21 C 0 21 9 18 18 7 C 28 -10 14 -22 0 0 Z" fill="url(#hCloverGradA)" stroke="#047857" stroke-width="1.1"/>
-            <path d="M -12 -3 C -6 -11 0 -13 0 -13 C 0 -13 6 -11 12 -3" fill="none" stroke="#ECFDF5" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/>
-            <circle cx="3" cy="-5" r="1.6" fill="#FFFFFF" opacity="0.9"/>
-          </g>
-          <circle cx="0" cy="0" r="3.5" fill="#F59E0B" stroke="#047857" stroke-width="1"/>
-          <circle cx="0" cy="0" r="1.8" fill="#FEF3C7"/>
-        </g>
-        <g fill="#FFFFFF" opacity="0.9">
-          <path d="M 22 25 Q 22 30 18 30 Q 22 30 22 35 Q 22 30 26 30 Q 22 30 22 25 Z"/>
-          <path d="M 98 32 Q 98 36 94 36 Q 98 36 98 40 Q 98 36 102 36 Q 98 36 98 32 Z"/>
-          <path d="M 92 88 Q 92 92 88 92 Q 92 92 92 96 Q 92 92 96 92 Q 92 92 92 88 Z"/>
-          <path d="M 26 86 Q 26 90 22 90 Q 26 90 26 94 Q 26 90 30 90 Q 26 90 26 86 Z"/>
-        </g>
-      </svg>
-    `;
-  }
-
   function renderFlowerPotSvg(flowerId, progress) {
     const stage = getCloverStage(progress);
     const glints = STAGE_DEW_GLINTS[stage] || STAGE_DEW_GLINTS[1];
@@ -1934,14 +1600,37 @@
       </g>
     `).join('');
 
+    // Delicate sunlit fairy butterfly visiting the blooming Stage 4 clover
+    const stage4Accents = stage === 4 ? `
+      <g transform="translate(76, 17)" class="clover-sun-butterfly-path">
+        <g class="clover-bfly-bob">
+          <g class="clover-bfly-wing-l">
+            <path d="M 0 0 C -3.8 -4.4 -5.8 -0.2 -1.3 2.1 C -4.2 4.6 -1.1 5.8 0 1.6 Z"
+                  fill="#FEF3C7" stroke="#B45309" stroke-width="0.35"/>
+            <circle cx="-1.9" cy="0.8" r="0.65" fill="#FDE68A" opacity="0.9"/>
+          </g>
+          <g class="clover-bfly-wing-r">
+            <path d="M 0 0 C 3.8 -4.4 5.8 -0.2 1.3 2.1 C 4.2 4.6 1.1 5.8 0 1.6 Z"
+                  fill="#FEF3C7" stroke="#B45309" stroke-width="0.35"/>
+            <circle cx="1.9" cy="0.8" r="0.65" fill="#FDE68A" opacity="0.9"/>
+          </g>
+          <ellipse cx="0" cy="0.9" rx="0.45" ry="1.8" fill="#78350F"/>
+        </g>
+      </g>
+    ` : '';
+
     return `
       <div class="clover-living-stage clover-stage-${stage}" data-stage="${stage}">
         <div class="clover-ground-shadow" aria-hidden="true"></div>
         <div class="clover-aura-halo" aria-hidden="true"></div>
         <div class="clover-breeze-rig">
-          ${renderLuckyCloverSvg(stage)}
+          <img src="assets/garden/clover_stage_${stage}.png"
+               alt="Cỏ 4 Lá May Mắn VSTEP - Giai đoạn ${stage}"
+               class="clover-living-art"
+               draggable="false" />
           <svg viewBox="0 0 100 100" class="clover-dew-overlay" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             ${glintMarkup}
+            ${stage4Accents}
           </svg>
         </div>
       </div>
@@ -2042,7 +1731,5 @@
   root.resetQuizSeenHistory = resetQuizSeenHistory;
   root.getCloverStage = getCloverStage;
   root.renderFlowerPotSvg = renderFlowerPotSvg;
-  root.renderLuckyCloverSvg = renderLuckyCloverSvg;
-  root.renderHarvestCelebrationSvg = renderHarvestCelebrationSvg;
 
 })(typeof window !== 'undefined' ? window : global);
