@@ -168,6 +168,7 @@
   // ==========================================
   const FlowerGarden = {
     WATER_PER_WATERING: 10, // Giọt nước cần thiết cho mỗi lần tưới
+    SUN_PER_SUNBATHE: 10,   // Tia nắng cần thiết cho mỗi lần tắm nắng
     currentActiveAccountId: null,
 
     state: {
@@ -176,6 +177,7 @@
       moisture: 75,
       sunlight: 80,
       waterDrops: 35, // Giọt nước nỗ lực tích lũy
+      sunDrops: 35,   // Tia nắng nỗ lực tích lũy
       loginStreak: 1,
       lastLoginDate: '',
       lastWateredDate: '', // Theo dõi ngày tưới nước gần nhất để héo cây nếu bỏ bê
@@ -200,6 +202,7 @@
         moisture: 75,
         sunlight: 80,
         waterDrops: 35, // 35 giọt nước nỗ lực khởi đầu cho mỗi tài khoản
+        sunDrops: 35,   // 35 tia nắng nỗ lực khởi đầu cho mỗi tài khoản
         loginStreak: 1,
         lastLoginDate: today,
         lastWateredDate: today,
@@ -378,6 +381,9 @@
       if (typeof this.state.waterDrops !== 'number' || isNaN(this.state.waterDrops)) {
         this.state.waterDrops = 35;
       }
+      if (typeof this.state.sunDrops !== 'number' || isNaN(this.state.sunDrops)) {
+        this.state.sunDrops = typeof this.state.waterDrops === 'number' ? this.state.waterDrops : 35;
+      }
       if (!Array.isArray(this.state.harvestedQuotes)) {
         this.state.harvestedQuotes = [];
       }
@@ -515,6 +521,7 @@
         // Daily login water bonus: base 15 + streak bonus up to 25
         const bonus = 15 + Math.min(10, (this.state.loginStreak - 1) * 2);
         this.state.waterDrops += bonus;
+        this.state.sunDrops = (this.state.sunDrops || 0) + bonus;
         this.saveState();
 
         setTimeout(() => {
@@ -525,9 +532,10 @@
 
     showDailyLoginToast(bonus, streak) {
       GardenAudio.playReward();
-      this.spawnParticles('💧', 6);
+      this.spawnParticles('💧', 5);
+      this.spawnParticles('☀️', 5);
       this.spawnParticles('✨', 6);
-      const msg = `☀️ Điểm danh đăng nhập ngày mới: +${bonus}💧 Nước Nỗ Lực! (Chuỗi ${streak} ngày chuyên cần) 🍀`;
+      const msg = `☀️ Điểm danh đăng nhập ngày mới: +${bonus}💧 Nước & +${bonus}☀️ Nắng Nỗ Lực! (Chuỗi ${streak} ngày chuyên cần) 🍀`;
       this.updateSpeechBubble(msg);
       if (typeof showToast === 'function') {
         showToast(msg);
@@ -552,7 +560,7 @@
       const btnOpenBasket = document.getElementById('btn-open-flower-basket');
       if (btnOpenBasket) btnOpenBasket.addEventListener('click', () => this.openBasketModal());
 
-      // Header water pill click to open earning guide
+      // Header water & sun pill click to open earning guide
       const btnOpenEarnWater = document.getElementById('btn-open-earn-water');
       if (btnOpenEarnWater) btnOpenEarnWater.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -560,6 +568,14 @@
       });
       const waterPill = document.getElementById('garden-water-pill');
       if (waterPill) waterPill.addEventListener('click', () => this.openEarnWaterModal());
+
+      const btnOpenEarnSun = document.getElementById('btn-open-earn-sun');
+      if (btnOpenEarnSun) btnOpenEarnSun.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openEarnWaterModal();
+      });
+      const sunPill = document.getElementById('garden-sun-pill');
+      if (sunPill) sunPill.addEventListener('click', () => this.openEarnWaterModal());
 
       // Stage click for petting plant
       const stage = document.getElementById('garden-stage');
@@ -734,19 +750,21 @@
     },
 
     // ==========================================
-    // REWARD & WATER DROP EARNING API
+    // REWARD & ENERGY EARNING / EXCHANGE API (WATER 💧 & SUN ☀️)
     // ==========================================
     addWaterDrops(amount, reason, notify = true) {
       const added = Math.max(1, parseInt(amount, 10) || 5);
       this.state.waterDrops = (this.state.waterDrops || 0) + added;
+      this.state.sunDrops = (this.state.sunDrops || 0) + added;
       this.saveState();
 
       GardenAudio.playReward();
       this.triggerWaterDropPillGlint();
-      this.spawnWaterDropsFloat(`+${added}💧`);
+      this.triggerSunDropPillGlint();
+      this.spawnWaterDropsFloat(`+${added}💧 +${added}☀️`);
 
       if (notify) {
-        const msg = `🎉 +${added}💧 Nước Nỗ Lực! (${reason || 'Học tập chăm chỉ'}) 🍀`;
+        const msg = `🎉 +${added}💧 Nước & +${added}☀️ Nắng Nỗ Lực! (${reason || 'Học tập chăm chỉ'}) 🍀`;
         this.updateSpeechBubble(msg);
         if (typeof showToast === 'function') {
           showToast(msg);
@@ -755,8 +773,87 @@
       this.render();
     },
 
+    addSunDrops(amount, reason, notify = true) {
+      const added = Math.max(1, parseInt(amount, 10) || 5);
+      this.state.sunDrops = (this.state.sunDrops || 0) + added;
+      this.saveState();
+
+      GardenAudio.playReward();
+      this.triggerSunDropPillGlint();
+      this.spawnSunDropsFloat(`+${added}☀️`);
+
+      if (notify) {
+        const msg = `☀️ +${added}☀️ Tia Nắng Nỗ Lực! (${reason || 'Học tập chăm chỉ'}) 🍀`;
+        this.updateSpeechBubble(msg);
+        if (typeof showToast === 'function') {
+          showToast(msg);
+        }
+      }
+      this.render();
+    },
+
+    exchangeWaterToSun(amount = 10) {
+      const cost = Math.max(1, parseInt(amount, 10) || 10);
+      if ((this.state.waterDrops || 0) < cost) {
+        if (typeof showToast === 'function') {
+          showToast(`💧 Bạn cần tối thiểu ${cost} giọt nước để quy đổi thành tia nắng!`);
+        }
+        return false;
+      }
+      this.state.waterDrops -= cost;
+      this.state.sunDrops = (this.state.sunDrops || 0) + cost;
+      this.saveState();
+
+      GardenAudio.playReward();
+      this.triggerSunDropPillGlint();
+      this.spawnSunDropsFloat(`-10💧 ➔ +10☀️`);
+      if (typeof showToast === 'function') {
+        showToast(`✨ Đã đổi thành công 10💧 Nước ➔ 10☀️ Nắng Nỗ Lực!`);
+      }
+      this.updateSpeechBubble(`Đã chuyển đổi 10💧 Nước thành 10☀️ Nắng ấm áp cho cây! ☀️✨`);
+      this.render();
+      const modal = document.getElementById('garden-earn-water-modal');
+      if (modal) this.updateEarnModalBalances(modal);
+      return true;
+    },
+
+    exchangeSunToWater(amount = 10) {
+      const cost = Math.max(1, parseInt(amount, 10) || 10);
+      if ((this.state.sunDrops || 0) < cost) {
+        if (typeof showToast === 'function') {
+          showToast(`☀️ Bạn cần tối thiểu ${cost} tia nắng để quy đổi thành giọt nước!`);
+        }
+        return false;
+      }
+      this.state.sunDrops -= cost;
+      this.state.waterDrops = (this.state.waterDrops || 0) + cost;
+      this.saveState();
+
+      GardenAudio.playReward();
+      this.triggerWaterDropPillGlint();
+      this.spawnWaterDropsFloat(`-10☀️ ➔ +10💧`);
+      if (typeof showToast === 'function') {
+        showToast(`✨ Đã đổi thành công 10☀️ Nắng ➔ 10💧 Nước Nỗ Lực!`);
+      }
+      this.updateSpeechBubble(`Đã chuyển đổi 10☀️ Nắng thành 10💧 Nước mát lành cho cây! 💧🌿`);
+      this.render();
+      const modal = document.getElementById('garden-earn-water-modal');
+      if (modal) this.updateEarnModalBalances(modal);
+      return true;
+    },
+
     triggerWaterDropPillGlint() {
       const pill = document.getElementById('garden-water-pill');
+      if (pill) {
+        pill.classList.remove('pill-reward-glow');
+        void pill.offsetWidth;
+        pill.classList.add('pill-reward-glow');
+        setTimeout(() => pill.classList.remove('pill-reward-glow'), 1200);
+      }
+    },
+
+    triggerSunDropPillGlint() {
+      const pill = document.getElementById('garden-sun-pill');
       if (pill) {
         pill.classList.remove('pill-reward-glow');
         void pill.offsetWidth;
@@ -772,7 +869,23 @@
       const badge = document.createElement('div');
       badge.className = 'garden-float-water-reward';
       badge.textContent = text;
-      badge.style.left = `${35 + Math.random() * 30}%`;
+      badge.style.left = `${30 + Math.random() * 25}%`;
+      badge.style.bottom = `${45 + Math.random() * 20}%`;
+      stage.appendChild(badge);
+
+      setTimeout(() => {
+        if (typeof badge.remove === 'function') badge.remove();
+      }, 1600);
+    },
+
+    spawnSunDropsFloat(text) {
+      const stage = document.getElementById('garden-stage');
+      if (!stage) return;
+
+      const badge = document.createElement('div');
+      badge.className = 'garden-float-sun-reward';
+      badge.textContent = text;
+      badge.style.left = `${45 + Math.random() * 25}%`;
       badge.style.bottom = `${45 + Math.random() * 20}%`;
       stage.appendChild(badge);
 
@@ -831,14 +944,14 @@
 
     showNeedMoreWaterNotice() {
       GardenAudio.playSun();
-      this.updateSpeechBubble(`Chưa đủ nước tưới rồi! Em cần 10💧 (hiện có ${this.state.waterDrops}💧). Hãy làm câu đố ôn thi hoặc điểm danh để nhận thêm nước nhé! 💧✨`);
+      this.updateSpeechBubble(`Chưa đủ nước tưới rồi! Em cần 10💧 (hiện có ${this.state.waterDrops}💧). Hãy làm câu đố ôn thi, đổi từ tia nắng hoặc điểm danh nhé! 💧✨`);
       if (typeof showToast === 'function') {
-        showToast(`💧 Cần 10 giọt nước để tưới cây (bạn đang có ${this.state.waterDrops}💧). Bấm "Đố vui ôn thi" để kiếm thêm nước nhé!`);
+        showToast(`💧 Cần 10 giọt nước để tưới cây (bạn đang có ${this.state.waterDrops}💧). Bấm "Đố vui ôn thi" hoặc đổi từ nắng nhé!`);
       }
       this.openEarnWaterModal();
     },
 
-    // 2. Sunlight Action (+20%)
+    // 2. Sunlight Action: Costs SUN_PER_SUNBATHE (10☀️) -> +20% progress
     sunbathe() {
       if (this.isPlantWilted()) {
         GardenAudio.playSun();
@@ -856,16 +969,34 @@
         return;
       }
 
-      GardenAudio.playSun();
-      this.state.sunlight = Math.min(100, this.state.sunlight + 30);
+      const cost = this.SUN_PER_SUNBATHE;
+      if ((this.state.sunDrops || 0) < cost) {
+        this.showNeedMoreSunNotice();
+        return;
+      }
+
+      // Deduct sunDrops
+      this.state.sunDrops -= cost;
+      this.state.sunlight = Math.min(100, (this.state.sunlight || 75) + 30);
       this.addProgress(20);
 
+      GardenAudio.playSun();
       this.triggerPlantBounce();
       this.triggerSunAnimation();
       this.spawnParticles('✨', 6);
-      this.updateSpeechBubble('Ánh nắng ấm áp rọi xuống, lá cỏ 4 lá thêm xanh mướt! ☀️✨');
+      this.spawnParticles('☀️', 4);
+      this.updateSpeechBubble(`Ánh nắng ấm áp rọi xuống, bé cỏ hấp thụ 10☀️ tia nắng nỗ lực thêm xanh mướt! ☀️✨ (Còn ${this.state.sunDrops}☀️)`);
       this.saveState();
       this.render();
+    },
+
+    showNeedMoreSunNotice() {
+      GardenAudio.playSun();
+      this.updateSpeechBubble(`Chưa đủ tia nắng rồi! Em cần 10☀️ (hiện có ${this.state.sunDrops || 0}☀️). Hãy làm câu đố ôn thi, đổi từ giọt nước hoặc điểm danh nhé! ☀️✨`);
+      if (typeof showToast === 'function') {
+        showToast(`☀️ Cần 10 tia nắng nỗ lực để tắm nắng (bạn đang có ${this.state.sunDrops || 0}☀️). Bấm "Đố vui ôn thi" hoặc đổi từ nước nhé!`);
+      }
+      this.openEarnWaterModal();
     },
 
     // 3. Fertilize Action (+30%)
@@ -897,7 +1028,7 @@
       this.render();
     },
 
-    // 4. Pet Plant (+5%)
+    // 4. Pet Plant (Touch & Love interaction - no fake cheat growth)
     petPlant() {
       GardenAudio.playSun();
       this.triggerPlantBounce();
@@ -914,7 +1045,6 @@
       this.spawnParticles('💚', 3);
       this.spawnParticles('✨', 3);
       if (this.state.progress < 100) {
-        this.addProgress(5);
         this.updateSpeechBubble('Bạn nhẹ nhàng vuốt ve mầm cây, bé cỏ rung rinh thích thú! 🥰🌿');
       } else {
         this.updateSpeechBubble(`Cỏ 4 lá may mắn đã nở trọn vẹn rồi! Mau bấm "Thu hoạch" để đón thông điệp may mắn nhé ${this.getStudentName()}! 🍀✨`);
@@ -1145,7 +1275,7 @@
           <div class="modal-header">
             <div>
               <h3>🎯 ĐỐ VUI ÔN THI VSTEP THỰC CHIẾN</h3>
-              <p class="modal-subtext mb-0">Học Bảng Lợi Ích, Từ Vựng Speaking và Nhận Dạng Dạng Thư & Luận chuẩn VSTEP B1-B2-C1 (+10💧 Nước Nỗ Lực)!</p>
+              <p class="modal-subtext mb-0">Học Bảng Lợi Ích, Từ Vựng Speaking và Nhận Dạng Dạng Thư & Luận chuẩn VSTEP B1-B2-C1 (+10💧 Nước & +10☀️ Nắng Nỗ Lực)!</p>
             </div>
             <button class="modal-close-btn" id="btn-close-quiz-modal">&times;</button>
           </div>
@@ -1694,7 +1824,7 @@
       const nextBtnHtml = `
         <div class="feedback-action-row" style="margin-top: 14px; display: flex; justify-content: flex-end;">
           <button class="btn btn-primary btn-small pulse-glow" id="btn-feedback-next-q" style="padding: 9px 18px; font-weight: 800; border-radius: 12px; font-size: 13px;">
-            <i class="fa-solid fa-arrow-right"></i> Câu tiếp theo (+10💧)
+            <i class="fa-solid fa-arrow-right"></i> Câu tiếp theo (+10💧 & +10☀️)
           </button>
         </div>
       `;
@@ -1702,18 +1832,21 @@
       if (isCorrect) {
         this.addWaterDrops(10, 'Ôn thi VSTEP xuất sắc', false);
         this.spawnParticles('✨', 6);
-        this.spawnParticles('💧', 6);
+        this.spawnParticles('💧', 5);
+        this.spawnParticles('☀️', 5);
         feedback.className = 'quiz-feedback-box feedback-correct';
         feedback.innerHTML = `
-          <div class="feedback-title">🎉 CHÍNH XÁC! (+10💧 Nước Nỗ Lực)</div>
+          <div class="feedback-title">🎉 CHÍNH XÁC! (+10💧 Nước & +10☀️ Nắng Nỗ Lực)</div>
           <p class="feedback-explain">${q.explain}</p>
           ${nextBtnHtml}
         `;
       } else {
         this.addWaterDrops(2, 'Tinh thần học tập tích cực', false);
+        this.spawnParticles('💧', 2);
+        this.spawnParticles('☀️', 2);
         feedback.className = 'quiz-feedback-box feedback-wrong';
         feedback.innerHTML = `
-          <div class="feedback-title">💡 GẦN ĐÚNG RỒI! (+2💧 Khích lệ nỗ lực)</div>
+          <div class="feedback-title">💡 GẦN ĐÚNG RỒI! (+2💧 & +2☀️ Khích lệ nỗ lực)</div>
           <p class="feedback-explain">${q.explain}</p>
           ${nextBtnHtml}
         `;
@@ -1728,7 +1861,7 @@
     },
 
         // ==========================================
-    // 7. EARN WATER GUIDE MODAL
+    // 7. EARN WATER & SUN GUIDE MODAL
     // ==========================================
     openEarnWaterModal() {
       let modal = document.getElementById('garden-earn-water-modal');
@@ -1736,9 +1869,17 @@
         modal = this.createEarnWaterModalDom();
         document.body.appendChild(modal);
       }
-      const countEl = modal.querySelector('#earn-modal-water-count');
-      if (countEl) countEl.textContent = this.state.waterDrops;
+      this.updateEarnModalBalances(modal);
       modal.classList.add('active');
+    },
+
+    updateEarnModalBalances(modal) {
+      if (!modal) modal = document.getElementById('garden-earn-water-modal');
+      if (!modal) return;
+      const waterEl = modal.querySelector('#earn-modal-water-count');
+      const sunEl = modal.querySelector('#earn-modal-sun-count');
+      if (waterEl) waterEl.textContent = this.state.waterDrops || 0;
+      if (sunEl) sunEl.textContent = this.state.sunDrops || 0;
     },
 
     createEarnWaterModalDom() {
@@ -1750,7 +1891,7 @@
               <div class="earn-icon-wrap" style="background:#FFFBEB; color:#D97706;">🎲</div>
               <div class="earn-info">
                 <h4>GỌI TÊN TRẢ BÀI & VÒNG QUAY LỚP HỌC</h4>
-                <p>Học viên được gọi tên và trả lời tốt / xuất sắc tích lũy <b>+5💧 ~ +10💧</b> Nước Nỗ Lực.</p>
+                <p>Học viên được gọi tên và trả lời tốt / xuất sắc tích lũy <b>+5💧 & +5☀️ ~ +10💧 & +10☀️</b>.</p>
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Đến quay</span>
             </div>
@@ -1760,7 +1901,7 @@
               <div class="earn-icon-wrap" style="background:#FDF2F8; color:#DB2777;">📝</div>
               <div class="earn-info">
                 <h4>ĐIỂM DANH & LƯU NHẬT KÝ LỚP HỌC</h4>
-                <p>Cô giáo ghi nhận sĩ số điểm danh và lưu bài học nhận ngay <b>+10💧</b> Nước Nỗ Lực.</p>
+                <p>Cô giáo ghi nhận sĩ số điểm danh và lưu bài học nhận ngay <b>+10💧 & +10☀️</b> Nỗ Lực.</p>
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Vào lớp</span>
             </div>
@@ -1770,7 +1911,7 @@
               <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎧</div>
               <div class="earn-info">
                 <h4>LUYỆN TẬP BÀI THI NGHE VSTEP</h4>
-                <p>Hoàn thành và nộp bài luyện nghe VSTEP nhận ngay <b>+10💧 ~ +20💧</b> Nước Nỗ Lực.</p>
+                <p>Hoàn thành và nộp bài luyện nghe VSTEP nhận ngay <b>+10💧 & +10☀️ ~ +20💧 & +20☀️</b>.</p>
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-headphones"></i> Luyện ngay</span>
             </div>
@@ -1780,7 +1921,7 @@
               <div class="earn-icon-wrap" style="background:#FEF3C7; color:#D97706;">⭐</div>
               <div class="earn-info">
                 <h4>LÀM BÀI ĐẠT ĐIỂM SỐ TỐT</h4>
-                <p>Mỗi câu trả lời chính xác được tích lũy <b>+2💧 Nước Nỗ Lực</b> giúp cỏ 4 lá mau lớn!</p>
+                <p>Mỗi câu trả lời chính xác được tích lũy <b>+2💧 & +2☀️ Nỗ Lực</b> giúp cỏ 4 lá mau lớn!</p>
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-star"></i> Xem bài test</span>
             </div>
@@ -1792,14 +1933,46 @@
       modal.innerHTML = `
         <div class="modal-card garden-earn-card">
           <div class="modal-header">
-            <h3>💧 TÍCH LUỸ NƯỚC TƯỚI</h3>
+            <h3>⚡ TÍCH LUỸ & QUY ĐỔI NƯỚC - NẮNG</h3>
             <button class="modal-close-btn" id="btn-close-earn-modal">&times;</button>
           </div>
           
           <div class="earn-water-balance-box">
-            <span class="balance-label">Số giọt nước hiện có của bạn:</span>
-            <div class="balance-value"><span class="pulse-drop">💧</span> <b id="earn-modal-water-count">30</b> Giọt Nước Nỗ Lực</div>
-            <p class="balance-sub">"Mỗi giọt nước tưới cây là một nỗ lực học tập thực sự. Cỏ 4 lá lớn lên nhờ sự chăm chỉ mỗi ngày!"</p>
+            <span class="balance-label">Năng lượng nỗ lực học tập của bạn:</span>
+            <div class="balance-resources-dual-row">
+              <div class="balance-resource-badge water">
+                <span class="res-icon">💧</span>
+                <div class="res-details">
+                  <b id="earn-modal-water-count">${this.state.waterDrops || 0}</b>
+                  <span>Giọt Nước Nỗ Lực</span>
+                </div>
+              </div>
+              <div class="balance-resource-badge sun">
+                <span class="res-icon">☀️</span>
+                <div class="res-details">
+                  <b id="earn-modal-sun-count">${this.state.sunDrops || 0}</b>
+                  <span>Tia Nắng Nỗ Lực</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 1-Click Fast Exchange Section -->
+            <div class="balance-exchange-box">
+              <div class="exchange-title">
+                <i class="fa-solid fa-arrows-rotate"></i> <b>Quy đổi linh hoạt 1:1</b>
+                <span class="exchange-hint">(Chuyển đổi theo nhu cầu chăm cây)</span>
+              </div>
+              <div class="balance-exchange-row">
+                <button class="btn-exchange-resource" id="btn-exchange-w2s" type="button" title="Đổi 10 giọt nước lấy 10 tia nắng">
+                  <span class="ex-from">10💧</span> <i class="fa-solid fa-arrow-right-arrow-left"></i> <span class="ex-to">10☀️</span>
+                </button>
+                <button class="btn-exchange-resource" id="btn-exchange-s2w" type="button" title="Đổi 10 tia nắng lấy 10 giọt nước">
+                  <span class="ex-from">10☀️</span> <i class="fa-solid fa-arrow-right-arrow-left"></i> <span class="ex-to">10💧</span>
+                </button>
+              </div>
+            </div>
+
+            <p class="balance-sub">"Mỗi giọt nước & tia nắng là một nỗ lực học tập thực sự. Cỏ 4 lá lớn lên nhờ sự chăm chỉ mỗi ngày!"</p>
           </div>
 
           <div class="earn-methods-list">
@@ -1808,17 +1981,17 @@
               <div class="earn-icon-wrap" style="background:#ECFDF5; color:#059669;">☀️</div>
               <div class="earn-info">
                 <h4>ĐIỂM DANH ĐĂNG NHẬP HÀNG NGÀY</h4>
-                <p>Mở website mỗi ngày nhận <b>+15💧 ~ +25💧</b> (duy trì chuỗi ngày chuyên cần để nhận thêm thưởng streak!)</p>
+                <p>Mở website mỗi ngày nhận <b>+15💧 & +15☀️</b> (duy trì chuỗi ngày chuyên cần để nhận thêm thưởng streak!)</p>
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-calendar-check"></i> Điểm danh</span>
             </div>
 
             <!-- 2. VSTEP Quiz -->
-            <div class="earn-method-item" id="earn-action-quiz" role="button" tabindex="0" title="Bấm để mở bộ đề ôn thi VSTEP nhận +10💧 Nước Nỗ Lực">
+            <div class="earn-method-item" id="earn-action-quiz" role="button" tabindex="0" title="Bấm để mở bộ đề ôn thi VSTEP nhận +10💧 & +10☀️">
               <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎯</div>
               <div class="earn-info">
                 <h4>ĐỐ VUI ÔN THI VSTEP (4 KỸ NĂNG)</h4>
-                <p>Luyện tập các câu hỏi chuẩn VSTEP B1-B2-C1 nhận ngay <b>+10💧</b> cho mỗi câu trả lời đúng.</p>
+                <p>Luyện tập các câu hỏi chuẩn VSTEP B1-B2-C1 nhận ngay <b>+10💧 & +10☀️</b> cho mỗi câu trả lời đúng.</p>
               </div>
               <span class="earn-action-badge action-primary"><i class="fa-solid fa-play"></i> Luyện ngay</span>
             </div>
@@ -1828,7 +2001,7 @@
 
           <div class="earn-modal-actions">
             <button class="btn btn-primary w-100" id="btn-earn-start-quiz">
-              <i class="fa-solid fa-play"></i> Luyện Đề VSTEP Ngay (+10💧)
+              <i class="fa-solid fa-play"></i> Luyện Đề VSTEP Ngay (+10💧 & +10☀️)
             </button>
           </div>
         </div>
@@ -1839,6 +2012,22 @@
         modal.classList.remove('active');
         this.openQuizModal();
       });
+
+      // Exchange Buttons Listeners
+      const btnW2S = modal.querySelector('#btn-exchange-w2s');
+      if (btnW2S) {
+        btnW2S.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.exchangeWaterToSun(10);
+        });
+      }
+      const btnS2W = modal.querySelector('#btn-exchange-s2w');
+      if (btnS2W) {
+        btnS2W.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.exchangeSunToWater(10);
+        });
+      }
 
       // Item 1: Click to Claim / Check Daily Login
       modal.querySelector('#earn-action-login').addEventListener('click', () => {
@@ -1941,7 +2130,7 @@
         GardenAudio.playSun();
         this.spawnParticles('☀️', 6);
         const bonus = 15 + Math.min(10, (streak - 1) * 2);
-        const msg = `☀️ Bạn đã điểm danh hôm nay rồi (+${bonus}💧, chuỗi ${streak} ngày chuyên cần)! Hãy quay lại vào ngày mai nhé 🍀`;
+        const msg = `☀️ Bạn đã điểm danh hôm nay rồi (+${bonus}💧 & +${bonus}☀️, chuỗi ${streak} ngày chuyên cần)! Hãy quay lại vào ngày mai nhé 🍀`;
         if (typeof showToast === 'function') showToast(msg);
         this.updateSpeechBubble(msg);
       } else {
@@ -1949,14 +2138,15 @@
         const bonus = 15 + Math.min(10, (streak - 1) * 2);
         this.state.lastLoginDate = today;
         this.state.dailyLoginClaimed = true;
-        this.addWaterDrops(bonus, 'Điểm danh đăng nhập ngày mới');
+        this.addWaterDrops(bonus, 'Điểm danh đăng nhập ngày mới', false);
+        this.addSunDrops(bonus, 'Điểm danh đăng nhập ngày mới', false);
         this.spawnParticles('🎉', 8);
-        this.spawnParticles('💧', 8);
-        const msg = `🎉 Điểm danh thành công! +${bonus}💧 Nước Nỗ Lực (Chuỗi ${streak} ngày chuyên cần) 🍀`;
+        this.spawnParticles('💧', 6);
+        this.spawnParticles('☀️', 6);
+        const msg = `🎉 Điểm danh thành công! +${bonus}💧 Nước & +${bonus}☀️ Nắng Nỗ Lực (Chuỗi ${streak} ngày chuyên cần) 🍀`;
         if (typeof showToast === 'function') showToast(msg);
-        this.updateSpeechBubble(`Điểm danh đăng nhập thành công: +${bonus}💧 Nước Nỗ Lực! Chúc ${this.getStudentName()} một ngày học tập tuyệt vời và tràn đầy năng lượng! 🌟`);
-        const countEl = modal ? modal.querySelector('#earn-modal-water-count') : null;
-        if (countEl) countEl.textContent = this.state.waterDrops;
+        this.updateSpeechBubble(`Điểm danh đăng nhập thành công: +${bonus}💧 & +${bonus}☀️ Nỗ Lực! Chúc ${this.getStudentName()} một ngày học tập tuyệt vời và tràn đầy năng lượng! 🌟`);
+        this.updateEarnModalBalances(modal);
       }
     },
 
@@ -2111,7 +2301,7 @@
           </div>
         </div>
 
-        <!-- B. Symmetrical 3-Column Stats Grid -->
+        <!-- B. Symmetrical 4-Column Stats Grid -->
         <div class="basket-stats-row">
           <div class="basket-mini-stat stat-clover">
             <div class="mini-stat-icon">🍀</div>
@@ -2123,15 +2313,22 @@
           <div class="basket-mini-stat stat-water">
             <div class="mini-stat-icon">💧</div>
             <div class="mini-stat-info">
-              <span class="mini-stat-num">${this.state.waterDrops} giọt</span>
+              <span class="mini-stat-num">${this.state.waterDrops || 0} giọt</span>
               <span class="mini-stat-label">Nước Nỗ Lực</span>
+            </div>
+          </div>
+          <div class="basket-mini-stat stat-sun">
+            <div class="mini-stat-icon">☀️</div>
+            <div class="mini-stat-info">
+              <span class="mini-stat-num">${this.state.sunDrops || 35} tia</span>
+              <span class="mini-stat-label">Nắng Nỗ Lực</span>
             </div>
           </div>
           <div class="basket-mini-stat stat-streak">
             <div class="mini-stat-icon">🔥</div>
             <div class="mini-stat-info">
               <span class="mini-stat-num">${this.state.loginStreak || 1} ngày</span>
-              <span class="mini-stat-label">Ngày Chuyên Cần</span>
+              <span class="mini-stat-label">Chuyên Cần</span>
             </div>
           </div>
         </div>
@@ -2274,11 +2471,44 @@
       if (fillBar) fillBar.style.width = `${p}%`;
       if (textVal) textVal.textContent = `${p}%`;
       if (moistureVal) moistureVal.textContent = `${Math.round(this.state.moisture)}%`;
-      if (sunlightVal) sunlightVal.textContent = `${Math.round(this.state.sunlight)}%`;
+      if (sunlightVal) {
+        sunlightVal.textContent = `${this.state.sunDrops || 35}☀️`;
+        const statSunlightParent = document.getElementById('stat-sunlight');
+        if (statSunlightParent) statSunlightParent.title = `Tia Nắng Nỗ Lực đang có: ${this.state.sunDrops || 35}☀️`;
+      }
       if (harvestVal) harvestVal.textContent = `${this.state.harvestCount} cành`;
       if (harvestBadge) harvestBadge.textContent = this.state.harvestCount;
       if (waterCountPill) waterCountPill.textContent = this.state.waterDrops;
       if (waterStatVal) waterStatVal.textContent = `${this.state.waterDrops}💧`;
+
+      // Header Sun Pill Auto-Injection & Update
+      let sunPill = document.getElementById('garden-sun-pill');
+      if (!sunPill) {
+        const waterPill = document.getElementById('garden-water-pill');
+        if (waterPill && waterPill.parentNode) {
+          sunPill = document.createElement('div');
+          sunPill.className = 'garden-sun-pill';
+          sunPill.id = 'garden-sun-pill';
+          sunPill.title = 'Tia Nắng Nỗ Lực (Tích lũy từ điểm danh, ôn thi & quy đổi)';
+          sunPill.innerHTML = `
+            <span class="sun-pill-icon">☀️</span>
+            <span class="sun-pill-count" id="garden-sun-count">${this.state.sunDrops || 35}</span>
+            <button class="sun-pill-add-btn" id="btn-open-earn-sun" title="Kiếm thêm tia nắng hoặc quy đổi">+</button>
+          `;
+          waterPill.insertAdjacentElement('afterend', sunPill);
+          sunPill.addEventListener('click', () => this.openEarnWaterModal());
+          const addBtn = sunPill.querySelector('#btn-open-earn-sun');
+          if (addBtn) {
+            addBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.openEarnWaterModal();
+            });
+          }
+        }
+      } else {
+        const count = sunPill.querySelector('#garden-sun-count');
+        if (count) count.textContent = this.state.sunDrops || 0;
+      }
 
       // 3. Stage Badge Text & Styling
       if (stageBadge) {
@@ -2321,6 +2551,20 @@
           btnWater.classList.remove('btn-revive-pulse');
           btnWater.title = 'Tưới nước cho hoa (-10💧, +25% lớn)';
         }
+      }
+
+      // Dynamic Sun Button (Shows 10☀️ cost)
+      const btnSun = document.getElementById('btn-sun-flower');
+      if (btnSun) {
+        btnSun.innerHTML = '<span class="action-icon">☀️</span> Tắm nắng <span class="action-cost-tag">10☀️</span>';
+        btnSun.title = 'Cho cỏ 4 lá tắm nắng (-10☀️ tia nắng, +20% lớn)';
+      }
+
+      // Dynamic Quiz Button (Shows +10💧 & +10☀️ reward)
+      const btnQuiz = document.getElementById('btn-quiz-flower');
+      if (btnQuiz) {
+        btnQuiz.innerHTML = '<span class="action-icon">🎯</span> Đố Vui Ôn Thi VSTEP <span class="action-gain-tag">+10💧 & +10☀️</span>';
+        btnQuiz.title = 'Làm câu hỏi ôn thi VSTEP nhận ngay +10💧 Nước & +10☀️ Nắng Nỗ Lực';
       }
 
       // 4. Action buttons: show/hide harvest vs care (prevents button collision)
