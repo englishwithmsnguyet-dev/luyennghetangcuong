@@ -670,11 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (studentClassInput) studentClassInput.value = isTeacherSaved ? 'GV' : savedClass;
         if (studentPasswordInput) {
             studentPasswordInput.value = '';
-            if (isTeacherSaved) {
-                studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
-            } else {
-                studentPasswordInput.placeholder = 'Nhập mật khẩu...';
-            }
+            studentPasswordInput.placeholder = 'Nhập mật khẩu...';
         }
         if (loginError) {
             loginError.style.display = 'none';
@@ -700,25 +696,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (val === 'PTMN') {
                 if (studentClassInput && (!studentClassInput.value || studentClassInput.value.trim() === '')) {
                     studentClassInput.value = 'GV';
-                }
-                if (studentPasswordInput) {
-                    studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
-                }
-            } else {
-                if (studentPasswordInput && studentPasswordInput.placeholder.includes('không cần')) {
-                    studentPasswordInput.placeholder = 'Nhập mật khẩu...';
-                }
-            }
-        });
-    }
-
-    if (studentClassInput) {
-        studentClassInput.addEventListener('input', () => {
-            const cVal = studentClassInput.value.trim().toUpperCase();
-            const nVal = studentNameInput ? studentNameInput.value.trim().toUpperCase() : '';
-            if (cVal === 'GV' && nVal === 'PTMN') {
-                if (studentPasswordInput) {
-                    studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
                 }
             }
         });
