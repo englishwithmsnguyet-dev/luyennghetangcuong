@@ -1,0 +1,2323 @@
+/* ==========================================================================
+   CHẬU CỎ 4 LÁ MAY MẮN & TÍCH LUỸ NƯỚC TƯỚI VSTEP (ENGLISH WITH MISS NGUYET)
+   Gói giao diện độc lập - Tương thích 100% với mọi website của Cô Nguyệt
+   ========================================================================== */
+
+/* ==========================================
+   FLOWER GARDEN ("VƯỜN HOA CỦA CÔ NGUYỆT")
+   ========================================== */
+.garden-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.garden-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.garden-header-row h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #BE185D;
+    line-height: 1.25;
+}
+
+.garden-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.garden-subtitle {
+    font-size: 13px !important;
+    color: #9D174D !important;
+    background: #FDF2F8;
+    border: 1px solid #FBCFE8;
+    border-radius: 12px;
+    padding: 6px 12px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 12px !important;
+    transition: all 0.25s ease;
+}
+
+.garden-subtitle.pop-anim {
+    animation: bubblePop 0.35s ease;
+}
+
+/* Garden Stage (Background glow, sunshine, particles, flower pot) */
+.garden-stage {
+    position: relative;
+    width: 100%;
+    height: 232px;
+    background:
+        radial-gradient(ellipse 85% 42% at 50% 92%, rgba(180, 130, 80, 0.14) 0%, transparent 72%),
+        linear-gradient(180deg, #FEF9C3 0%, #FEF3C7 34%, #ECFDF5 72%, #D1FAE5 100%);
+    border-radius: 20px;
+    border: 1.5px solid #FDE68A;
+    box-shadow: inset 0 2px 10px rgba(245, 158, 11, 0.09);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 14px;
+}
+
+.garden-weather-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: background 0.8s ease;
+    z-index: 1;
+}
+
+.garden-floating-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.garden-float-particle {
+    position: absolute;
+    user-select: none;
+    animation: floatUpAndFade ease forwards;
+    pointer-events: none;
+}
+
+/* Sunshine Rays Animation */
+.garden-sun-rays {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 32px;
+    opacity: 0;
+    transform: scale(0.6) rotate(0deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 6;
+    pointer-events: none;
+}
+.garden-sun-rays.active {
+    opacity: 1;
+    transform: scale(1.2) rotate(45deg);
+    animation: sunRayPulse 1.8s ease-in-out;
+}
+@keyframes sunRayPulse {
+    0% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
+    30% { transform: scale(1.3) rotate(30deg); opacity: 1; filter: drop-shadow(0 0 16px #FBBF24); }
+    70% { transform: scale(1.2) rotate(60deg); opacity: 0.9; }
+    100% { transform: scale(0.8) rotate(90deg); opacity: 0; }
+}
+
+/* Watering Can Animation */
+.garden-watering-can {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    opacity: 0;
+    transform: translateY(-20px) rotate(-15deg);
+    transition: all 0.35s ease;
+    z-index: 6;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.garden-watering-can.active {
+    opacity: 1;
+    transform: translateY(0) rotate(-35deg);
+    animation: wateringCanTilt 1.8s ease-in-out;
+}
+.watering-can-emoji {
+    font-size: 34px;
+}
+.water-drops {
+    display: flex;
+    gap: 4px;
+    margin-top: -6px;
+    margin-left: 20px;
+}
+.water-drops span {
+    font-size: 14px;
+    opacity: 0;
+}
+.garden-watering-can.active .water-drops span {
+    animation: waterDropFall 0.7s ease infinite;
+}
+.garden-watering-can.active .water-drops span:nth-child(2) { animation-delay: 0.2s; }
+.garden-watering-can.active .water-drops span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes wateringCanTilt {
+    0% { transform: translateY(-15px) rotate(0deg); opacity: 0; }
+    20% { transform: translateY(0) rotate(-38deg); opacity: 1; }
+    80% { transform: translateY(0) rotate(-35deg); opacity: 1; }
+    100% { transform: translateY(-15px) rotate(0deg); opacity: 0; }
+}
+@keyframes waterDropFall {
+    0% { transform: translateY(0) scale(0.8); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(60px) scale(1.1); opacity: 0; }
+}
+
+/* Flower Pot & Lifelike Botanical Clover Rig */
+.garden-pot-wrapper {
+    position: relative;
+    width: 222px;
+    height: 222px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transform-origin: 50% 95%;
+    transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.35s ease;
+}
+.garden-pot-wrapper:hover {
+    transform: translateY(-2px) scale(1.022);
+}
+.garden-pot-wrapper.plant-bouncing {
+    animation: plantBounce 0.62s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.garden-pot-wrapper.stage-evolving {
+    animation: cloverStageBloom 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.garden-pot-wrapper.is-hydrated .clover-living-art {
+    filter: saturate(1.16) brightness(1.06) drop-shadow(0 6px 12px rgba(16, 185, 129, 0.22));
+}
+.garden-pot-wrapper.is-sunlit .clover-living-art {
+    filter: saturate(1.12) brightness(1.08) drop-shadow(0 0 14px rgba(251, 191, 36, 0.38));
+}
+
+.clover-living-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Warm Soft Contact Shadow Anchoring the Terracotta Pot to the Floor */
+.clover-ground-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 2.2%;
+    width: 52%;
+    height: 10.5%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at 50% 50%, rgba(68, 36, 18, 0.34) 0%, rgba(68, 36, 18, 0.14) 55%, rgba(68, 36, 18, 0) 78%);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Gentle Sunlit Botanical Aura behind Foliage */
+.clover-aura-halo {
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    width: 76%;
+    height: 62%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(167, 243, 208, 0.32) 0%, rgba(254, 249, 195, 0.18) 52%, transparent 74%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: cloverAuraBreathe 4.2s ease-in-out infinite;
+}
+.clover-stage-4 .clover-aura-halo {
+    top: 4%;
+    width: 86%;
+    height: 70%;
+    background: radial-gradient(circle, rgba(254, 240, 138, 0.48) 0%, rgba(110, 231, 183, 0.30) 46%, transparent 74%);
+}
+
+/* Bottom-Anchored Breeze Rig: Pot Base Stays 100% Grounded While Stems & Canopy Sway Naturally */
+.clover-breeze-rig {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transform-origin: 50% 95%;
+    animation: cloverBotanicalBreeze 5.2s ease-in-out infinite;
+    will-change: transform;
+}
+
+.clover-living-art {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 5px 10px rgba(62, 34, 18, 0.15));
+    transition: filter 0.35s ease;
+}
+
+.clover-dew-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.clover-dew-glint {
+    transform-origin: 0 0;
+    animation: cloverDewTwinkle 3.2s ease-in-out infinite;
+}
+
+.clover-bfly-bob {
+    animation: butterflyFloat 3.4s ease-in-out infinite;
+}
+.clover-bfly-wing-l {
+    transform-origin: 0 0;
+    animation: wingFlapLeft 0.28s ease-in-out infinite;
+}
+.clover-bfly-wing-r {
+    transform-origin: 0 0;
+    animation: wingFlapRight 0.28s ease-in-out infinite;
+}
+
+@keyframes cloverBotanicalBreeze {
+    0%, 100% {
+        transform: skewX(0deg) scale(1, 1);
+    }
+    28% {
+        transform: skewX(-1.35deg) scale(1.004, 1.012);
+    }
+    68% {
+        transform: skewX(1.25deg) scale(0.998, 1.008);
+    }
+}
+
+@keyframes cloverAuraBreathe {
+    0%, 100% { opacity: 0.65; transform: translateX(-50%) scale(0.96); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.06); }
+}
+
+@keyframes cloverDewTwinkle {
+    0%, 100% { opacity: 0.15; transform: scale(0.45) rotate(0deg); }
+    45% { opacity: 0.95; transform: scale(1.15) rotate(45deg); }
+    55% { opacity: 0.85; transform: scale(1.0) rotate(60deg); }
+}
+
+@keyframes cloverStageBloom {
+    0% { transform: scale(0.88); filter: brightness(1.18); }
+    55% { transform: scale(1.05); filter: brightness(1.08); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+.garden-pot-svg, .clover-pot-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 6px 12px rgba(55, 30, 20, 0.12));
+}
+
+/* Plant Keyframe Animations */
+@keyframes plantBounce {
+    0%, 100% { transform: scale(1); }
+    30% { transform: scale(1.08, 0.92); }
+    60% { transform: scale(0.95, 1.05); }
+    80% { transform: scale(1.02, 0.98); }
+}
+@keyframes breezeSway {
+    0%, 100% { transform: rotate(0deg); }
+    33% { transform: rotate(-3deg); }
+    66% { transform: rotate(3deg); }
+}
+@keyframes heartBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+}
+@keyframes auraShine {
+    0%, 100% { opacity: 0.35; transform: scale(0.95); }
+    50% { opacity: 0.75; transform: scale(1.12); }
+}
+@keyframes butterflyBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px) translateX(-3px); }
+}
+@keyframes wingFlapLeft {
+    0%, 100% { transform: rotate(-15deg) scaleX(1); }
+    50% { transform: rotate(5deg) scaleX(0.35); }
+}
+@keyframes wingFlapRight {
+    0%, 100% { transform: rotate(15deg) scaleX(1); }
+    50% { transform: rotate(-5deg) scaleX(0.35); }
+}
+@keyframes starTwinkle {
+    0%, 100% { opacity: 0.35; transform: scale(0.8) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.25) rotate(180deg); }
+}
+
+@keyframes organicSwayL {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-3.5deg); }
+}
+@keyframes organicSwayR {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(3deg); }
+}
+@keyframes leafBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035, 0.98); }
+}
+@keyframes babyFlutter {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(4deg); }
+    75% { transform: rotate(-3deg); }
+}
+@keyframes auraPulse {
+    0%, 100% { opacity: 0.35; transform: scale(0.96); }
+    50% { opacity: 0.75; transform: scale(1.1); }
+}
+@keyframes butterflyFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-4px, -7px); }
+}
+@keyframes dewGlint {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.25); }
+}
+
+.anim-stem-l {
+    animation: organicSwayL 4.5s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-stem-r {
+    animation: organicSwayR 4s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-leaf-breathe, .anim-breathe {
+    animation: leafBreathe 3.4s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-baby-leaf {
+    animation: babyFlutter 2.8s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-aura-glow, .anim-aura {
+    animation: auraPulse 3.2s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-bfly-bob, .anim-butterfly-group {
+    animation: butterflyFloat 2.6s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-wing-l, .anim-wing-left {
+    animation: wingFlapLeft 0.22s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-wing-r, .anim-wing-right {
+    animation: wingFlapRight 0.22s ease-in-out infinite;
+    transform-origin: 0 0;
+}
+.anim-dew {
+    animation: dewGlint 2.4s ease-in-out infinite;
+    transform-origin: center;
+}
+.anim-star {
+    animation: starTwinkle 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes sproutSway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(3deg); }
+}
+.anim-sprout-sway {
+    animation: sproutSway 3s ease-in-out infinite;
+}
+
+@keyframes budBreathe {
+    0%, 100% { transform: scale(1, 1); }
+    50% { transform: scale(1.02, 0.98); }
+}
+.anim-bud-breathe {
+    animation: budBreathe 3.5s ease-in-out infinite;
+}
+
+@keyframes bloomSway {
+    0%, 100% { transform: rotate(0deg); }
+    33% { transform: rotate(-2deg); }
+    66% { transform: rotate(2deg); }
+}
+.anim-bloom-sway {
+    animation: bloomSway 4.2s ease-in-out infinite;
+}
+
+@keyframes creatureFlutter {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(12deg); }
+}
+.anim-creature-flutter {
+    animation: creatureFlutter 2.2s ease-in-out infinite;
+}
+
+/* Flower Info Panel & Progress */
+.garden-info-panel {
+    width: 100%;
+    margin-bottom: 12px;
+}
+.garden-flower-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.garden-flower-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #831843;
+}
+.garden-stage-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+}
+.stage-seeding { background: #FEF3C7; color: #B45309; }
+.stage-sprouting { background: #DCFCE7; color: #15803D; }
+.stage-budding { background: #FCE7F3; color: #BE185D; }
+.stage-blooming { background: #FDF2F8; color: #BE123C; border: 1px solid #FDA4AF; animation: pulseBorder 1.8s infinite; }
+
+.garden-progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.garden-progress-bar {
+    flex: 1;
+    height: 10px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+.garden-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ADE80 0%, #34D399 50%, #F472B6 100%);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+.garden-progress-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4B5563;
+    min-width: 34px;
+    text-align: right;
+}
+
+.garden-stats-row {
+    display: flex;
+    justify-content: space-around;
+    background: #FFFBEB;
+    border: 1px solid #FEF3C7;
+    border-radius: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #4B5563;
+}
+.garden-stat b {
+    color: #1F2937;
+    margin-left: 2px;
+}
+
+/* Garden Actions Layout (No Overlap) */
+.garden-actions-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    box-sizing: border-box;
+}
+.garden-care-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+.garden-care-row.hidden,
+.garden-harvest-row.hidden,
+.garden-quiz-row.hidden {
+    display: none !important;
+}
+.garden-care-row .garden-btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 8px;
+    border-radius: 14px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-sizing: border-box;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.action-cost-tag,
+.action-gain-tag {
+    flex-shrink: 0;
+}
+.garden-care-row .garden-btn:hover {
+    transform: translateY(-2px);
+}
+.garden-quiz-row {
+    width: 100%;
+}
+.garden-btn-quiz {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+    border: 1.5px solid #A7F3D0;
+    color: #065F46;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.garden-btn-quiz:hover {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #047857;
+    border-color: #6EE7B7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+.garden-harvest-row {
+    width: 100%;
+}
+.garden-btn-harvest-cta {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
+    border: none;
+    color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.38);
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.garden-btn-harvest-cta:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.48);
+}
+.pulse-glow {
+    animation: pulseBorder 1.5s infinite;
+}
+
+.action-cost-tag {
+    font-size: 10px;
+    font-weight: 800;
+    background: #BAE6FD;
+    color: #0369A1;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 3px;
+}
+.action-gain-tag {
+    font-size: 10px;
+    font-weight: 800;
+    background: #DCFCE7;
+    color: #15803D;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 3px;
+}
+
+/* Seed & Basket Modals */
+.garden-modal-card {
+    max-width: 540px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+.modal-subtext {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 16px;
+}
+.garden-title-badge-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FDF2F8;
+    border: 1px solid #FBCFE8;
+    border-radius: 12px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+}
+.gardener-title-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: #BE185D;
+}
+.total-harvested-badge {
+    font-size: 13px;
+    color: #6B7280;
+}
+.garden-seed-grid,
+.garden-basket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+.garden-seed-card,
+.basket-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFFFFF;
+    border: 1.5px solid #F3F4F6;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+}
+.garden-seed-card:hover,
+.basket-item:hover {
+    border-color: #FBCFE8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12);
+}
+.garden-seed-card.selected {
+    border-color: #EC4899;
+    background: #FDF2F8;
+}
+.seed-card-icon,
+.basket-item-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+.seed-card-info,
+.basket-item-info {
+    flex: 1;
+    min-width: 0;
+}
+.seed-card-info h4,
+.basket-item-info h4 {
+    margin: 0 0 2px 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+.seed-scientific {
+    font-size: 11px;
+    font-style: italic;
+    color: #9CA3AF;
+    display: block;
+}
+.seed-meaning {
+    margin: 4px 0 0 0;
+    font-size: 11px;
+    color: #4B5563;
+    line-height: 1.3;
+}
+.basket-item-count {
+    font-size: 12px;
+    color: #059669;
+}
+.basket-item.locked {
+    opacity: 0.55;
+    filter: grayscale(0.5);
+}
+
+/* ==========================================
+   WATER ECONOMY & EXAM MOTIVATION STYLES
+   ========================================== */
+.garden-water-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    border: 1.5px solid #7DD3FC;
+    border-radius: 20px;
+    padding: 3px 6px 3px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0369A1;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.12);
+    transition: all 0.25s ease;
+    user-select: none;
+}
+.garden-water-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+    border-color: #38BDF8;
+}
+.garden-water-pill.pill-reward-glow {
+    animation: pillWaterPulse 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes pillWaterPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(14, 165, 233, 0)); }
+    40% { transform: scale(1.16); filter: drop-shadow(0 0 12px #38BDF8); background: #7DD3FC; color: #0C4A6E; }
+    100% { transform: scale(1); }
+}
+.water-pill-icon {
+    font-size: 14px;
+    animation: waterDripBob 2.5s ease-in-out infinite;
+}
+@keyframes waterDripBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+.water-pill-add-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: #0284C7;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.water-pill-add-btn:hover {
+    transform: scale(1.15) rotate(90deg);
+    background: #0369A1;
+}
+
+
+
+/* Random Picker Reward Assessment Bar */
+.picker-reward-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 50%, #FEF3C7 100%);
+    border: 1.5px solid #A7F3D0;
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+    animation: slideDownFade 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes slideDownFade {
+    0% { opacity: 0; transform: translateY(-8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.picker-reward-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #065F46;
+}
+.picker-reward-btns {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+.btn-reward {
+    flex: 1;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+.btn-reward-great {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+}
+.btn-reward-great:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+.btn-reward-good {
+    background: linear-gradient(135deg, #38BDF8 0%, #0284C7 100%);
+    color: #FFFFFF;
+}
+.btn-reward-good:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+}
+
+/* Floating Water Drops Reward Badge */
+.garden-float-water-reward {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0284C7;
+    background: #E0F2FE;
+    border: 1.5px solid #7DD3FC;
+    border-radius: 14px;
+    padding: 4px 10px;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    animation: floatRewardUp 1.5s ease-out forwards;
+}
+@keyframes floatRewardUp {
+    0% { opacity: 0; transform: translateY(0) scale(0.7); }
+    20% { opacity: 1; transform: translateY(-8px) scale(1.15); }
+    80% { opacity: 1; transform: translateY(-34px) scale(1.0); }
+    100% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+}
+
+/* Grand Harvest Exam Motivation Card Modal */
+.garden-harvest-card {
+    max-width: 580px;
+    width: 92%;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 60%, #FEF9F3 100%);
+    border: 2px solid #FDE68A;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(217, 119, 6, 0.16);
+    padding: 24px;
+    text-align: center;
+}
+.harvest-celebration-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.harvest-clover-sparkle-halo {
+    position: relative;
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(254, 240, 138, 0.5) 0%, rgba(52, 211, 153, 0.2) 60%, transparent 75%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: auraPulse 3s ease-in-out infinite;
+}
+.harvest-clover-img {
+    width: 95px;
+    height: 95px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 14px rgba(5, 150, 105, 0.25));
+}
+.harvest-pill-badge {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FCD34D;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    letter-spacing: 0.4px;
+}
+.harvest-main-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #065F46;
+    margin: 4px 0 0;
+}
+.harvest-fortune-card {
+    background: #FFFFFF;
+    border: 1.5px solid #E5E7EB;
+    border-left: 5px solid #10B981;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: left;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    margin: 12px 0 16px;
+}
+.fortune-tag-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.fortune-topic-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #059669;
+    background: #ECFDF5;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+.fortune-date-stamp {
+    font-size: 11px;
+    color: #9CA3AF;
+}
+.fortune-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 10px;
+    font-family: 'Roboto Serif', Georgia, serif;
+}
+.fortune-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+    margin: 0 0 10px;
+    font-style: italic;
+    background: #F9FAFB;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border-left: 3px solid #6EE7B7;
+}
+.fortune-advice-box {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    background: #FEF9C3;
+    border: 1px solid #FEF08A;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #713F12;
+    margin-bottom: 6px;
+}
+.fortune-advice-box i {
+    color: #EAB308;
+    margin-top: 2px;
+}
+.harvest-quote-en {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1F2937;
+    line-height: 1.5;
+    margin: 12px 0 6px;
+    font-family: 'Roboto Serif', Georgia, serif;
+}
+.harvest-quote-vi {
+    font-size: 14.5px;
+    color: #4B5563;
+    line-height: 1.5;
+    margin: 0 0 14px;
+}
+.harvest-quote-vi em {
+    font-style: italic;
+    color: #6B7280;
+}
+.fortune-signature {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed #E5E7EB;
+}
+.harvest-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Mini-Quiz & Garden Modals */
+.modal-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+.garden-quiz-card {
+    max-width: 540px;
+    width: 92%;
+}
+.garden-quiz-card .modal-header {
+    padding: 0 0 12px 0;
+    border-bottom: 1px solid #F3F4F6;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.garden-quiz-card .modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #1F2937;
+}
+.garden-quiz-card .modal-subtext {
+    font-size: 13px;
+    color: #4B5563;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+.quiz-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    gap: 10px;
+}
+.quiz-question-box {
+    background: #F9FAFB;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+.quiz-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.quiz-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.quiz-skill-tag {
+    background: #E0E7FF;
+    color: #4338CA;
+    border: 1px solid #C7D2FE;
+}
+.quiz-skill-tag.skill-reading {
+    background: #E0F2FE;
+    color: #0369A1;
+    border-color: #BAE6FD;
+}
+.quiz-skill-tag.skill-listening {
+    background: #FEF3C7;
+    color: #B45309;
+    border-color: #FDE68A;
+}
+.quiz-skill-tag.skill-writing {
+    background: #FCE7F3;
+    color: #BE185D;
+    border-color: #FBCFE8;
+}
+.quiz-skill-tag.skill-speaking {
+    background: #DCFCE7;
+    color: #15803D;
+    border-color: #BBF7D0;
+}
+.quiz-skill-tag.skill-grammar {
+    background: #F3E8FF;
+    color: #7E22CE;
+    border-color: #E9D5FF;
+}
+.quiz-skill-tag.skill-lexical {
+    background: #FFF1F2;
+    color: #BE123C;
+    border-color: #FECDD3;
+}
+.quiz-level-tag {
+    background: #F3F4F6;
+    color: #374151;
+    border: 1px solid #E5E7EB;
+    font-weight: 800;
+}
+.quiz-topic-tag {
+    background: #FFF7ED;
+    color: #C2410C;
+    border: 1px solid #FFEDD5;
+}
+.quiz-topic-badge {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #2563EB;
+    background: #EFF6FF;
+    border-radius: 8px;
+    padding: 3px 8px;
+    margin-bottom: 8px;
+}
+.quiz-prompt {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+.quiz-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.quiz-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #FFFFFF;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 13.5px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+.quiz-option-btn:hover:not(:disabled) {
+    border-color: #38BDF8;
+    background: #F0F9FF;
+    transform: translateX(3px);
+}
+.option-letter {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #F3F4F6;
+    color: #4B5563;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.quiz-option-btn.is-correct {
+    border-color: #10B981 !important;
+    background: #ECFDF5 !important;
+    color: #065F46 !important;
+    font-weight: 700;
+}
+.quiz-option-btn.is-correct .option-letter {
+    background: #10B981;
+    color: #FFFFFF;
+}
+.quiz-option-btn.is-wrong {
+    border-color: #EF4444 !important;
+    background: #FEF2F2 !important;
+    color: #991B1B !important;
+}
+.quiz-option-btn.is-wrong .option-letter {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+.quiz-feedback-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    animation: slideDownFade 0.25s ease;
+}
+.feedback-correct {
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    color: #065F46;
+}
+.feedback-wrong {
+    background: #FEF3C7;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+}
+.feedback-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.feedback-explain {
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* ==========================================
+   VSTEP STUDY HUB & TABBED QUIZ MODAL
+   ========================================== */
+.vstep-hub-card {
+    max-width: 780px !important;
+    width: 95% !important;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabs Bar */
+.quiz-modal-tabs {
+    display: flex;
+    gap: 6px;
+    background: #F3F4F6;
+    padding: 5px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+}
+.quiz-tab-btn {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4B5563;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.quiz-tab-btn:hover {
+    color: #1F2937;
+    background: rgba(255, 255, 255, 0.6);
+}
+.quiz-tab-btn.active {
+    background: #FFFFFF;
+    color: #0369A1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Tab Panels */
+.quiz-tab-panel {
+    display: none;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.quiz-tab-panel.active {
+    display: block;
+    animation: fadeIn 0.25s ease;
+}
+
+/* Category Filter Pills */
+.quiz-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.quiz-filter-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    color: #4B5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.quiz-filter-pill:hover {
+    border-color: #38BDF8;
+    background: #F0F9FF;
+    color: #0284C7;
+}
+.quiz-filter-pill.active {
+    background: #0284C7;
+    border-color: #0284C7;
+    color: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+}
+
+/* Category Badge in Question */
+.quiz-cat-tag {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+    font-weight: 800;
+}
+.quiz-progress-tag {
+    background: #E0F2FE;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
+    font-weight: 800;
+}
+.quiz-norepeat-tag {
+    background: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+    font-weight: 700;
+}
+
+/* Guide Wrapper & Hero */
+.vstep-guide-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.vstep-guide-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%);
+    border: 1.5px solid #BAE6FD;
+    border-radius: 16px;
+    padding: 14px 18px;
+    flex-wrap: wrap;
+}
+.vstep-guide-hero .hero-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0F172A;
+}
+.vstep-guide-hero .hero-text p {
+    margin: 0;
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.45;
+}
+
+/* Benefits Matrix Grid */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+}
+.benefit-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.benefit-card-header {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+.benefit-icon {
+    font-size: 24px;
+    line-height: 1;
+}
+.benefit-card-header h5 {
+    margin: 0 0 3px 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #1E293B;
+}
+.benefit-core {
+    margin: 0;
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.4;
+}
+.benefit-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.section-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.colloc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.colloc-pill {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 2px 7px;
+    font-size: 11px;
+    color: #334155;
+    line-height: 1.4;
+}
+.colloc-pill b {
+    color: #0369A1;
+}
+.example-quote {
+    font-size: 12px;
+    font-style: italic;
+    border-radius: 10px;
+    padding: 8px 10px;
+    line-height: 1.45;
+}
+.speaking-quote {
+    background: #EFF6FF;
+    border-left: 3px solid #3B82F6;
+    color: #1E40AF;
+}
+.writing-quote {
+    background: #ECFDF5;
+    border-left: 3px solid #10B981;
+    color: #065F46;
+}
+
+/* Speaking Guide Styles */
+.guide-box {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.guide-box-header {
+    background: #F0FDF4;
+    color: #15803D;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #E2E8F0;
+}
+.box-badge {
+    background: #16A34A;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+}
+.guide-box-header h5 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+}
+.guide-desc {
+    padding: 10px 14px 6px;
+    margin: 0;
+    font-size: 12.5px;
+    color: #64748B;
+    line-height: 1.45;
+}
+.idioms-list {
+    padding: 6px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.idiom-item {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+.idiom-phrase {
+    color: #1E293B;
+}
+.idiom-example {
+    margin-top: 3px;
+    color: #0369A1;
+    font-style: italic;
+}
+.formula-steps {
+    padding: 8px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.formula-step-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 10px;
+}
+.formula-step-card h6 {
+    margin: 0 0 6px 0;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #1E293B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.step-num {
+    background: #2563EB;
+    color: #FFFFFF;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+.step-phrases {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.5;
+}
+.markers-table {
+    padding: 8px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.marker-row {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    background: #FDF2F8;
+    border-radius: 8px;
+    font-size: 12px;
+    align-items: center;
+}
+.marker-code {
+    flex: 0 0 220px;
+    color: #BE185D;
+}
+.marker-use {
+    color: #374151;
+}
+
+/* Writing Guide Styles */
+.writing-section-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.writing-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.section-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #FFFFFF;
+}
+.task1-tag { background: #0284C7; }
+.task2-tag { background: #7C3AED; }
+.writing-section-title h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0F172A;
+}
+.sub-label {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #334155;
+    margin: 12px 0 8px 0;
+}
+.registers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+}
+.register-col {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 11.5px;
+}
+.register-col h6 {
+    margin: 0 0 6px 0;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #0369A1;
+}
+.reg-meta {
+    margin: 0 0 4px 0;
+    color: #475569;
+}
+.reg-meta code {
+    background: #E2E8F0;
+    padding: 1px 4px;
+    border-radius: 4px;
+    color: #0F172A;
+}
+.reg-rule {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #CBD5E1;
+    color: #B91C1C;
+    font-size: 11px;
+}
+.letter-types-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.letter-type-item {
+    background: #F0F9FF;
+    border: 1px solid #BAE6FD;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+.lt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.lt-header b {
+    color: #0369A1;
+    font-size: 12.5px;
+}
+.lt-keywords {
+    font-size: 11px;
+    color: #64748B;
+    background: #FFFFFF;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+.lt-starter {
+    font-style: italic;
+    color: #1E293B;
+}
+.starter-tag {
+    font-weight: 700;
+    font-style: normal;
+    color: #0284C7;
+}
+
+/* Essay Types List */
+.essay-types-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.essay-type-card {
+    background: #FBFBFE;
+    border: 1px solid #E0E7FF;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 12px;
+}
+.et-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.et-header h6 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #4338CA;
+}
+.et-clue {
+    font-size: 11.5px;
+    color: #6366F1;
+    background: #EEF2FF;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+.et-trap {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #991B1B;
+    font-size: 11.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.et-body {
+    color: #334155;
+    line-height: 1.45;
+}
+.thesis-text {
+    color: #047857;
+    font-weight: 600;
+}
+.quiz-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Water Earning Guide Modal */
+.garden-earn-card {
+    max-width: 520px;
+    width: 90%;
+}
+.earn-water-balance-box {
+    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    border: 1.5px solid #7DD3FC;
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 14px;
+}
+.balance-label {
+    font-size: 12px;
+    color: #0369A1;
+    font-weight: 600;
+}
+.balance-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0C4A6E;
+    margin: 4px 0 6px;
+}
+.balance-sub {
+    font-size: 12px;
+    color: #075985;
+    font-style: italic;
+    margin: 0;
+}
+.earn-methods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.earn-method-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #FFFFFF;
+    border: 1.5px solid #F3F4F6;
+    border-radius: 14px;
+    padding: 11px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+.earn-method-item:hover {
+    transform: translateY(-2px) scale(1.01);
+    border-color: #38BDF8;
+    background: #F0F9FF;
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.12);
+}
+.earn-method-item:active {
+    transform: scale(0.99);
+}
+.earn-action-badge {
+    margin-left: auto;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #0369A1;
+    background: #E0F2FE;
+    border: 1px solid #BAE6FD;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.earn-method-item:hover .earn-action-badge {
+    background: #0284C7;
+    color: #FFFFFF;
+    border-color: #0284C7;
+}
+.earn-action-badge.action-primary {
+    background: #ECFDF5;
+    color: #059669;
+    border-color: #A7F3D0;
+}
+.earn-method-item:hover .earn-action-badge.action-primary {
+    background: #10B981;
+    color: #FFFFFF;
+    border-color: #10B981;
+}
+.earn-icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.earn-info h4 {
+    margin: 0 0 2px 0;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1F2937;
+}
+.earn-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #4B5563;
+    line-height: 1.4;
+}
+
+/* Basket Tabs & Quotes Archive */
+.basket-tabs-row {
+    display: flex;
+    gap: 8px;
+    border-bottom: 2px solid #F3F4F6;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+}
+.basket-tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: #F9FAFB;
+    color: #6B7280;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.basket-tab-btn.active {
+    background: #ECFDF5;
+    color: #059669;
+}
+.harvested-quotes-archive {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 52vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.archive-quote-card {
+    background: #FFFFFF;
+    border: 1.5px solid #E5E7EB;
+    border-left: 4px solid #10B981;
+    border-radius: 14px;
+    padding: 12px 14px;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+.archive-quote-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #9CA3AF;
+    margin-bottom: 6px;
+}
+.archive-badge {
+    font-weight: 700;
+    color: #059669;
+}
+.archive-tag {
+    background: #F3F4F6;
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: #374151;
+}
+.archive-quote-en {
+    margin: 6px 0 4px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.45;
+}
+.archive-quote-vi {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: #4B5563;
+    line-height: 1.45;
+}
+.archive-quote-vi em {
+    font-style: italic;
+    color: #6B7280;
+}
+.archive-signature {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #F3F4F6;
+}
+.archive-title {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+.archive-text {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-style: italic;
+    color: #4B5563;
+    line-height: 1.45;
+}
+.archive-advice {
+    font-size: 12px;
+    color: #854D0E;
+    background: #FEF9C3;
+    padding: 6px 8px;
+    border-radius: 8px;
+    margin-top: 4px;
+}
+.empty-quotes-notice {
+    text-align: center;
+    padding: 30px 16px;
+    color: #9CA3AF;
+}
+
+
+/* ==========================================
+   OFFICIAL VSTEP MATERIALS: BENEFITS, LETTERS & ESSAYS
+   ========================================== */
+
+/* 1. Official Benefits Matrix (64 Collocations) */
+.benefits-official-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 14px;
+    margin-top: 10px;
+}
+.benefit-official-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.formula-tip-badge {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+.benefit-items-pill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 6px;
+    margin-top: 4px;
+}
+.official-benefit-pill {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: all 0.2s ease;
+}
+.official-benefit-pill:hover {
+    background: #F0F9FF;
+    border-color: #38BDF8;
+    transform: translateY(-1px);
+}
+.ob-en {
+    font-size: 11.5px;
+    color: #0369A1;
+    line-height: 1.35;
+    word-break: break-word;
+}
+.ob-vi {
+    font-size: 11px;
+    color: #64748B;
+    line-height: 1.3;
+}
+.benefit-sample-box {
+    background: #F8FAFC;
+    border-radius: 10px;
+    padding: 8px 10px;
+    border: 1px dashed #CBD5E1;
+}
+.speaking-quote {
+    color: #0F766E !important;
+    font-style: italic;
+    font-size: 12px !important;
+    margin-top: 4px;
+}
+
+/* 2. Writing Guides (Task 1 & Task 2) */
+.writing-section-card {
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.writing-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+.writing-section-title h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #1E293B;
+}
+.section-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.task1-tag {
+    background: #E0F2FE;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
+}
+.task2-tag {
+    background: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+
+/* 7 Letters Grid */
+.official-letters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+}
+.official-letter-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+.official-letter-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+.olc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.olc-idx {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #F1F5F9;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.olc-header h6 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0F172A;
+}
+.olc-vi {
+    font-size: 11.5px;
+    color: #64748B;
+}
+.olc-style-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    background: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+.olc-purpose {
+    margin: 0;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.4;
+}
+.olc-keywords {
+    background: #FFFBEB;
+    border: 1px solid #FEF3C7;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    color: #92400E;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.olc-keywords code {
+    background: #FEF9C3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+.olc-structures {
+    background: #F8FAFC;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+}
+.struct-title {
+    font-weight: 700;
+    color: #0369A1;
+    margin-bottom: 4px;
+}
+.struct-phrase {
+    color: #047857;
+    margin-bottom: 4px;
+    font-size: 11.5px;
+}
+.struct-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #334155;
+}
+.olc-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #64748B;
+    border-top: 1px solid #F1F5F9;
+    padding-top: 6px;
+    margin-top: 4px;
+}
+
+/* 4 Essays Grid */
+.official-essays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+}
+.official-essay-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+.official-essay-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+.oec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.oec-badge {
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.3px;
+}
+.oec-header h6 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0F172A;
+}
+.oec-vi {
+    font-size: 11.5px;
+    color: #64748B;
+}
+.oec-clues {
+    background: #EEF2FF;
+    border: 1px solid #E0E7FF;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 11.5px;
+}
+.clue-label {
+    font-weight: 700;
+    color: #4338CA;
+    margin-bottom: 3px;
+}
+.clue-list {
+    margin: 0;
+    padding-left: 16px;
+    color: #312E81;
+}
+.oec-structure {
+    background: #F8FAFC;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.struct-row {
+    color: #334155;
+    line-height: 1.4;
+}
+.struct-row b {
+    color: #0F172A;
+}
+.thesis-highlight {
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: #065F46;
+}
+.thesis-highlight b {
+    color: #047857;
+}

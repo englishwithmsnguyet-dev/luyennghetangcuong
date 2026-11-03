@@ -478,6 +478,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.score-total').textContent = `/ ${total}`;
         document.getElementById('score-message').textContent = message;
         document.getElementById('results-overlay').classList.add('active');
+
+        // Reward water drops for completing listening exercise
+        if (window.FlowerGarden) {
+            const rewardDrops = Math.max(5, realScore * 2);
+            window.FlowerGarden.addWaterDrops(rewardDrops, `Hoàn thành bài luyện nghe (${realScore}/${total} câu đúng)`);
+        }
     });
 
     // Results Actions
@@ -546,15 +552,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginError = document.getElementById('loginError');
     const btnLogin = document.getElementById('btnLogin');
 
-    const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209', 'CB206', 'CB210', 'CB211', 'CB213', 'ONB103', 'B212', 'GV'];
+    const ALLOWED_CLASSES = ['CB210', 'CB211', 'CB213', 'ONB103', 'B209', 'B212', 'GV'];
     const REQUIRED_PASSWORD = 'PRACTICELISTENING';
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
 
     function checkLoginState() {
+        const isPreview = (typeof window !== 'undefined' && window.location.hash.includes('preview'));
         const loggedIn = localStorage.getItem('vstep_student_logged_in') || sessionStorage.getItem('vstep_student_logged_in');
-        if (loggedIn === 'true') {
+        if (loggedIn === 'true' || isPreview) {
             if (loginOverlay) loginOverlay.classList.add('hidden');
+            if (window.FlowerGarden) {
+                window.FlowerGarden.checkDailyLoginReward();
+            }
         } else {
             if (loginOverlay) loginOverlay.classList.remove('hidden');
             const savedName = localStorage.getItem('vstep_student_name') || '';

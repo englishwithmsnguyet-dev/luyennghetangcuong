@@ -7,7 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="flower_garden.css?v=20261103_v1">
 </head>
 <body>
     <div class="app-layout">
@@ -56,6 +61,91 @@
                     <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-right">
                 </div>
                 <p class="subtitle">LUYỆN NGHE TĂNG CƯỜNG - TIẾN BỘ KHÔNG TƯỞNG</p>
+
+                <!-- THÔNG ĐIỆP HÔM NAY -->
+                <div class="daily-quote-card" id="daily-quote-card" style="margin-bottom: 20px;">
+                    <div class="daily-quote-header">
+                        <span class="daily-quote-badge">THÔNG ĐIỆP HÔM NAY</span>
+                        <button class="daily-quote-refresh" id="btn-refresh-daily-quote" title="Đổi câu truyền cảm hứng khác">Đổi câu khác</button>
+                    </div>
+                    <div class="daily-quote-text" id="daily-quote-en">"A winner is a dreamer who never gives up."</div>
+                    <div class="daily-quote-vi" id="daily-quote-vi"><em>"Người chiến thắng là một kẻ mộng mơ không bao giờ từ bỏ."</em></div>
+                    <div class="daily-quote-signature">
+                        From Miss Nguyet with LOVE <span class="heart-pulse">❤️</span>
+                    </div>
+                </div>
+
+                <!-- CHẬU CỎ 4 LÁ MAY MẮN CỦA CÔ NGUYỆT -->
+                <div class="home-card garden-container" id="garden-container" style="margin-bottom: 24px; max-width: 620px; margin-left: auto; margin-right: auto;">
+                    <div class="garden-header-row">
+                        <h3>🍀 Chậu Cỏ 4 Lá May Mắn Của Cô Nguyệt</h3>
+                        <div class="garden-header-actions">
+                            <div class="garden-water-pill" id="garden-water-pill" title="Giọt Nước Nỗ Lực (Tích lũy từ điểm danh & làm bài đúng)">
+                                <span class="water-pill-icon">💧</span>
+                                <span class="water-pill-count" id="garden-water-count">35</span>
+                                <button class="water-pill-add-btn" id="btn-open-earn-water" title="Kiếm thêm nước tưới">+</button>
+                            </div>
+                            <button class="btn btn-secondary btn-small" id="btn-open-flower-basket" title="Xem giỏ cỏ 4 lá & kho thông điệp ôn thi">
+                                🍀 <span id="garden-harvest-count">0</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="garden-subtitle" id="garden-subtitle">Tích lũy nước nỗ lực mỗi ngày để vun trồng Cỏ 4 Lá May Mắn & đón nhận thông điệp ôn thi! 🍀✨</p>
+
+                    <!-- Garden Stage -->
+                    <div class="garden-stage" id="garden-stage" title="Bấm vào cây để truyền yêu thương!">
+                        <div class="garden-weather-glow" id="garden-weather-glow"></div>
+                        <div class="garden-floating-particles" id="garden-floating-particles"></div>
+                        <div class="garden-sun-rays" id="garden-sun-rays">☀️</div>
+                        <div class="garden-watering-can" id="garden-watering-can">
+                            <span class="watering-can-emoji">🪴</span>
+                            <div class="water-drops"><span>💧</span><span>💧</span><span>💧</span></div>
+                        </div>
+                        <div class="garden-pot-wrapper" id="garden-pot-wrapper"></div>
+                    </div>
+
+                    <!-- Flower Info & Growth Progress -->
+                    <div class="garden-info-panel">
+                        <div class="garden-flower-name-row">
+                            <span class="garden-flower-name" id="garden-flower-name">🍀 Cỏ 4 Lá May Mắn</span>
+                            <span class="garden-stage-badge" id="garden-stage-badge">🌱 Đang Nảy Mầm</span>
+                        </div>
+                        <div class="garden-progress-bar-wrap">
+                            <div class="garden-progress-bar">
+                                <div class="garden-progress-fill" id="garden-progress-fill" style="width: 30%;"></div>
+                            </div>
+                            <span class="garden-progress-text" id="garden-progress-text">30%</span>
+                        </div>
+                        <div class="garden-stats-row">
+                            <span class="garden-stat" id="stat-water-drops" title="Giọt Nước Nỗ Lực đang có"><i class="fa-solid fa-faucet-drip" style="color:#0284C7;"></i> <b id="garden-water-drops-stat">35💧</b></span>
+                            <span class="garden-stat" id="stat-moisture" title="Độ ẩm đất"><i class="fa-solid fa-droplet" style="color:#0284C7;"></i> <b id="garden-moisture-val">75%</b></span>
+                            <span class="garden-stat" id="stat-sunlight" title="Ánh sáng mặt trời"><i class="fa-solid fa-sun" style="color:#F59E0B;"></i> <b id="garden-sunlight-val">80%</b></span>
+                            <span class="garden-stat" id="stat-level" title="Số cỏ 4 lá đã thu hoạch"><i class="fa-solid fa-trophy" style="color:#10B981;"></i> <b id="garden-harvest-val">0 cành</b></span>
+                        </div>
+                    </div>
+
+                    <!-- Care Actions Container -->
+                    <div class="garden-actions-container" id="garden-actions-container">
+                        <div class="garden-care-row" id="garden-care-row">
+                            <button class="btn btn-secondary btn-small garden-btn" id="btn-water-flower" title="Tưới nước cho hoa (-10💧, +25% lớn)">
+                                <span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧</span>
+                            </button>
+                            <button class="btn btn-secondary btn-small garden-btn" id="btn-sun-flower" title="Cho hoa tắm nắng (+20% lớn)">
+                                <span class="action-icon">☀️</span> Tắm nắng <span class="action-gain-tag">+20%</span>
+                            </button>
+                        </div>
+                        <div class="garden-harvest-row hidden" id="garden-harvest-row">
+                            <button class="btn btn-primary garden-btn garden-btn-harvest-cta pulse-glow" id="btn-harvest-flower" title="Thu hoạch Cỏ 4 Lá May Mắn & Nhận thông điệp VSTEP!">
+                                <span class="action-icon">🍀</span> THU HOẠCH & NHẬN THÔNG ĐIỆP VSTEP! ✨
+                            </button>
+                        </div>
+                        <div class="garden-quiz-row" id="garden-quiz-row">
+                            <button class="btn btn-secondary btn-small garden-btn garden-btn-quiz" id="btn-quiz-flower" title="Làm câu hỏi ôn thi VSTEP nhận ngay +10💧 Nước Nỗ Lực">
+                                <span class="action-icon">🎯</span> Đố Vui Ôn Thi VSTEP <span class="action-gain-tag">+10💧 Nước</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 
                 <div id="active-day-content">
                     <div class="alert-box">
@@ -244,5 +334,7 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
+    <script src="flower_definitions.js?v=20261103_v1"></script>
+    <script src="flower_garden.js?v=20261103_v1"></script>
 </body>
 </html>
