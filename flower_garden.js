@@ -260,12 +260,22 @@
         }
       } catch (e) {}
 
+      // 2b. Check window._studentProgress
+      if (typeof window !== 'undefined' && window._studentProgress && window._studentProgress.studentName) {
+        const s = this.cleanStudentName(window._studentProgress.studentName);
+        if (s && s !== 'Bạn' && s !== 'Khách') {
+          return 'user_' + this.slugify(s);
+        }
+      }
+
       // 3. Check common DOM elements on the page
       if (typeof document !== 'undefined') {
         const selectors = [
           '#sidebar-user-name',
           '#b-stat-student',
           '#student-name',
+          '#display-name',
+          '#progress-modal-student-name',
           '.user-name',
           '#user-display-name',
           '#current-user-name'
@@ -298,7 +308,143 @@
       return `flower_garden_data_v2_${acc}`;
     },
 
+    ensureGardenContainerDom() {
+      if (typeof document === 'undefined') return;
+      if (document.getElementById('garden-container')) return;
+
+      let targetParent = null;
+      let insertBeforeEl = null;
+
+      // Case 1: Tab Overview in Speaking sites (speaking-part1/2/3)
+      const overviewPane = document.getElementById('overview');
+      if (overviewPane) {
+        targetParent = overviewPane;
+        const teacherCard = overviewPane.querySelector('.teacher-brand-card');
+        if (teacherCard && teacherCard.nextElementSibling) {
+          insertBeforeEl = teacherCard.nextElementSibling;
+        } else {
+          insertBeforeEl = overviewPane.firstChild;
+        }
+      }
+
+      // Case 2: Speaking Mock Tests (.app-main)
+      if (!targetParent) {
+        const appMain = document.querySelector('.app-main');
+        if (appMain) {
+          targetParent = appMain;
+          const dashboardGrid = appMain.querySelector('.dashboard-grid');
+          if (dashboardGrid) {
+            insertBeforeEl = dashboardGrid;
+          }
+        }
+      }
+
+      // Case 3: Generic fallback
+      if (!targetParent) {
+        const main = document.querySelector('.main-content, #main-content, main, .content-area, #app');
+        if (main) {
+          targetParent = main;
+          insertBeforeEl = main.firstChild;
+        }
+      }
+
+      if (!targetParent) return;
+
+      const container = document.createElement('div');
+      container.className = 'home-card garden-container';
+      container.id = 'garden-container';
+      container.style.cssText = 'margin-bottom: 24px; max-width: 680px; margin-left: auto; margin-right: auto;';
+      container.innerHTML = `
+        <div class="garden-header-row">
+            <h3 id="garden-title-heading">🍀 Chậu Cỏ 4 Lá May Mắn Của <span class="garden-student-name-tag" id="garden-student-name" title="Bấm để đổi tên học viên của bạn">Bạn <i class="fa-solid fa-pen-to-square edit-name-pen-icon"></i></span></h3>
+            <div class="garden-header-actions">
+                <div class="garden-water-pill" id="garden-water-pill" title="Giọt Nước Nỗ Lực (Tích lũy từ điểm danh & làm bài đúng)">
+                    <span class="water-pill-icon">💧</span>
+                    <span class="water-pill-count" id="garden-water-count">35</span>
+                    <button class="water-pill-add-btn" id="btn-open-earn-water" title="Kiếm thêm nước tưới">+</button>
+                </div>
+                <div class="garden-sun-pill" id="garden-sun-pill" title="Tia Nắng Nỗ Lực (Tích lũy từ điểm danh, ôn thi & quy đổi)">
+                    <span class="sun-pill-icon">☀️</span>
+                    <span class="sun-pill-count" id="garden-sun-count">35</span>
+                    <button class="sun-pill-add-btn" id="btn-open-earn-sun" title="Kiếm thêm tia nắng hoặc quy đổi">+</button>
+                </div>
+                <button class="btn btn-secondary btn-small" id="btn-open-flower-basket" title="Xem giỏ cỏ 4 lá & kho thông điệp ôn thi">
+                    🍀 <span id="garden-harvest-count">0</span>
+                </button>
+            </div>
+        </div>
+        <p class="garden-subtitle" id="garden-subtitle">Tích lũy nước & nắng nỗ lực mỗi ngày để vun trồng Cỏ 4 Lá May Mắn & đón nhận thông điệp ôn thi! 🍀✨</p>
+
+        <!-- Garden Stage (Sunshine, Floating Petals, Interactive Flower Pot) -->
+        <div class="garden-stage" id="garden-stage" title="Bấm vào cây để truyền yêu thương!">
+            <div class="garden-weather-glow" id="garden-weather-glow"></div>
+            <div class="garden-floating-particles" id="garden-floating-particles"></div>
+            <div class="garden-sun-rays" id="garden-sun-rays">☀️</div>
+
+            <div class="garden-watering-can" id="garden-watering-can">
+                <span class="watering-can-emoji">🪴</span>
+                <div class="water-drops">
+                    <span>💧</span><span>💧</span><span>💧</span>
+                </div>
+            </div>
+
+            <div class="garden-pot-wrapper" id="garden-pot-wrapper"></div>
+        </div>
+
+        <!-- Flower Info & Growth Progress -->
+        <div class="garden-info-panel">
+            <div class="garden-flower-name-row">
+                <span class="garden-flower-name" id="garden-flower-name">🍀 Cỏ 4 Lá May Mắn</span>
+                <span class="garden-stage-badge" id="garden-stage-badge">🌱 Đang Nảy Mầm</span>
+            </div>
+            <div class="garden-progress-bar-wrap">
+                <div class="garden-progress-bar">
+                    <div class="garden-progress-fill" id="garden-progress-fill" style="width: 30%;"></div>
+                </div>
+                <span class="garden-progress-text" id="garden-progress-text">30%</span>
+            </div>
+            <div class="garden-stats-row">
+                <span class="garden-stat" id="stat-water-drops" title="Giọt Nước Nỗ Lực đang có"><i class="fa-solid fa-faucet-drip" style="color:#0284C7;"></i> <b id="garden-water-drops-stat">35💧</b></span>
+                <span class="garden-stat" id="stat-moisture" title="Độ ẩm đất"><i class="fa-solid fa-droplet" style="color:#0284C7;"></i> <b id="garden-moisture-val">75%</b></span>
+                <span class="garden-stat" id="stat-sunlight" title="Tia Nắng Nỗ Lực đang có"><i class="fa-solid fa-sun" style="color:#F59E0B;"></i> <b id="garden-sunlight-val">35☀️</b></span>
+                <span class="garden-stat" id="stat-level" title="Số cỏ 4 lá đã thu hoạch"><i class="fa-solid fa-trophy" style="color:#10B981;"></i> <b id="garden-harvest-val">0 cành</b></span>
+            </div>
+        </div>
+
+        <!-- Care Actions Container (Water, Sun, Quiz / Harvest) -->
+        <div class="garden-actions-container" id="garden-actions-container">
+            <div class="garden-care-row" id="garden-care-row">
+                <button class="btn btn-secondary btn-small garden-btn" id="btn-water-flower" title="Tưới nước cho hoa (-10💧, +25% lớn)">
+                    <span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧</span>
+                </button>
+                <button class="btn btn-secondary btn-small garden-btn" id="btn-sun-flower" title="Cho hoa tắm nắng (-10☀️ tia nắng, +20% lớn)">
+                    <span class="action-icon">☀️</span> Tắm nắng <span class="action-cost-tag">10☀️</span>
+                </button>
+            </div>
+
+            <div class="garden-harvest-row hidden" id="garden-harvest-row">
+                <button class="btn btn-primary garden-btn garden-btn-harvest-cta pulse-glow" id="btn-harvest-flower" title="Thu hoạch Cỏ 4 Lá May Mắn & Nhận thông điệp VSTEP!">
+                    <span class="action-icon">🍀</span> THU HOẠCH & NHẬN THÔNG ĐIỆP VSTEP! ✨
+                </button>
+            </div>
+
+            <div class="garden-quiz-row" id="garden-quiz-row">
+                <button class="btn btn-secondary btn-small garden-btn garden-btn-quiz" id="btn-quiz-flower" title="Làm câu hỏi ôn thi VSTEP nhận ngay +10💧 Nước & +10☀️ Nắng Nỗ Lực">
+                    <span class="action-icon">🎯</span> Đố Vui Ôn Thi VSTEP <span class="action-gain-tag">+10💧 & +10☀️</span>
+                </button>
+            </div>
+        </div>
+      `;
+
+      if (insertBeforeEl) {
+        targetParent.insertBefore(container, insertBeforeEl);
+      } else {
+        targetParent.appendChild(container);
+      }
+    },
+
     init() {
+      this.ensureGardenContainerDom();
       this.currentActiveAccountId = this.getAccountId();
       this.loadState();
       this.checkWiltingStatus();
@@ -610,6 +756,9 @@
       const candidateElements = [
         document.getElementById('sidebar-user-name'),
         document.getElementById('b-stat-student'),
+        document.getElementById('display-name'),
+        document.getElementById('student-name'),
+        document.getElementById('progress-modal-student-name'),
         document.querySelector('.user-name'),
         document.querySelector('#user-display-name'),
         document.querySelector('#current-user-name')
@@ -622,6 +771,19 @@
         candidateElements.forEach(el => {
           observer.observe(el, { childList: true, characterData: true, subtree: true });
         });
+      }
+
+      // 4. Hook into window.finishLogin for Speaking apps
+      if (typeof window !== 'undefined') {
+        const origFinishLogin = window.finishLogin;
+        if (typeof origFinishLogin === 'function' && !window._finishLoginHooked) {
+          window._finishLoginHooked = true;
+          window.finishLogin = (...args) => {
+            const res = origFinishLogin.apply(window, args);
+            setTimeout(() => this.checkAccountChange(), 250);
+            return res;
+          };
+        }
       }
     },
 
@@ -650,12 +812,22 @@
         }
       } catch (e) {}
 
+      // 2b. Check window._studentProgress
+      if (typeof window !== 'undefined' && window._studentProgress && window._studentProgress.studentName) {
+        const s = this.cleanStudentName(window._studentProgress.studentName);
+        if (s && s !== 'Bạn' && s !== 'Khách') {
+          return 'user_' + this.slugify(s);
+        }
+      }
+
       // 3. Check common DOM elements on the page
       if (typeof document !== 'undefined') {
         const selectors = [
           '#sidebar-user-name',
           '#b-stat-student',
           '#student-name',
+          '#display-name',
+          '#progress-modal-student-name',
           '.user-name',
           '#user-display-name',
           '#current-user-name'
@@ -682,8 +854,8 @@
     cleanStudentName(raw) {
       if (!raw || typeof raw !== 'string') return '';
       let s = raw.trim().replace(/\s+/g, ' ');
-      // Filter out generic placeholders and teacher identifiers
-      if (/^(học viên|hoc vien|học viên vstep|chưa nhập tên|chua nhap ten|ẩn danh|an danh|học viên ẩn danh|cô nguyệt|co nguyet|ptmn|giáo viên|giao vien|teacher|cô nguyệt \(ptmn\))$/i.test(s)) return '';
+      // Filter out generic placeholders, teacher identifiers, and guest labels
+      if (/^(học viên|hoc vien|học viên vstep|chưa nhập tên|chua nhap ten|ẩn danh|an danh|học viên ẩn danh|cô nguyệt|co nguyet|ptmn|giáo viên|giao vien|teacher|cô nguyệt \(ptmn\)|khách|khach|guest)$/i.test(s)) return '';
 
       // Strip (PTMN) or (Giáo viên) suffixes if attached
       s = s.replace(/\s*\((ptmn|giáo viên|teacher)\)/gi, '').trim();
@@ -1884,8 +2056,13 @@
 
     createEarnWaterModalDom() {
       const isClassesSite = !!document.getElementById('class-list') || !!document.querySelector('.random-picker-container');
+      const isSpeakingSite = (typeof window !== 'undefined' && window.location.href.toLowerCase().includes('speaking')) ||
+                             (typeof document !== 'undefined' && document.title && document.title.toLowerCase().includes('speaking')) ||
+                             !!document.querySelector('.test-sidebar, [data-target="practice-topics"], #voice-mode-toggle, .btn-audio-sample');
 
-      const methods3and4Html = isClassesSite ? `
+      let methods3and4Html = '';
+      if (isClassesSite) {
+        methods3and4Html = `
             <!-- 3. Random Picker -->
             <div class="earn-method-item" id="earn-action-picker" role="button" tabindex="0" title="Bấm để mở Gọi Tên Trả Bài & Vòng Quay">
               <div class="earn-icon-wrap" style="background:#FFFBEB; color:#D97706;">🎲</div>
@@ -1905,7 +2082,31 @@
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-arrow-right"></i> Vào lớp</span>
             </div>
-      ` : `
+        `;
+      } else if (isSpeakingSite) {
+        methods3and4Html = `
+            <!-- 3. Speaking Practice -->
+            <div class="earn-method-item" id="earn-action-speaking" role="button" tabindex="0" title="Bấm để luyện nói VSTEP theo chủ đề hoặc đề thi">
+              <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎙️</div>
+              <div class="earn-info">
+                <h4>LUYỆN NÓI & THỰC HÀNH VSTEP SPEAKING</h4>
+                <p>Luyện phản xạ các chủ đề Speaking hoặc giải đề thi nói tích lũy ngay <b>+10💧 & +10☀️ ~ +20💧 & +20☀️</b> Nỗ Lực.</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-microphone"></i> Luyện nói ngay</span>
+            </div>
+
+            <!-- 4. Speaking Vocabulary & Benefits -->
+            <div class="earn-method-item" id="earn-action-speaking-vocab" role="button" tabindex="0" title="Bấm để mở Bộ Đố Vui ôn tập Bảng Lợi Ích & Từ Vựng Speaking">
+              <div class="earn-icon-wrap" style="background:#FEF3C7; color:#D97706;">⭐</div>
+              <div class="earn-info">
+                <h4>ÁP DỤNG BẢNG LỢI ÍCH & TỪ VỰNG CHUẨN</h4>
+                <p>Mỗi câu đố Bảng Lợi Ích & Từ Vựng Speaking trả lời chính xác nhận <b>+10💧 & +10☀️ Nỗ Lực</b>.</p>
+              </div>
+              <span class="earn-action-badge"><i class="fa-solid fa-star"></i> Luyện ngay</span>
+            </div>
+        `;
+      } else {
+        methods3and4Html = `
             <!-- 3. Listening Practice Completion -->
             <div class="earn-method-item" id="earn-action-practice" role="button" tabindex="0" title="Bấm để chuyển tới làm bài luyện nghe VSTEP">
               <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎧</div>
@@ -1925,7 +2126,8 @@
               </div>
               <span class="earn-action-badge"><i class="fa-solid fa-star"></i> Xem bài test</span>
             </div>
-      `;
+        `;
+      }
 
       const modal = document.createElement('div');
       modal.className = 'modal-overlay garden-modal';
@@ -2077,6 +2279,32 @@
           if (typeof showToast === 'function') {
             showToast('📝 Hãy chọn một lớp học ở danh sách bên trái để điểm danh và lưu bài học (+10💧 Nước Tưới)!');
           }
+        });
+      }
+
+      // Item 3 (Speaking): Click to switch to practice tab or scroll
+      const itemSpeaking = modal.querySelector('#earn-action-speaking');
+      if (itemSpeaking) {
+        itemSpeaking.addEventListener('click', () => {
+          modal.classList.remove('active');
+          if (typeof window.switchTab === 'function') {
+            window.switchTab('practice-topics');
+          } else {
+            const target = document.querySelector('[data-target="practice-topics"], .dashboard-grid, .test-list, main');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          if (typeof showToast === 'function') {
+            showToast('🎙️ Hãy chọn chủ đề để luyện phản xạ Speaking & tích lũy Nước + Nắng Nỗ Lực!');
+          }
+        });
+      }
+
+      // Item 4 (Speaking Vocab): Open Quiz Modal
+      const itemSpeakingVocab = modal.querySelector('#earn-action-speaking-vocab');
+      if (itemSpeakingVocab) {
+        itemSpeakingVocab.addEventListener('click', () => {
+          modal.classList.remove('active');
+          this.openQuizModal(null, 'speaking');
         });
       }
 
