@@ -310,49 +310,54 @@
 
     ensureGardenContainerDom() {
       if (typeof document === 'undefined') return;
-      if (document.getElementById('garden-container')) return;
+      let container = document.getElementById('garden-container');
+      if (container && container.querySelector('#garden-pot-wrapper')) {
+        return; // Đã có đầy đủ cấu trúc
+      }
 
       let targetParent = null;
       let insertBeforeEl = null;
 
-      // Case 1: Tab Overview in Speaking sites (speaking-part1/2/3)
-      const overviewPane = document.getElementById('overview');
-      if (overviewPane) {
-        targetParent = overviewPane;
-        const teacherCard = overviewPane.querySelector('.teacher-brand-card');
-        if (teacherCard && teacherCard.nextElementSibling) {
-          insertBeforeEl = teacherCard.nextElementSibling;
-        } else {
-          insertBeforeEl = overviewPane.firstChild;
-        }
-      }
-
-      // Case 2: Speaking Mock Tests (.app-main)
-      if (!targetParent) {
-        const appMain = document.querySelector('.app-main');
-        if (appMain) {
-          targetParent = appMain;
-          const dashboardGrid = appMain.querySelector('.dashboard-grid');
-          if (dashboardGrid) {
-            insertBeforeEl = dashboardGrid;
+      if (!container) {
+        // Case 1: Tab Overview in Speaking sites (speaking-part1/2/3)
+        const overviewPane = document.getElementById('overview');
+        if (overviewPane) {
+          targetParent = overviewPane;
+          const teacherCard = overviewPane.querySelector('.teacher-brand-card');
+          if (teacherCard && teacherCard.nextElementSibling) {
+            insertBeforeEl = teacherCard.nextElementSibling;
+          } else {
+            insertBeforeEl = overviewPane.firstChild;
           }
         }
-      }
 
-      // Case 3: Generic fallback
-      if (!targetParent) {
-        const main = document.querySelector('.main-content, #main-content, main, .content-area, #app');
-        if (main) {
-          targetParent = main;
-          insertBeforeEl = main.firstChild;
+        // Case 2: Speaking Mock Tests (.app-main)
+        if (!targetParent) {
+          const appMain = document.querySelector('.app-main');
+          if (appMain) {
+            targetParent = appMain;
+            const dashboardGrid = appMain.querySelector('.dashboard-grid');
+            if (dashboardGrid) {
+              insertBeforeEl = dashboardGrid;
+            }
+          }
         }
+
+        // Case 3: Generic fallback
+        if (!targetParent) {
+          const main = document.querySelector('.main-content, #main-content, main, .content-area, #app');
+          if (main) {
+            targetParent = main;
+            insertBeforeEl = main.firstChild;
+          }
+        }
+
+        if (!targetParent) return;
+        container = document.createElement('div');
+        container.id = 'garden-container';
       }
 
-      if (!targetParent) return;
-
-      const container = document.createElement('div');
       container.className = 'home-card garden-container';
-      container.id = 'garden-container';
       container.style.cssText = 'margin-bottom: 24px; max-width: 680px; margin-left: auto; margin-right: auto;';
       container.innerHTML = `
         <div class="garden-header-row">
@@ -436,10 +441,12 @@
         </div>
       `;
 
-      if (insertBeforeEl) {
-        targetParent.insertBefore(container, insertBeforeEl);
-      } else {
-        targetParent.appendChild(container);
+      if (!container.parentNode && targetParent) {
+        if (insertBeforeEl) {
+          targetParent.insertBefore(container, insertBeforeEl);
+        } else {
+          targetParent.appendChild(container);
+        }
       }
     },
 
