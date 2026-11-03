@@ -178,6 +178,8 @@
       waterDrops: 35, // Giọt nước nỗ lực tích lũy
       loginStreak: 1,
       lastLoginDate: '',
+      lastWateredDate: '', // Theo dõi ngày tưới nước gần nhất để héo cây nếu bỏ bê
+      isWilted: false, // Trạng thái héo rũ khi >= 1 ngày không được tưới
       harvestCount: 0,
       basket: {
         clover: 0
@@ -191,24 +193,41 @@
 
     init() {
       this.loadState();
+      this.checkWiltingStatus();
       this.checkDailyLoginReward();
       this.bindEvents();
       this.initStudentNameWatcher();
       this.render();
       this.startAmbientDecay();
+
+      // Show wilted alert notice if plant needs water
+      if (this.isPlantWilted()) {
+        setTimeout(() => {
+          this.updateSpeechBubble(`🥀 Em khát nước quá rồi... Đã 1 ngày ${this.getStudentName()} chưa tưới nước, lá cỏ đang bị héo rũ mất rồi! Mau tưới cho em 10💧 nước để hồi sinh nhé! 🥺💧`);
+        }, 600);
+      }
+
       if (typeof window !== 'undefined') {
-        if (window.location.hash === '#quiz') {
+        const hash = window.location.hash;
+        if (hash === '#quiz') {
           setTimeout(() => this.openQuizModal(), 300);
-        } else if (window.location.hash === '#quiz-benefits') {
+        } else if (hash === '#quiz-benefits') {
           setTimeout(() => this.openQuizModal(null, 'benefits'), 300);
-        } else if (window.location.hash === '#quiz-speaking') {
+        } else if (hash === '#quiz-speaking') {
           setTimeout(() => this.openQuizModal(null, 'speaking'), 300);
-        } else if (window.location.hash === '#quiz-writing') {
+        } else if (hash === '#quiz-writing') {
           setTimeout(() => this.openQuizModal(null, 'writing'), 300);
-        } else if (window.location.hash === '#harvest-test') {
+        } else if (hash === '#harvest-test') {
           setTimeout(() => this.harvest(), 400);
-        } else if (window.location.hash === '#earn-water') {
+        } else if (hash === '#earn-water') {
           setTimeout(() => this.openEarnWaterModal(), 300);
+        } else if (hash === '#wilted' || hash === '#wilt-test') {
+          // Dedicated debug hash for testing wilted plant state
+          this.state.lastWateredDate = '2026-01-01';
+          this.state.moisture = 10;
+          this.checkWiltingStatus();
+          this.render();
+          this.updateSpeechBubble(`🥀 Em khát nước quá rồi... Đã 1 ngày ${this.getStudentName()} chưa tưới nước, lá cỏ đang bị héo rũ mất rồi! Mau tưới cho em 10💧 nước để hồi sinh nhé! 🥺💧`);
         }
       }
     },
@@ -240,6 +259,10 @@
       if (!this.state.loginStreak) {
         this.state.loginStreak = 1;
       }
+      if (!this.state.lastWateredDate) {
+        // Initialize to today for fresh players so they start healthy
+        this.state.lastWateredDate = new Date().toISOString().slice(0, 10);
+      }
     },
 
     saveState() {
@@ -247,6 +270,60 @@
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
       } catch (e) {
         console.warn('Could not save garden state to localStorage', e);
+      }
+    },
+
+    // ==========================================
+    // PLANT WILTING & REVIVAL ENGINE (HÉO RŨ KHI 1 NGÀY KHÔNG TƯỚI)
+    // ==========================================
+    getTodayDateString() {
+      return new Date().toISOString().slice(0, 10);
+    },
+
+    getDaysSinceLastWater() {
+      if (!this.state.lastWateredDate) return 0;
+      const today = this.getTodayDateString();
+      if (this.state.lastWateredDate === today) return 0;
+
+      try {
+        const t1 = new Date(this.state.lastWateredDate + 'T00:00:00');
+        const t2 = new Date(today + 'T00:00:00');
+        const diffMs = t2.getTime() - t1.getTime();
+        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+        return Math.max(0, diffDays);
+      } catch (e) {
+        return 0;
+      }
+    },
+
+    isPlantWilted() {
+      // 1. If clover already reached full bloom (100%), it stays ready to harvest
+      if (this.state.progress >= 100) return false;
+      // 2. If >= 1 day has passed without watering, the clover withers
+      return this.getDaysSinceLastWater() >= 1;
+    },
+
+    checkWiltingStatus() {
+      if (this.isPlantWilted()) {
+        this.state.isWilted = true;
+        // Dry out soil moisture when neglected
+        if (this.state.moisture > 15) {
+          this.state.moisture = 15;
+          this.saveState();
+        }
+      } else {
+        this.state.isWilted = false;
+      }
+    },
+
+    triggerRevivalAnimation() {
+      const potWrapper = document.getElementById('garden-pot-wrapper');
+      if (potWrapper) {
+        potWrapper.classList.remove('is-wilted');
+        potWrapper.classList.remove('pot-revival-burst');
+        void potWrapper.offsetWidth;
+        potWrapper.classList.add('pot-revival-burst');
+        setTimeout(() => potWrapper.classList.remove('pot-revival-burst'), 1200);
       }
     },
 
@@ -538,16 +615,33 @@
         return;
       }
 
+      const wasWilted = this.isPlantWilted();
+
       // Deduct water
       this.state.waterDrops -= cost;
       this.state.moisture = Math.min(100, this.state.moisture + 35);
+      this.state.lastWateredDate = this.getTodayDateString();
+      this.state.isWilted = false;
       this.addProgress(25);
 
       GardenAudio.playWater();
       this.triggerPlantBounce();
       this.triggerWateringAnimation();
-      this.spawnParticles('💧', 6);
-      this.updateSpeechBubble(`Bé cỏ được tưới 10💧 nước nỗ lực mát lành, đang vươn mình lớn nhanh! 💧🍀 (Còn ${this.state.waterDrops}💧)`);
+
+      if (wasWilted) {
+        this.triggerRevivalAnimation();
+        this.spawnParticles('🌿', 8);
+        this.spawnParticles('✨', 8);
+        this.spawnParticles('💧', 8);
+        this.updateSpeechBubble(`🎉 Oa, tuyệt vời quá! Cảm ơn ${this.getStudentName()} đã tưới nước kịp thời! Bé cỏ 4 lá đã hồi sinh tươi tốt và xanh mướt trở lại rồi! 🥰🌿✨`);
+        if (typeof showToast === 'function') {
+          showToast(`🌿 Bé Cỏ 4 Lá đã hồi sinh xanh mướt nhờ 10💧 nước nỗ lực của ${this.getStudentName()}!`);
+        }
+      } else {
+        this.spawnParticles('💧', 6);
+        this.updateSpeechBubble(`Bé cỏ được tưới 10💧 nước nỗ lực mát lành, đang vươn mình lớn nhanh! 💧🍀 (Còn ${this.state.waterDrops}💧)`);
+      }
+
       this.saveState();
       this.render();
     },
@@ -563,6 +657,17 @@
 
     // 2. Sunlight Action (+20%)
     sunbathe() {
+      if (this.isPlantWilted()) {
+        GardenAudio.playSun();
+        this.triggerPlantBounce();
+        this.spawnParticles('🥀', 3);
+        this.updateSpeechBubble(`🥀 Cây đang bị héo rũ vì 1 ngày chưa tưới nước! Phơi nắng lúc này sẽ làm cây càng khô hơn. Mau bấm "Cứu cây hồi sinh" để tưới 10💧 nước trước nhé ${this.getStudentName()}! 🥺💧`);
+        if (typeof showToast === 'function') {
+          showToast('🥀 Cây đang héo vì thiếu nước! Hãy tưới nước cứu cây trước khi tắm nắng nhé!');
+        }
+        return;
+      }
+
       if (this.state.progress >= 100) {
         this.triggerReadyToHarvest();
         return;
@@ -582,6 +687,17 @@
 
     // 3. Fertilize Action (+30%)
     fertilize() {
+      if (this.isPlantWilted()) {
+        GardenAudio.playSun();
+        this.triggerPlantBounce();
+        this.spawnParticles('🥀', 3);
+        this.updateSpeechBubble(`🥀 Cây đang bị héo rũ vì thiếu nước! Đất đang khô cằn nên chưa thể hấp thụ phân bón. Mau tưới 10💧 nước cứu cây trước nhé ${this.getStudentName()}! 🥺💧`);
+        if (typeof showToast === 'function') {
+          showToast('🥀 Đất khô cằn do chưa tưới nước! Hãy bấm "Cứu cây hồi sinh" trước nhé!');
+        }
+        return;
+      }
+
       if (this.state.progress >= 100) {
         this.triggerReadyToHarvest();
         return;
@@ -602,6 +718,16 @@
     petPlant() {
       GardenAudio.playSun();
       this.triggerPlantBounce();
+
+      if (this.isPlantWilted()) {
+        this.spawnParticles('🥀', 3);
+        this.updateSpeechBubble(`🥀 Cây cỏ 4 lá đang bị héo rũ vì thiếu nước! Bạn vuốt nhẹ nhưng bé cỏ khẽ thì thầm: "Tưới 10💧 nước cứu em với ${this.getStudentName()} ơi..." 🥺💧`);
+        if (typeof showToast === 'function') {
+          showToast('🥀 Cây đang bị héo do 1 ngày chưa tưới nước! Mau bấm "Cứu cây hồi sinh" nhé!');
+        }
+        return;
+      }
+
       this.spawnParticles('💚', 3);
       this.spawnParticles('✨', 3);
       if (this.state.progress < 100) {
@@ -1848,7 +1974,10 @@
 
       // 3. Stage Badge Text & Styling
       if (stageBadge) {
-        if (p >= 100) {
+        if (this.isPlantWilted()) {
+          stageBadge.textContent = '🥀 Cỏ Đang Héo Rũ (Cần Nước!)';
+          stageBadge.className = 'garden-stage-badge stage-wilted';
+        } else if (p >= 100) {
           stageBadge.textContent = '🍀 Bừng Nở 4 Lá May Mắn!';
           stageBadge.className = 'garden-stage-badge stage-blooming';
         } else if (p >= 60) {
@@ -1860,6 +1989,29 @@
         } else {
           stageBadge.textContent = '🌱 Vừa Gieo Mầm Cỏ';
           stageBadge.className = 'garden-stage-badge stage-seeding';
+        }
+      }
+
+      // Visual Wilted class on Pot Wrapper
+      if (potWrapper) {
+        if (this.isPlantWilted()) {
+          potWrapper.classList.add('is-wilted');
+        } else {
+          potWrapper.classList.remove('is-wilted');
+        }
+      }
+
+      // Dynamic Water Button (Revive vs Normal)
+      const btnWater = document.getElementById('btn-water-flower');
+      if (btnWater) {
+        if (this.isPlantWilted()) {
+          btnWater.innerHTML = '<span class="action-icon">💧</span> Cứu cây hồi sinh! <span class="action-cost-tag">10💧</span>';
+          btnWater.classList.add('btn-revive-pulse');
+          btnWater.title = 'Cây đang bị héo do 1 ngày chưa tưới nước! Mau tưới 10💧 để hồi sinh nhé!';
+        } else {
+          btnWater.innerHTML = '<span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧</span>';
+          btnWater.classList.remove('btn-revive-pulse');
+          btnWater.title = 'Tưới nước cho hoa (-10💧, +25% lớn)';
         }
       }
 

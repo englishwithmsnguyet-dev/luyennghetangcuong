@@ -2696,3 +2696,94 @@
     color: #059669 !important;
 }
 
+/* ========================================================
+   WILTED PLANT STATE (CÂY HÉO RŨ KHI >= 1 NGÀY KHÔNG TƯỚI)
+   ======================================================== */
+.garden-pot-wrapper.is-wilted .clover-living-img,
+.clover-living-img.is-wilted {
+    filter: grayscale(60%) saturate(50%) sepia(25%) brightness(0.82) hue-rotate(-20deg) !important;
+    transform: translateY(8px) rotate(-4deg) scale(0.92) !important;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    animation: wiltDroopAnim 3.5s ease-in-out infinite alternate !important;
+}
+
+@keyframes wiltDroopAnim {
+    0% {
+        transform: translateY(8px) rotate(-4deg) scale(0.92);
+        filter: grayscale(60%) saturate(50%) sepia(25%) brightness(0.82) hue-rotate(-20deg);
+    }
+    100% {
+        transform: translateY(12px) rotate(-2deg) scale(0.90);
+        filter: grayscale(65%) saturate(45%) sepia(30%) brightness(0.78) hue-rotate(-25deg);
+    }
+}
+
+/* Wilted Floating Teardrop / Dry Indicator */
+.garden-pot-wrapper.is-wilted::after {
+    content: '🥀';
+    position: absolute;
+    top: 20px;
+    right: 32px;
+    font-size: 30px;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
+    animation: wiltIconFloat 2s ease-in-out infinite alternate;
+    z-index: 10;
+    pointer-events: none;
+}
+
+@keyframes wiltIconFloat {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.85; }
+    100% { transform: translateY(-7px) rotate(12deg); opacity: 1; }
+}
+
+/* Wilted Stage Warning Badge */
+.garden-stage-badge.stage-wilted {
+    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%) !important;
+    color: #DC2626 !important;
+    border: 1.5px solid #FCA5A5 !important;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2) !important;
+    animation: wiltPulseBadge 1.8s ease-in-out infinite alternate !important;
+    font-weight: 800 !important;
+}
+
+@keyframes wiltPulseBadge {
+    0% { transform: scale(1); box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2); }
+    100% { transform: scale(1.04); box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35); }
+}
+
+/* Button Revive Call-To-Action Glow */
+#btn-water-flower.btn-revive-pulse {
+    background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+    color: #FFFFFF !important;
+    border: 2px solid #38BDF8 !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45) !important;
+    animation: reviveBtnGlow 1.4s ease-in-out infinite alternate !important;
+    font-weight: 800 !important;
+}
+
+@keyframes reviveBtnGlow {
+    0% { transform: scale(1); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); }
+    100% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.65); }
+}
+
+/* Revival Animation when watered back to health */
+.pot-revival-burst {
+    animation: revivalBurst 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+}
+
+@keyframes revivalBurst {
+    0% {
+        transform: scale(0.9) translateY(8px);
+        filter: grayscale(60%) brightness(0.8);
+    }
+    50% {
+        transform: scale(1.12) translateY(-4px);
+        filter: brightness(1.25) saturate(140%);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        filter: brightness(1) saturate(100%);
+    }
+}
+
+
