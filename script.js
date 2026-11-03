@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderSidebar();
         loadDay(currentPartIndex);
+        updateSidebarUserProfile();
         checkLoginState();
     }
 
@@ -642,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backupOverlay = document.getElementById('progress-backup-overlay');
     const btnHeaderBackup = document.getElementById('btn-header-backup');
     const btnSidebarBackup = document.getElementById('btn-sidebar-backup');
+    const sidebarUserCard = document.getElementById('sidebar-user-card');
     const sidebarProgressBox = document.getElementById('sidebar-progress-box');
     const btnCloseBackupModal = document.getElementById('btn-close-backup-modal');
     const btnCloseBackupFooter = document.getElementById('btn-close-backup-footer');
@@ -656,6 +658,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnConfirmCodeRestore = document.getElementById('btn-confirm-code-restore');
     const btnResetAllProgress = document.getElementById('btn-reset-all-progress');
     const backupMapGrid = document.getElementById('backup-map-grid');
+
+    function updateSidebarUserProfile() {
+        const sName = (localStorage.getItem('vstep_student_name') || '').trim();
+        const sClass = (localStorage.getItem('vstep_student_class') || '').trim();
+
+        const roleEl = document.getElementById('sidebar-user-role');
+        const nameEl = document.getElementById('sidebar-user-name');
+        const classEl = document.getElementById('sidebar-user-class');
+        const avatarEl = document.getElementById('sidebar-user-avatar');
+
+        const isTeacher = (sName.toUpperCase() === 'PTMN') || (sClass.toUpperCase() === 'GV');
+
+        if (nameEl) {
+            nameEl.textContent = sName || 'Học viên Miss Nguyệt';
+            nameEl.title = sName || 'Học viên Miss Nguyệt';
+        }
+
+        if (classEl) {
+            if (isTeacher) {
+                classEl.textContent = 'Giáo viên hướng dẫn';
+            } else if (sClass) {
+                classEl.textContent = `Lớp: ${sClass}`;
+            } else {
+                classEl.textContent = 'Lớp: VSTEP';
+            }
+        }
+
+        if (roleEl) {
+            roleEl.textContent = isTeacher ? 'GIÁO VIÊN' : 'HỌC VIÊN';
+        }
+
+        if (avatarEl) {
+            avatarEl.innerHTML = isTeacher ? 
+                '<i class="fa-solid fa-chalkboard-user"></i>' : 
+                '<i class="fa-solid fa-user-graduate"></i>';
+        }
+    }
 
     window.showToast = function(msg) {
         let toast = document.getElementById('app-floating-toast');
@@ -923,6 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (parsed.studentClass) {
             localStorage.setItem('vstep_student_class', parsed.studentClass);
         }
+        updateSidebarUserProfile();
 
         if (parsed.gardenState) {
             try {
@@ -966,12 +1006,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgress();
         renderSidebar();
         loadDay(currentPartIndex);
+        updateSidebarUserProfile();
         updateBackupModalStats();
         window.showToast('🗑️ Toàn bộ tiến độ luyện nghe đã được đặt lại về ban đầu.');
     }
 
     // Attach Backup event listeners
     if (btnHeaderBackup) btnHeaderBackup.addEventListener('click', openProgressBackupModal);
+    if (sidebarUserCard) sidebarUserCard.addEventListener('click', openProgressBackupModal);
     if (btnSidebarBackup) btnSidebarBackup.addEventListener('click', (e) => {
         e.stopPropagation();
         openProgressBackupModal();
@@ -1027,6 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedName = localStorage.getItem('vstep_student_name') || '';
         const savedClass = localStorage.getItem('vstep_student_class') || '';
         const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN');
+        updateSidebarUserProfile();
 
         if (studentNameInput) studentNameInput.value = isTeacherSaved ? 'PTMN' : savedName;
         if (studentClassInput) studentClassInput.value = isTeacherSaved ? 'GV' : savedClass;
@@ -1151,6 +1194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('vstep_student_class', rawClassVal);
         localStorage.setItem('vstep_student_logged_in', 'true');
         sessionStorage.setItem('vstep_student_logged_in', 'true');
+        updateSidebarUserProfile();
 
         // Submit to Google Form (Multi-method guarantee)
         try {
