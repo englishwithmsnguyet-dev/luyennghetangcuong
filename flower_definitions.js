@@ -1624,10 +1624,15 @@
         <div class="clover-ground-shadow" aria-hidden="true"></div>
         <div class="clover-aura-halo" aria-hidden="true"></div>
         <div class="clover-breeze-rig">
-          <img src="assets/garden/clover_stage_${stage}.png"
-               alt="Cỏ 4 Lá May Mắn VSTEP - Giai đoạn ${stage}"
-               class="clover-living-art"
-               draggable="false" />
+          <picture class="clover-picture-wrap">
+            <source type="image/webp" srcset="assets/garden/clover_stage_${stage}.webp">
+            <img src="assets/garden/clover_stage_${stage}.png"
+                 alt="Cỏ 4 Lá May Mắn VSTEP - Giai đoạn ${stage}"
+                 class="clover-living-art"
+                 draggable="false"
+                 loading="eager"
+                 decoding="async" />
+          </picture>
           <svg viewBox="0 0 100 100" class="clover-dew-overlay" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             ${glintMarkup}
             ${stage4Accents}

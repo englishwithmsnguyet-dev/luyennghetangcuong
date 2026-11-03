@@ -66,7 +66,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 4px;
+    padding-bottom: 6px;
     overflow: hidden;
     cursor: pointer;
     margin-bottom: 14px;
@@ -172,8 +172,8 @@
 /* Flower Pot & Lifelike Botanical Clover Rig */
 .garden-pot-wrapper {
     position: relative;
-    width: 222px;
-    height: 222px;
+    width: 216px;
+    height: 216px;
     z-index: 2;
     display: flex;
     align-items: flex-end;
@@ -209,11 +209,11 @@
 .clover-ground-shadow {
     position: absolute;
     left: 50%;
-    bottom: 2.2%;
-    width: 52%;
-    height: 10.5%;
+    bottom: 3.5%;
+    width: 54%;
+    height: 11%;
     transform: translateX(-50%);
-    background: radial-gradient(ellipse at 50% 50%, rgba(68, 36, 18, 0.34) 0%, rgba(68, 36, 18, 0.14) 55%, rgba(68, 36, 18, 0) 78%);
+    background: radial-gradient(ellipse at 50% 50%, rgba(68, 36, 18, 0.38) 0%, rgba(68, 36, 18, 0.16) 55%, rgba(68, 36, 18, 0) 78%);
     border-radius: 50%;
     z-index: 1;
 }
@@ -247,6 +247,19 @@
     transform-origin: 50% 95%;
     animation: cloverBotanicalBreeze 5.2s ease-in-out infinite;
     will-change: transform;
+}
+
+.clover-picture-wrap {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.harvest-clover-pic,
+.basket-hero-pic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .clover-living-art {
@@ -2699,7 +2712,9 @@
 /* ========================================================
    WILTED PLANT STATE (CÂY HÉO RŨ KHI >= 1 NGÀY KHÔNG TƯỚI)
    ======================================================== */
+.garden-pot-wrapper.is-wilted .clover-living-art,
 .garden-pot-wrapper.is-wilted .clover-living-img,
+.clover-living-art.is-wilted,
 .clover-living-img.is-wilted {
     filter: grayscale(60%) saturate(50%) sepia(25%) brightness(0.82) hue-rotate(-20deg) !important;
     transform: translateY(8px) rotate(-4deg) scale(0.92) !important;
