@@ -574,16 +574,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const savedName = localStorage.getItem('vstep_student_name') || '';
         const savedClass = localStorage.getItem('vstep_student_class') || '';
-        if (studentNameInput && savedName) studentNameInput.value = savedName;
-        if (studentClassInput && savedClass) studentClassInput.value = savedClass;
-        if (studentPasswordInput) studentPasswordInput.value = '';
+        const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN');
+
+        if (studentNameInput) studentNameInput.value = isTeacherSaved ? 'PTMN' : savedName;
+        if (studentClassInput) studentClassInput.value = isTeacherSaved ? 'GV' : savedClass;
+        if (studentPasswordInput) {
+            studentPasswordInput.value = '';
+            if (isTeacherSaved) {
+                studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
+            } else {
+                studentPasswordInput.placeholder = 'Nhập mật khẩu...';
+            }
+        }
         if (loginError) {
             loginError.style.display = 'none';
             loginError.textContent = '';
         }
 
         setTimeout(() => {
-            if (studentNameInput && !studentNameInput.value) {
+            if (isTeacherSaved && btnLogin) {
+                btnLogin.focus();
+            } else if (studentNameInput && !studentNameInput.value) {
                 studentNameInput.focus();
             } else if (studentClassInput && !studentClassInput.value) {
                 studentClassInput.focus();
@@ -591,6 +602,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 studentPasswordInput.focus();
             }
         }, 200);
+    }
+
+    if (studentNameInput) {
+        studentNameInput.addEventListener('input', () => {
+            const val = studentNameInput.value.trim().toUpperCase();
+            if (val === 'PTMN') {
+                if (studentClassInput && (!studentClassInput.value || studentClassInput.value.trim() === '')) {
+                    studentClassInput.value = 'GV';
+                }
+                if (studentPasswordInput) {
+                    studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
+                }
+            } else {
+                if (studentPasswordInput && studentPasswordInput.placeholder.includes('không cần')) {
+                    studentPasswordInput.placeholder = 'Nhập mật khẩu...';
+                }
+            }
+        });
+    }
+
+    if (studentClassInput) {
+        studentClassInput.addEventListener('input', () => {
+            const cVal = studentClassInput.value.trim().toUpperCase();
+            const nVal = studentNameInput ? studentNameInput.value.trim().toUpperCase() : '';
+            if (cVal === 'GV' && nVal === 'PTMN') {
+                if (studentPasswordInput) {
+                    studentPasswordInput.placeholder = '(Giáo viên không cần mật khẩu)';
+                }
+            }
+        });
     }
 
     if (togglePasswordBtn && studentPasswordInput) {
@@ -628,12 +669,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const normName = nameVal.toUpperCase();
-        const isTeacher = (normName === 'PTMN' && (rawClassVal === 'GV' || !rawClassVal)) || 
-                          (normName === 'PTMN' && rawClassVal === 'GV') ||
-                          normName.includes('CÔ NGUYỆT') || normName.includes('CO NGUYET');
+        // Tài khoản giáo viên: PTMN với mã lớp GV (hoặc để trống lớp sẽ tự gán GV), không cần mật khẩu
+        const isTeacher = (normName === 'PTMN') || normName.includes('CÔ NGUYỆT') || normName.includes('CO NGUYET');
 
         if (isTeacher) {
             if (!rawClassVal) rawClassVal = 'GV';
+            // Không yêu cầu mật khẩu đối với Giáo viên PTMN
         } else {
             if (rawClassVal === 'GV') {
                 showLoginError('Mã lớp GV chỉ dành riêng cho tài khoản Giáo viên (PTMN)!');

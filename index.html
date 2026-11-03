@@ -327,19 +327,19 @@
             <div class="login-course-title">VSTEP LISTENING – LUYỆN NGHE TĂNG CƯỜNG</div>
             <h2 class="login-title-custom">NHẬP THÔNG TIN<br/>ĐỂ BẮT ĐẦU HỌC 🚀</h2>
             
-            <form id="loginForm" class="login-form-custom" onsubmit="return false;">
+            <form id="loginForm" class="login-form-custom" onsubmit="return false;" novalidate>
                 <div class="input-group-custom">
                     <label for="studentName">
                         <i class="fa-solid fa-user-pen" style="color: #6366f1;"></i> HỌ VÀ TÊN HỌC VIÊN:
                     </label>
-                    <input type="text" id="studentName" placeholder="Nhập họ và tên học viên..." autocomplete="name" spellcheck="false" required>
+                    <input type="text" id="studentName" placeholder="Nhập họ và tên học viên..." autocomplete="name" spellcheck="false">
                 </div>
                 
                 <div class="input-group-custom">
                     <label for="studentClass">
                         <i class="fa-solid fa-chalkboard-user" style="color: #0284c7;"></i> MÃ LỚP HỌC:
                     </label>
-                    <input type="text" id="studentClass" placeholder="Nhập mã lớp học (VD: CB210, CB211...)" autocomplete="off" spellcheck="false" required>
+                    <input type="text" id="studentClass" placeholder="Nhập mã lớp học (VD: CB210, CB211...)" autocomplete="off" spellcheck="false">
                 </div>
 
                 <div class="input-group-custom">
@@ -347,7 +347,7 @@
                         <i class="fa-solid fa-key" style="color: #d97706;"></i> MẬT KHẨU TRUY CẬP:
                     </label>
                     <div class="pwd-input-wrap">
-                        <input type="password" id="studentPassword" placeholder="Nhập mật khẩu..." autocomplete="current-password" spellcheck="false" required>
+                        <input type="password" id="studentPassword" placeholder="Nhập mật khẩu..." autocomplete="current-password" spellcheck="false">
                         <button type="button" id="togglePasswordBtn" class="btn-toggle-pwd" title="Hiện/Ẩn mật khẩu">
                             <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
                         </button>
