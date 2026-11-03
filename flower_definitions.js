@@ -1008,7 +1008,7 @@
       "question": "Theo công thức chuẩn của Cô Nguyệt trong Speaking Part 2, khi tình huống hỏi về lựa chọn của chính bản thân mình (Subject = I), câu mở bài chuẩn band B2 là gì?",
       "options": [
           "Well, if I had to choose [tình huống], I would go for [lựa chọn của mình].",
-          "Weighing all three alternatives, I firmly believe that Option A is the most viable solution.",
+          "In my personal opinion, I think that Option A is the best choice for me.",
           "There are 3 options on the computer screen, I pick Option A.",
           "I like Option A because it is cheap and good."
       ],

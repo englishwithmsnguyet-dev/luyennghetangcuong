@@ -547,11 +547,23 @@
     flex-wrap: wrap !important;
     box-sizing: border-box !important;
 }
+.hidden,
+[hidden],
 .garden-care-row.hidden,
 .garden-harvest-row.hidden,
 .garden-quiz-row.hidden,
-.garden-btn.hidden {
+.garden-btn.hidden,
+#btn-harvest-flower.hidden {
     display: none !important;
+    visibility: hidden !important;
+}
+
+/* Fallback protection for legacy garden actions row */
+.garden-actions-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
 }
 .garden-care-row .garden-btn {
     flex: 1 1 120px !important;
@@ -1773,9 +1785,85 @@
     font-weight: 600;
 }
 .quiz-footer-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 16px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #F1F5F9 !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+}
+
+.quiz-footer-left {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+.quiz-footer-actions button,
+.quiz-footer-actions .btn {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 9px 14px !important;
+    border-radius: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    outline: none !important;
+    line-height: 1.4 !important;
+}
+
+#btn-quiz-reset-deck,
+#btn-quiz-next,
+.quiz-footer-actions .btn-secondary {
+    background: #F8FAFC !important;
+    color: #334155 !important;
+    border: 1.5px solid #CBD5E1 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+#btn-quiz-reset-deck i,
+#btn-quiz-next i,
+.quiz-footer-actions .btn-secondary i {
+    color: #64748B !important;
+    font-size: 12px !important;
+}
+
+#btn-quiz-reset-deck:hover,
+#btn-quiz-next:hover,
+.quiz-footer-actions .btn-secondary:hover {
+    background: #EDF2F7 !important;
+    color: #0F172A !important;
+    border-color: #94A3B8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+#btn-quiz-reset-deck:hover i,
+#btn-quiz-next:hover i,
+.quiz-footer-actions .btn-secondary:hover i {
+    color: #0F172A !important;
+}
+
+#btn-quiz-done,
+.quiz-footer-actions .btn-primary {
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28) !important;
+    margin-left: auto !important;
+}
+
+#btn-quiz-done:hover,
+.quiz-footer-actions .btn-primary:hover {
+    background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.38) !important;
 }
 
 /* Water Earning Guide Modal */

@@ -722,12 +722,14 @@
             </div>
 
             <div class="quiz-footer-actions">
-              <button class="btn btn-secondary btn-small" id="btn-quiz-reset-deck" title="Làm mới tiến độ để làm lại từ đầu">
-                <i class="fa-solid fa-rotate-left"></i> Làm lại từ đầu
-              </button>
-              <button class="btn btn-secondary btn-small" id="btn-quiz-next">
-                <i class="fa-solid fa-arrows-rotate"></i> Đổi câu hỏi khác
-              </button>
+              <div class="quiz-footer-left">
+                <button class="btn btn-secondary btn-small" id="btn-quiz-reset-deck" title="Làm mới tiến độ để làm lại từ đầu">
+                  <i class="fa-solid fa-rotate-left"></i> Làm lại từ đầu
+                </button>
+                <button class="btn btn-secondary btn-small" id="btn-quiz-next">
+                  <i class="fa-solid fa-arrows-rotate"></i> Đổi câu hỏi khác
+                </button>
+              </div>
               <button class="btn btn-primary btn-small" id="btn-quiz-done">
                 <i class="fa-solid fa-seedling"></i> Về Chậu Cây Cỏ May Mắn
               </button>

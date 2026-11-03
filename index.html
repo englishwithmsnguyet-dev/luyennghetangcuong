@@ -12,7 +12,7 @@
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="flower_garden.css?v=20261103_v1">
+    <link rel="stylesheet" href="flower_garden.css?v=20261103_v8">
 </head>
 <body>
     <div class="app-layout">
@@ -32,7 +32,7 @@
                 </button>
             </div>
             
-            <div class="progress-box">
+            <div class="progress-box" id="sidebar-progress-box" title="Nhấn để mở Bảng Sao lưu & Thống kê tiến độ">
                 <div class="progress-header">
                     <span>Tiến độ lộ trình</span>
                     <span id="progress-percent">0%</span>
@@ -40,6 +40,10 @@
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
                 </div>
+                <button class="btn-backup-sidebar" id="btn-sidebar-backup" type="button" title="Mở Bảng Sao lưu & Khôi phục tiến độ">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Sao lưu tiến độ</span>
+                </button>
             </div>
             
             <nav class="day-menu" id="day-menu">
@@ -51,9 +55,15 @@
         <main class="main-content">
             <div class="content-wrapper">
                 
-                <a href="https://www.facebook.com/nguyetpham28" target="_blank" class="top-badge">
-                    <span>ENGLISH WITH MISS NGUYET</span>
-                </a>
+                <div class="top-nav-bar">
+                    <a href="https://www.facebook.com/nguyetpham28" target="_blank" class="top-badge">
+                        <span>ENGLISH WITH MISS NGUYET</span>
+                    </a>
+                    <button class="btn-backup-header" id="btn-header-backup" type="button" title="Sao lưu & Khôi phục tiến độ học">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Sao lưu tiến độ</span>
+                    </button>
+                </div>
                 
                 <div class="page-header">
                     <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-left">
@@ -310,6 +320,140 @@
 
     </div>
 
+    <!-- Progress Backup & Restore Modal Overlay -->
+    <div id="progress-backup-overlay" class="backup-overlay" style="display: none;">
+        <div class="backup-modal-card">
+            <button class="backup-close-btn" id="btn-close-backup-modal" title="Đóng cửa sổ">&times;</button>
+            
+            <div class="backup-modal-header">
+                <div class="backup-icon-wrap">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div class="backup-header-text">
+                    <h3>SAO LƯU & KHÔI PHỤC TIẾN ĐỘ</h3>
+                    <p>Bảo toàn tiến độ học tập trên trình duyệt hoặc chuyển đổi qua lại giữa điện thoại và máy tính</p>
+                </div>
+            </div>
+
+            <!-- Stats Overview 4 Cards -->
+            <div class="backup-stats-grid">
+                <div class="backup-stat-card">
+                    <span class="b-stat-label"><i class="fa-solid fa-headphones"></i> BÀI ĐÃ HOÀN THÀNH</span>
+                    <strong class="b-stat-val text-green" id="b-stat-completed">0 / 0</strong>
+                    <span class="b-stat-sub" id="b-stat-percent">0% lộ trình</span>
+                </div>
+                <div class="backup-stat-card">
+                    <span class="b-stat-label"><i class="fa-solid fa-circle-check"></i> CÂU HỎI ĐÃ LÀM</span>
+                    <strong class="b-stat-val text-blue" id="b-stat-questions">0 câu</strong>
+                    <span class="b-stat-sub">Đáp án đã lưu</span>
+                </div>
+                <div class="backup-stat-card">
+                    <span class="b-stat-label"><i class="fa-solid fa-clover"></i> CỎ 4 LÁ & NƯỚC</span>
+                    <strong class="b-stat-val text-amber" id="b-stat-garden">0 cành</strong>
+                    <span class="b-stat-sub" id="b-stat-water">0 giọt nước</span>
+                </div>
+                <div class="backup-stat-card">
+                    <span class="b-stat-label"><i class="fa-solid fa-user-graduate"></i> HỌC VIÊN</span>
+                    <strong class="b-stat-val text-purple" id="b-stat-student">Học viên</strong>
+                    <span class="b-stat-sub" id="b-stat-class">Lớp VSTEP</span>
+                </div>
+            </div>
+
+            <!-- Overall Progress Bar -->
+            <div class="backup-progress-section">
+                <div class="b-progress-head">
+                    <span><i class="fa-solid fa-chart-line" style="color: #10b981;"></i> Tiến độ lộ trình tổng thể</span>
+                    <strong id="b-progress-percent-text">0%</strong>
+                </div>
+                <div class="b-progress-track">
+                    <div class="b-progress-fill" id="b-progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Main 2-Column Action Grid: Export & Import -->
+            <div class="backup-actions-grid">
+                <!-- Column 1: Export -->
+                <div class="b-action-col export-col">
+                    <div class="b-col-header">
+                        <i class="fa-solid fa-download"></i>
+                        <h4>1. XUẤT & SAO LƯU TIẾN ĐỘ</h4>
+                    </div>
+                    <p class="b-col-desc">
+                        Tải file sao lưu về máy để bảo toàn tiến độ đã học. Bạn có thể gửi file qua Zalo, Drive hoặc chuyển sang điện thoại/máy tính khác mở lên để tiếp tục học.
+                    </p>
+                    <div class="b-col-btns">
+                        <button type="button" class="btn-backup-cta btn-export-file" id="btn-export-json">
+                            <i class="fa-solid fa-file-arrow-down"></i> TẢI FILE SAO LƯU (.JSON)
+                        </button>
+                        <button type="button" class="btn-backup-secondary" id="btn-copy-code">
+                            <i class="fa-solid fa-copy"></i> Sao chép mã sao lưu dạng văn bản
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Column 2: Import -->
+                <div class="b-action-col import-col">
+                    <div class="b-col-header">
+                        <i class="fa-solid fa-upload"></i>
+                        <h4>2. PHỤC HỒI TIẾN ĐỘ ĐÃ LƯU</h4>
+                    </div>
+                    <p class="b-col-desc">
+                        Chọn file <code>.json</code> đã sao lưu trước đó từ máy tính, hoặc dán mã sao lưu để khôi phục lại toàn bộ bài đã hoàn thành và chậu cây may mắn.
+                    </p>
+                    <input type="file" id="backup-file-input" accept=".json,application/json" style="display:none;">
+                    <div class="b-col-btns">
+                        <button type="button" class="btn-backup-cta btn-import-file" id="btn-trigger-file-select">
+                            <i class="fa-solid fa-folder-open"></i> CHỌN FILE SAO LƯU ĐỂ PHỤC HỒI
+                        </button>
+                        <button type="button" class="btn-backup-secondary" id="btn-toggle-paste-code">
+                            <i class="fa-solid fa-paste"></i> Dán mã sao lưu thủ công...
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collapsible Paste Code Section -->
+            <div id="backup-paste-section" class="backup-paste-box" style="display:none;">
+                <div class="b-paste-title">
+                    <i class="fa-solid fa-code"></i> Dán chuỗi mã sao lưu của bạn vào đây:
+                </div>
+                <textarea id="backup-code-textarea" rows="3" placeholder="Nhấp chuột phải và Dán (Paste) mã sao lưu tại đây..."></textarea>
+                <div class="b-paste-actions">
+                    <button type="button" class="btn-cancel-paste" id="btn-cancel-paste">Hủy</button>
+                    <button type="button" class="btn-confirm-restore" id="btn-confirm-code-restore">
+                        <i class="fa-solid fa-circle-check"></i> Xác nhận phục hồi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Practice Map Grid -->
+            <div class="backup-map-section">
+                <div class="b-map-header">
+                    <div class="b-map-title">
+                        <i class="fa-solid fa-map-location-dot" style="color: var(--color-primary);"></i> BẢN ĐỒ TIẾN ĐỘ CÁC BÀI NGHE
+                    </div>
+                    <div class="b-map-legend">
+                        <span class="legend-item"><span class="legend-dot completed"></span> Đã hoàn thành</span>
+                        <span class="legend-item"><span class="legend-dot not-started"></span> Chưa hoàn thành</span>
+                    </div>
+                </div>
+                <div class="backup-map-grid" id="backup-map-grid">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer / Danger Zone -->
+            <div class="backup-modal-footer">
+                <button type="button" class="btn-reset-progress" id="btn-reset-all-progress">
+                    <i class="fa-solid fa-trash-can"></i> Đặt lại (reset) toàn bộ tiến độ
+                </button>
+                <button type="button" class="btn-close-modal" id="btn-close-backup-footer">
+                    Đóng cửa sổ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card-custom">
@@ -381,7 +525,7 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script src="flower_definitions.js?v=20261103_v1"></script>
-    <script src="flower_garden.js?v=20261103_v1"></script>
+    <script src="flower_definitions.js?v=20261103_v8"></script>
+    <script src="flower_garden.js?v=20261103_v8"></script>
 </body>
 </html>

@@ -93,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (index === currentPartIndex) {
                 menuItem.classList.add('active');
             }
+            if (userAnswers[day.title] && Object.keys(userAnswers[day.title]).length > 0) {
+                menuItem.classList.add('completed');
+            }
             menuItem.textContent = day.title;
             
             menuItem.addEventListener('click', () => {
@@ -632,6 +635,365 @@ document.addEventListener('DOMContentLoaded', () => {
             themeBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
         }
     });
+
+    // ==========================================
+    // BACKUP & RESTORE PROGRESS LOGIC
+    // ==========================================
+    const backupOverlay = document.getElementById('progress-backup-overlay');
+    const btnHeaderBackup = document.getElementById('btn-header-backup');
+    const btnSidebarBackup = document.getElementById('btn-sidebar-backup');
+    const sidebarProgressBox = document.getElementById('sidebar-progress-box');
+    const btnCloseBackupModal = document.getElementById('btn-close-backup-modal');
+    const btnCloseBackupFooter = document.getElementById('btn-close-backup-footer');
+    const btnExportJson = document.getElementById('btn-export-json');
+    const btnCopyCode = document.getElementById('btn-copy-code');
+    const btnTriggerFileSelect = document.getElementById('btn-trigger-file-select');
+    const backupFileInput = document.getElementById('backup-file-input');
+    const btnTogglePasteCode = document.getElementById('btn-toggle-paste-code');
+    const backupPasteSection = document.getElementById('backup-paste-section');
+    const backupCodeTextarea = document.getElementById('backup-code-textarea');
+    const btnCancelPaste = document.getElementById('btn-cancel-paste');
+    const btnConfirmCodeRestore = document.getElementById('btn-confirm-code-restore');
+    const btnResetAllProgress = document.getElementById('btn-reset-all-progress');
+    const backupMapGrid = document.getElementById('backup-map-grid');
+
+    window.showToast = function(msg) {
+        let toast = document.getElementById('app-floating-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'app-floating-toast';
+            toast.className = 'app-floating-toast';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<i class="fa-solid fa-bell"></i> <span>${msg}</span>`;
+        toast.classList.add('visible');
+        if (window._toastTimeout) clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(() => {
+            toast.classList.remove('visible');
+        }, 4000);
+    };
+
+    function openProgressBackupModal() {
+        updateBackupModalStats();
+        if (backupOverlay) {
+            backupOverlay.style.display = 'flex';
+        }
+    }
+
+    function closeProgressBackupModal() {
+        if (backupOverlay) {
+            backupOverlay.style.display = 'none';
+        }
+    }
+
+    function updateBackupModalStats() {
+        const availablePractices = appData.filter(d => !d.isPlaceholder && !d.isHome);
+        const totalCount = availablePractices.length;
+        let completedCount = 0;
+        let totalQuestionsCount = 0;
+
+        availablePractices.forEach(p => {
+            const ans = userAnswers[p.title] || {};
+            const answeredNum = Object.keys(ans).length;
+            if (answeredNum > 0) {
+                completedCount++;
+            }
+            totalQuestionsCount += answeredNum;
+        });
+
+        const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+        const statCompleted = document.getElementById('b-stat-completed');
+        const statPercent = document.getElementById('b-stat-percent');
+        const statQuestions = document.getElementById('b-stat-questions');
+        const statGarden = document.getElementById('b-stat-garden');
+        const statWater = document.getElementById('b-stat-water');
+        const statStudent = document.getElementById('b-stat-student');
+        const statClass = document.getElementById('b-stat-class');
+        const bProgressFill = document.getElementById('b-progress-fill');
+        const bProgressPercentText = document.getElementById('b-progress-percent-text');
+
+        if (statCompleted) statCompleted.textContent = `${completedCount} / ${totalCount}`;
+        if (statPercent) statPercent.textContent = `${pct}% lộ trình`;
+        if (statQuestions) statQuestions.textContent = `${totalQuestionsCount} câu`;
+
+        // Garden stats
+        let gardenState = {};
+        try {
+            gardenState = JSON.parse(localStorage.getItem('garden_state_v1') || '{}');
+        } catch (e) {}
+        const harvestCount = gardenState.harvestCount || 0;
+        const waterDrops = (gardenState.waterDrops !== undefined) ? gardenState.waterDrops : 35;
+        if (statGarden) statGarden.textContent = `${harvestCount} cành cỏ`;
+        if (statWater) statWater.textContent = `${waterDrops} giọt nước`;
+
+        // Student stats
+        const sName = localStorage.getItem('vstep_student_name') || 'Học viên';
+        const sClass = localStorage.getItem('vstep_student_class') || 'Chưa chọn lớp';
+        if (statStudent) statStudent.textContent = sName;
+        if (statClass) statClass.textContent = `Lớp: ${sClass}`;
+
+        if (bProgressFill) bProgressFill.style.width = `${pct}%`;
+        if (bProgressPercentText) bProgressPercentText.textContent = `${pct}%`;
+
+        // Render Practice Grid Map
+        if (backupMapGrid) {
+            backupMapGrid.innerHTML = '';
+            availablePractices.forEach(p => {
+                const ans = userAnswers[p.title] || {};
+                const isDone = Object.keys(ans).length > 0;
+                const item = document.createElement('div');
+                item.className = `backup-map-item ${isDone ? 'completed' : ''}`;
+                item.innerHTML = `
+                    <span class="map-item-title">${p.title}</span>
+                    <span class="map-item-status">${isDone ? `✔ ${Object.keys(ans).length} câu` : 'Chưa làm'}</span>
+                `;
+                item.addEventListener('click', () => {
+                    const idx = appData.findIndex(d => d.title === p.title);
+                    if (idx !== -1) {
+                        currentPartIndex = idx;
+                        isReviewMode = false;
+                        document.body.classList.remove('review-mode');
+                        renderSidebar();
+                        loadDay(idx);
+                        closeProgressBackupModal();
+                    }
+                });
+                backupMapGrid.appendChild(item);
+            });
+        }
+    }
+
+    function exportProgressJSON() {
+        try {
+            const studentName = (localStorage.getItem('vstep_student_name') || 'HocVien').trim();
+            const studentClass = (localStorage.getItem('vstep_student_class') || '').trim();
+            let gardenState = {};
+            try {
+                gardenState = JSON.parse(localStorage.getItem('garden_state_v1') || '{}');
+            } catch (e) {}
+
+            const backupData = {
+                app: "LUYEN_NGHE_TANG_CUONG",
+                course: "VSTEP LISTENING - LUYỆN NGHE TĂNG CƯỜNG",
+                version: "2.0",
+                exportedAt: new Date().toISOString(),
+                studentName: studentName,
+                studentClass: studentClass,
+                userAnswers: userAnswers,
+                gardenState: gardenState,
+                summary: {
+                    completedPractices: Object.keys(userAnswers || {}).filter(k => Object.keys(userAnswers[k] || {}).length > 0).length,
+                    totalAnswersCount: Object.values(userAnswers || {}).reduce((acc, cur) => acc + Object.keys(cur || {}).length, 0)
+                }
+            };
+
+            const jsonStr = JSON.stringify(backupData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const cleanName = studentName.replace(/[^\w\s\-]/g, '').trim().replace(/\s+/g, '_') || 'HocVien';
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `VSTEP_Listening_TangCuong_${cleanName}_${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            window.showToast('📥 Đã tải file sao lưu tiến độ (.json) thành công! Hãy lưu file vào Google Drive hoặc Zalo nhé!');
+        } catch (e) {
+            alert('⚠️ Có lỗi xảy ra khi tạo file sao lưu: ' + e.message);
+        }
+    }
+
+    function copyProgressCode() {
+        try {
+            const studentName = (localStorage.getItem('vstep_student_name') || 'HocVien').trim();
+            const studentClass = (localStorage.getItem('vstep_student_class') || '').trim();
+            let gardenState = {};
+            try {
+                gardenState = JSON.parse(localStorage.getItem('garden_state_v1') || '{}');
+            } catch (e) {}
+
+            const backupData = {
+                app: "LUYEN_NGHE_TANG_CUONG",
+                course: "VSTEP LISTENING - LUYỆN NGHE TĂNG CƯỜNG",
+                exportedAt: new Date().toISOString(),
+                studentName: studentName,
+                studentClass: studentClass,
+                userAnswers: userAnswers,
+                gardenState: gardenState
+            };
+
+            const jsonStr = JSON.stringify(backupData);
+            const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+            const fullCode = `VSTEP_LISTENING_BACKUP::${b64}`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullCode).then(() => {
+                    window.showToast('📋 Đã sao chép mã sao lưu vào bộ nhớ tạm (clipboard)!');
+                }).catch(() => {
+                    prompt('Vui lòng sao chép mã sao lưu này:', fullCode);
+                });
+            } else {
+                prompt('Vui lòng sao chép mã sao lưu này:', fullCode);
+            }
+        } catch (e) {
+            alert('⚠️ Có lỗi xảy ra khi tạo mã sao lưu: ' + e.message);
+        }
+    }
+
+    function togglePasteCodeArea() {
+        if (!backupPasteSection) return;
+        backupPasteSection.style.display = backupPasteSection.style.display === 'none' ? 'block' : 'none';
+        if (backupPasteSection.style.display === 'block' && backupCodeTextarea) {
+            backupCodeTextarea.focus();
+        }
+    }
+
+    function handleBackupFileSelect(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const content = e.target.result;
+                const parsed = JSON.parse(content);
+                applyRestoredProgress(parsed);
+                event.target.value = '';
+            } catch (err) {
+                alert('⚠️ File sao lưu không hợp lệ hoặc bị lỗi định dạng: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function importProgressFromCode() {
+        if (!backupCodeTextarea || !backupCodeTextarea.value.trim()) {
+            alert('Vui lòng dán chuỗi mã sao lưu vào ô nhập!');
+            return;
+        }
+        let raw = backupCodeTextarea.value.trim();
+        let parsed = null;
+        if (raw.startsWith('VSTEP_LISTENING_BACKUP::')) {
+            raw = raw.replace('VSTEP_LISTENING_BACKUP::', '');
+            try {
+                const jsonStr = decodeURIComponent(escape(atob(raw)));
+                parsed = JSON.parse(jsonStr);
+            } catch (e) {
+                alert('⚠️ Mã sao lưu không đúng định dạng! Vui lòng kiểm tra lại.');
+                return;
+            }
+        } else {
+            try {
+                parsed = JSON.parse(raw);
+            } catch (e) {
+                alert('⚠️ Mã sao lưu không đúng định dạng! Vui lòng kiểm tra lại.');
+                return;
+            }
+        }
+
+        if (parsed) {
+            applyRestoredProgress(parsed);
+            if (backupPasteSection) backupPasteSection.style.display = 'none';
+            backupCodeTextarea.value = '';
+        }
+    }
+
+    function applyRestoredProgress(parsed) {
+        if (!parsed || typeof parsed !== 'object') {
+            alert('⚠️ Dữ liệu sao lưu không hợp lệ!');
+            return;
+        }
+
+        const restoredAnswers = parsed.userAnswers || parsed.answers || parsed;
+        if (restoredAnswers && typeof restoredAnswers === 'object') {
+            userAnswers = { ...userAnswers, ...restoredAnswers };
+            localStorage.setItem('vstepListeningAnswers', JSON.stringify(userAnswers));
+        }
+
+        if (parsed.studentName) {
+            localStorage.setItem('vstep_student_name', parsed.studentName);
+        }
+        if (parsed.studentClass) {
+            localStorage.setItem('vstep_student_class', parsed.studentClass);
+        }
+
+        if (parsed.gardenState) {
+            try {
+                localStorage.setItem('garden_state_v1', JSON.stringify(parsed.gardenState));
+                if (window.FlowerGarden && typeof window.FlowerGarden.loadState === 'function') {
+                    window.FlowerGarden.state = { ...window.FlowerGarden.state, ...parsed.gardenState };
+                    window.FlowerGarden.saveState();
+                    window.FlowerGarden.updateUI();
+                }
+            } catch (e) {}
+        }
+
+        updateProgress();
+        renderSidebar();
+        loadDay(currentPartIndex);
+        updateBackupModalStats();
+
+        if (typeof confetti === 'function') {
+            try {
+                confetti({
+                    particleCount: 120,
+                    spread: 100,
+                    origin: { y: 0.3 }
+                });
+            } catch (e) {}
+        }
+
+        const completedCount = Object.keys(userAnswers || {}).filter(k => Object.keys(userAnswers[k] || {}).length > 0).length;
+        window.showToast(`🎉 Khôi phục tiến độ thành công! Đã bảo toàn dữ liệu ${completedCount} bài luyện nghe.`);
+    }
+
+    function confirmResetAllProgress() {
+        if (!confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ TIẾN ĐỘ HỌC TẬP KHÔNG?\n\nToàn bộ đáp án các bài nghe đã hoàn thành sẽ được đưa về ban đầu để bạn làm lại. Hãy tải file sao lưu (.json) trước nếu bạn muốn lưu trữ!')) {
+            return;
+        }
+        userAnswers = {};
+        appData.forEach(d => {
+            userAnswers[d.title] = {};
+        });
+        localStorage.removeItem('vstepListeningAnswers');
+        updateProgress();
+        renderSidebar();
+        loadDay(currentPartIndex);
+        updateBackupModalStats();
+        window.showToast('🗑️ Toàn bộ tiến độ luyện nghe đã được đặt lại về ban đầu.');
+    }
+
+    // Attach Backup event listeners
+    if (btnHeaderBackup) btnHeaderBackup.addEventListener('click', openProgressBackupModal);
+    if (btnSidebarBackup) btnSidebarBackup.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openProgressBackupModal();
+    });
+    if (sidebarProgressBox) sidebarProgressBox.addEventListener('click', openProgressBackupModal);
+    if (btnCloseBackupModal) btnCloseBackupModal.addEventListener('click', closeProgressBackupModal);
+    if (btnCloseBackupFooter) btnCloseBackupFooter.addEventListener('click', closeProgressBackupModal);
+    if (backupOverlay) {
+        backupOverlay.addEventListener('click', (e) => {
+            if (e.target === backupOverlay) closeProgressBackupModal();
+        });
+    }
+    if (btnExportJson) btnExportJson.addEventListener('click', exportProgressJSON);
+    if (btnCopyCode) btnCopyCode.addEventListener('click', copyProgressCode);
+    if (btnTriggerFileSelect && backupFileInput) {
+        btnTriggerFileSelect.addEventListener('click', () => backupFileInput.click());
+        backupFileInput.addEventListener('change', handleBackupFileSelect);
+    }
+    if (btnTogglePasteCode) btnTogglePasteCode.addEventListener('click', togglePasteCodeArea);
+    if (btnCancelPaste) btnCancelPaste.addEventListener('click', togglePasteCodeArea);
+    if (btnConfirmCodeRestore) btnConfirmCodeRestore.addEventListener('click', importProgressFromCode);
+    if (btnResetAllProgress) btnResetAllProgress.addEventListener('click', confirmResetAllProgress);
 
     // --- Login Logic ---
     const loginOverlay = document.getElementById('loginOverlay');
