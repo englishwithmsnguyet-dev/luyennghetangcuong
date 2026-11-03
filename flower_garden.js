@@ -226,14 +226,72 @@
         .replace(/^_+|_+$/g, '') || 'guest';
     },
 
+    isTeacherIdentity(rawName = '', rawCode = '') {
+      const name = String(rawName || '').trim().toLowerCase();
+      const code = String(rawCode || '').trim().toUpperCase();
+      if (code === 'GV') return true;
+      if (/^(ptmn|cô nguyệt|co nguyet|giáo viên|giao vien|teacher|ptmn - gv)$/i.test(name)) return true;
+      if (name.includes('ptmn') || name.includes('cô nguyệt') || name.includes('giáo viên')) return true;
+      return false;
+    },
+
+    checkIfCurrentIsTeacher() {
+      // 1. Session in listening-mock-tests
+      try {
+        const sessionStr = sessionStorage.getItem('vstep_user_session') || localStorage.getItem('vstep_user_session');
+        if (sessionStr) {
+          const parsed = JSON.parse(sessionStr);
+          if (parsed && (parsed.isTeacher || this.isTeacherIdentity(parsed.name, parsed.class || parsed.code))) {
+            return true;
+          }
+        }
+      } catch (e) {}
+
+      // 2. sessionStorage / localStorage keys (sessionStorage takes precedence!)
+      try {
+        const sessName = sessionStorage.getItem('vstep_student_name') || sessionStorage.getItem('student_name') || '';
+        const sessCode = sessionStorage.getItem('vstep_access_code') || '';
+        if (this.isTeacherIdentity(sessName, sessCode)) return true;
+
+        const locName = localStorage.getItem('vstep_student_name') || localStorage.getItem('student_name') || '';
+        const locCode = localStorage.getItem('vstep_access_code') || '';
+        if (this.isTeacherIdentity(locName, locCode)) return true;
+      } catch (e) {}
+
+      // 3. Check DOM elements (sidebar user badge, etc.)
+      if (typeof document !== 'undefined') {
+        const sideEl = document.querySelector('#sidebar-user-name');
+        if (sideEl && this.isTeacherIdentity(sideEl.textContent)) return true;
+
+        const badgeEl = document.querySelector('.sidebar-user-badge, .user-level, .user-info, .sidebar-footer');
+        if (badgeEl && /giáo viên|teacher|ptmn/i.test(badgeEl.textContent)) return true;
+      }
+
+      // 4. Check global app object if available
+      if (typeof window !== 'undefined' && window.app && typeof window.app.isTeacher === 'function') {
+        const appName = window.app.studentName || '';
+        const appCode = (window.app.elements && window.app.elements.studentClassInput && window.app.elements.studentClassInput.value) || '';
+        if (window.app.isTeacher(appName.split(' - ')[0] || '', appName.split(' - ')[1] || appCode)) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
     getAccountId() {
+      // 0. Priority: Check if Teacher is logged in!
+      if (this.checkIfCurrentIsTeacher()) {
+        return 'teacher_ptmn';
+      }
+
       // 1. Check JSON session in listening-mock-tests
       try {
-        const sessionStr = localStorage.getItem('vstep_user_session');
+        const sessionStr = sessionStorage.getItem('vstep_user_session') || localStorage.getItem('vstep_user_session');
         if (sessionStr) {
           const parsed = JSON.parse(sessionStr);
           if (parsed) {
-            if (parsed.isTeacher || (parsed.name && /^(ptmn|cô nguyệt|co nguyet)$/i.test(String(parsed.name).trim()))) {
+            if (parsed.isTeacher || (parsed.name && this.isTeacherIdentity(parsed.name))) {
               return 'teacher_ptmn';
             }
             if (parsed.name) {
@@ -246,12 +304,23 @@
         }
       } catch (e) {}
 
-      // 2. Check localStorage / sessionStorage candidate keys
+      // 2. Check sessionStorage first (current active tab session), then localStorage
       try {
         const candidateKeys = ['vstep_student_name', 'student_name', 'studentName', 'userName', 'username'];
         for (const k of candidateKeys) {
-          const val = localStorage.getItem(k) || sessionStorage.getItem(k);
+          const val = sessionStorage.getItem(k);
           if (val && typeof val === 'string') {
+            if (this.isTeacherIdentity(val)) return 'teacher_ptmn';
+            const s = this.cleanStudentName(val);
+            if (s && s !== 'Bạn') {
+              return 'user_' + this.slugify(s);
+            }
+          }
+        }
+        for (const k of candidateKeys) {
+          const val = localStorage.getItem(k);
+          if (val && typeof val === 'string') {
+            if (this.isTeacherIdentity(val)) return 'teacher_ptmn';
             const s = this.cleanStudentName(val);
             if (s && s !== 'Bạn') {
               return 'user_' + this.slugify(s);
@@ -262,6 +331,7 @@
 
       // 2b. Check window._studentProgress
       if (typeof window !== 'undefined' && window._studentProgress && window._studentProgress.studentName) {
+        if (this.isTeacherIdentity(window._studentProgress.studentName)) return 'teacher_ptmn';
         const s = this.cleanStudentName(window._studentProgress.studentName);
         if (s && s !== 'Bạn' && s !== 'Khách') {
           return 'user_' + this.slugify(s);
@@ -283,6 +353,7 @@
         for (const sel of selectors) {
           const el = document.querySelector(sel);
           if (el && el.textContent) {
+            if (this.isTeacherIdentity(el.textContent)) return 'teacher_ptmn';
             const s = this.cleanStudentName(el.textContent);
             if (s && s !== 'Bạn') {
               return 'user_' + this.slugify(s);
@@ -293,6 +364,7 @@
 
       // 4. Check custom name in state if exists
       if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
+        if (this.isTeacherIdentity(this.state.studentName)) return 'teacher_ptmn';
         const s = this.cleanStudentName(this.state.studentName);
         if (s && s !== 'Bạn') {
           return 'user_' + this.slugify(s);
@@ -547,7 +619,9 @@
         // Initialize to today for fresh players so they start healthy
         this.state.lastWateredDate = new Date().toISOString().slice(0, 10);
       }
-      if (studentName && studentName !== 'Bạn') {
+      if (accId === 'teacher_ptmn') {
+        this.state.studentName = 'Cô Nguyệt';
+      } else if (studentName && studentName !== 'Bạn') {
         this.state.studentName = studentName;
       }
     },
@@ -795,24 +869,39 @@
     },
 
     getStudentName() {
+      // 0. Priority: Check if Teacher is logged in!
+      if (this.checkIfCurrentIsTeacher()) {
+        return 'Cô Nguyệt';
+      }
+
       // 1. Check JSON session in listening-mock-tests
       try {
-        const sessionStr = localStorage.getItem('vstep_user_session');
+        const sessionStr = sessionStorage.getItem('vstep_user_session') || localStorage.getItem('vstep_user_session');
         if (sessionStr) {
           const parsed = JSON.parse(sessionStr);
           if (parsed && parsed.name) {
+            if (this.isTeacherIdentity(parsed.name)) return 'Cô Nguyệt';
             const s = this.cleanStudentName(parsed.name);
             if (s && s !== 'Bạn') return s;
           }
         }
       } catch (e) {}
 
-      // 2. Check localStorage / sessionStorage
+      // 2. Check sessionStorage first, then localStorage
       try {
         const candidateKeys = ['vstep_student_name', 'student_name', 'studentName', 'userName', 'username'];
         for (const k of candidateKeys) {
-          const val = localStorage.getItem(k) || sessionStorage.getItem(k);
+          const val = sessionStorage.getItem(k);
           if (val && typeof val === 'string') {
+            if (this.isTeacherIdentity(val)) return 'Cô Nguyệt';
+            const s = this.cleanStudentName(val);
+            if (s && s !== 'Bạn') return s;
+          }
+        }
+        for (const k of candidateKeys) {
+          const val = localStorage.getItem(k);
+          if (val && typeof val === 'string') {
+            if (this.isTeacherIdentity(val)) return 'Cô Nguyệt';
             const s = this.cleanStudentName(val);
             if (s && s !== 'Bạn') return s;
           }
@@ -821,9 +910,10 @@
 
       // 2b. Check window._studentProgress
       if (typeof window !== 'undefined' && window._studentProgress && window._studentProgress.studentName) {
+        if (this.isTeacherIdentity(window._studentProgress.studentName)) return 'Cô Nguyệt';
         const s = this.cleanStudentName(window._studentProgress.studentName);
         if (s && s !== 'Bạn' && s !== 'Khách') {
-          return 'user_' + this.slugify(s);
+          return s;
         }
       }
 
@@ -842,6 +932,7 @@
         for (const sel of selectors) {
           const el = document.querySelector(sel);
           if (el && el.textContent) {
+            if (this.isTeacherIdentity(el.textContent)) return 'Cô Nguyệt';
             const s = this.cleanStudentName(el.textContent);
             if (s && s !== 'Bạn') return s;
           }
@@ -850,6 +941,7 @@
 
       // 4. Check custom name in flower garden state
       if (this.state && this.state.studentName && typeof this.state.studentName === 'string') {
+        if (this.isTeacherIdentity(this.state.studentName)) return 'Cô Nguyệt';
         const s = this.cleanStudentName(this.state.studentName);
         if (s && s !== 'Bạn') return s;
       }
