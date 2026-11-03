@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginError = document.getElementById('loginError');
     const btnLogin = document.getElementById('btnLogin');
 
-    const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209'];
+    const ALLOWED_CLASSES = ['CB196', 'CB201', 'CB202', 'B209', 'CB206', 'CB210', 'CB211', 'CB213', 'ONB103', 'B212', 'GV'];
     const REQUIRED_PASSWORD = 'PRACTICELISTENING';
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleLoginSubmit() {
         const nameVal = studentNameInput ? studentNameInput.value.trim() : '';
-        const rawClassVal = studentClassInput ? studentClassInput.value.trim().toUpperCase().replace(/\s+/g, '') : '';
+        let rawClassVal = studentClassInput ? studentClassInput.value.trim().toUpperCase().replace(/\s+/g, '') : '';
         const passwordVal = studentPasswordInput ? studentPasswordInput.value.trim() : '';
 
         if (!nameVal) {
@@ -581,31 +581,45 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (!rawClassVal) {
-            showLoginError('Vui lòng nhập Lớp học.');
-            if (studentClassInput) studentClassInput.focus();
-            return;
-        }
+        const normName = nameVal.toUpperCase();
+        const isTeacher = (normName === 'PTMN' && (rawClassVal === 'GV' || !rawClassVal)) || (normName === 'PTMN' && rawClassVal === 'GV');
 
-        if (!ALLOWED_CLASSES.includes(rawClassVal)) {
-            showLoginError(`Lớp học không hợp lệ. Chỉ chấp nhận các lớp: ${ALLOWED_CLASSES.join(', ')}.`);
-            if (studentClassInput) studentClassInput.focus();
-            return;
-        }
-
-        if (!passwordVal) {
-            showLoginError('Vui lòng nhập Mật khẩu.');
-            if (studentPasswordInput) studentPasswordInput.focus();
-            return;
-        }
-
-        if (passwordVal.toUpperCase().replace(/\s+/g, '') !== REQUIRED_PASSWORD) {
-            showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
-            if (studentPasswordInput) {
-                studentPasswordInput.focus();
-                studentPasswordInput.select();
+        if (isTeacher) {
+            if (!rawClassVal) rawClassVal = 'GV';
+        } else {
+            if (rawClassVal === 'GV') {
+                showLoginError('Mã lớp GV chỉ dành riêng cho tài khoản Giáo viên (PTMN)!');
+                if (studentNameInput) studentNameInput.focus();
+                return;
             }
-            return;
+
+            if (!rawClassVal) {
+                showLoginError('Vui lòng nhập Lớp học.');
+                if (studentClassInput) studentClassInput.focus();
+                return;
+            }
+
+            if (!ALLOWED_CLASSES.includes(rawClassVal)) {
+                showLoginError(`Lớp học không hợp lệ. Chỉ chấp nhận các lớp: ${ALLOWED_CLASSES.filter(c => c !== 'GV').join(', ')}.`);
+                if (studentClassInput) studentClassInput.focus();
+                return;
+            }
+
+            if (!passwordVal) {
+                showLoginError('Vui lòng nhập Mật khẩu.');
+                if (studentPasswordInput) studentPasswordInput.focus();
+                return;
+            }
+
+            const cleanPass = passwordVal.toUpperCase().replace(/\s+/g, '');
+            if (cleanPass !== REQUIRED_PASSWORD && cleanPass !== 'STUDYHARD') {
+                showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
+                if (studentPasswordInput) {
+                    studentPasswordInput.focus();
+                    studentPasswordInput.select();
+                }
+                return;
+            }
         }
 
         if (loginError) loginError.style.display = 'none';
@@ -615,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Save student info to storage
-        localStorage.setItem('vstep_student_name', nameVal);
+        localStorage.setItem('vstep_student_name', isTeacher ? 'PTMN' : nameVal);
         localStorage.setItem('vstep_student_class', rawClassVal);
         localStorage.setItem('vstep_student_logged_in', 'true');
         sessionStorage.setItem('vstep_student_logged_in', 'true');
