@@ -6,13 +6,16 @@
     <title>LUYỆN NGHE TĂNG CƯỜNG - ENGLISHWITHMISSNGUYET</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Canvas Confetti (deferred for zero-render-blocking) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="flower_garden.css?v=20261103_v8">
+    <link rel="stylesheet" href="flower_garden.css?v=20261103_v9">
 </head>
 <body>
     <div class="app-layout">
@@ -80,9 +83,9 @@
                 </div>
                 
                 <div class="page-header">
-                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-left">
+                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-left" loading="lazy" decoding="async">
                     <h2>VSTEP LISTENING</h2>
-                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-right">
+                    <img src="assets/img/cat.gif" alt="cute cat" class="cute-cat cat-right" loading="lazy" decoding="async">
                 </div>
                 <p class="subtitle">LUYỆN NGHE TĂNG CƯỜNG - TIẾN BỘ KHÔNG TƯỞNG</p>
 
@@ -474,7 +477,7 @@
             <!-- Miss Nguyet Avatar Brand Ring -->
             <div class="login-teacher-avatar-wrap">
                 <div class="login-teacher-halo">
-                    <img src="miss_nguyet.jpg" alt="Miss Nguyet" class="login-teacher-avatar" onerror="this.src='https://raw.githubusercontent.com/englishwithmsnguyet-dev/writingtask1practice-b2nangcao/main/miss_nguyet.jpg'">
+                    <img src="miss_nguyet.jpg" alt="Miss Nguyet" class="login-teacher-avatar" loading="lazy" decoding="async" onerror="this.src='https://raw.githubusercontent.com/englishwithmsnguyet-dev/writingtask1practice-b2nangcao/main/miss_nguyet.jpg'">
                 </div>
                 <span class="login-teacher-badge"><i class="fa-solid fa-certificate"></i> Lead Instructor</span>
             </div>
@@ -539,7 +542,7 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script src="flower_definitions.js?v=20261103_v8"></script>
-    <script src="flower_garden.js?v=20261103_v8"></script>
+    <script src="flower_definitions.js?v=20261103_v9"></script>
+    <script src="flower_garden.js?v=20261103_v9"></script>
 </body>
 </html>
