@@ -982,6 +982,346 @@
     "explain": "\"communication skills\" = kỹ năng giao tiếp. Ví dụ: \"Working in a team helps me improve my communication skills.\""
   },
   {
+    "id": "bm-off-11",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"cải thiện tâm trạng\" khi bạn nghe một bản nhạc yêu thích lúc buồn?",
+    "options": [
+      "improve my mood",
+      "lose weight",
+      "digital skills",
+      "avoid getting sick"
+    ],
+    "answer": 0,
+    "explain": "\"improve my mood\" = cải thiện tâm trạng. Ví dụ: \"Listening to upbeat music helps me improve my mood.\""
+  },
+  {
+    "id": "bm-off-12",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Khi nói về lý do bạn thường xuyên chạy bộ hoặc tập gym, cụm từ nào mang nghĩa \"giảm cân\"?",
+    "options": [
+      "have fun",
+      "lose weight",
+      "communication skills",
+      "stimulate creativity"
+    ],
+    "answer": 1,
+    "explain": "\"lose weight\" = giảm cân. Ví dụ: \"I go to the gym three times a week to lose weight.\""
+  },
+  {
+    "id": "bm-off-13",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Khi phải chờ xe buýt hoặc chờ bạn bè, cụm từ nào mang nghĩa \"giết thời gian\" khi bạn chơi game hoặc lướt mạng xã hội?",
+    "options": [
+      "stay in good shape",
+      "money management skills",
+      "pass the time",
+      "improve my physical health"
+    ],
+    "answer": 2,
+    "explain": "\"pass the time\" = giết thời gian trong lúc chờ đợi: \"I often read news on my phone to pass the time.\""
+  },
+  {
+    "id": "bm-off-14",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"nạp lại năng lượng\" sau một kỳ thi căng thẳng hoặc một tuần làm việc bận rộn?",
+    "options": [
+      "prevent some health problems",
+      "presentation skills",
+      "develop useful skills",
+      "regain my energy"
+    ],
+    "answer": 3,
+    "explain": "\"regain my energy\" = nạp lại năng lượng: \"A short weekend trip helps me regain my energy.\""
+  },
+  {
+    "id": "bm-off-15",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"tránh bị ốm đau, bệnh tật\" khi duy trì chế độ ăn uống lành mạnh?",
+    "options": [
+      "avoid getting sick",
+      "have fun",
+      "public speaking skills",
+      "pass the time"
+    ],
+    "answer": 0,
+    "explain": "\"avoid getting sick\" = tránh bị ốm đau: \"Eating fresh fruits and vegetables helps me avoid getting sick.\""
+  },
+  {
+    "id": "bm-off-16",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giáo Dục (Education)",
+    "question": "Khi tham gia các hoạt động như vẽ tranh, chụp ảnh hoặc làm đồ thủ công, cụm từ nào mang nghĩa \"kích thích sự sáng tạo\"?",
+    "options": [
+      "sleep better",
+      "stimulate creativity",
+      "escape from study pressure",
+      "stay energetic"
+    ],
+    "answer": 1,
+    "explain": "\"stimulate creativity\" = kích thích sự sáng tạo: \"Painting is a great hobby because it stimulates my creativity.\""
+  },
+  {
+    "id": "bm-off-17",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Kỹ Năng Mềm (Soft Skills)",
+    "question": "Cụm từ nào trong nhóm Kỹ Năng Mềm có nghĩa là \"kỹ năng quản lý tiền bạc / tài chính\"?",
+    "options": [
+      "improve concentration",
+      "forget about my worries",
+      "money management skills",
+      "create a balanced lifestyle"
+    ],
+    "answer": 2,
+    "explain": "\"money management skills\" = kỹ năng quản lý tài chính/chi tiêu: \"A part-time job teaches students money management skills.\""
+  },
+  {
+    "id": "bm-off-18",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích có nghĩa là \"quên đi những nỗi lo âu, phiền muộn\" khi bạn đi xem phim hoặc trò chuyện cùng bạn bè?",
+    "options": [
+      "digital skills",
+      "maintain a healthy lifestyle",
+      "lose weight",
+      "forget about my worries"
+    ],
+    "answer": 3,
+    "explain": "\"forget about my worries\" = quên đi những lo lắng: \"Watching a funny comedy helps me forget about my worries.\""
+  },
+  {
+    "id": "bm-off-19",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích có nghĩa là \"cải thiện sức khỏe thể chất\" khi bạn tập thể dục thường xuyên?",
+    "options": [
+      "improve my physical health",
+      "pass the time",
+      "enrich practical experience",
+      "enjoy my free time"
+    ],
+    "answer": 0,
+    "explain": "\"improve my physical health\" = cải thiện sức khỏe thể chất: \"Playing badminton regularly helps improve my physical health.\""
+  },
+  {
+    "id": "bm-off-20",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giáo Dục (Education)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"phát triển các kỹ năng hữu ích\" khi bạn đi làm thêm hoặc tham gia câu lạc bộ?",
+    "options": [
+      "clear my mind",
+      "develop useful skills",
+      "avoid getting sick",
+      "have fun"
+    ],
+    "answer": 1,
+    "explain": "\"develop useful skills\" = phát triển các kỹ năng hữu ích: \"Volunteering helps young people develop useful skills.\""
+  },
+  {
+    "id": "bm-off-21",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"thoát khỏi áp lực học tập\" khi học sinh đi du lịch hoặc cắm trại cuối tuần?",
+    "options": [
+      "lose weight",
+      "presentation skills",
+      "escape from study pressure",
+      "sleep better"
+    ],
+    "answer": 2,
+    "explain": "\"escape from study pressure\" = thoát khỏi áp lực học tập: \"Going on a picnic helps students escape from study pressure.\""
+  },
+  {
+    "id": "bm-off-22",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"duy trì lối sống lành mạnh\" bằng việc ăn ngủ đúng giờ và tập thể thao?",
+    "options": [
+      "teamwork skills",
+      "pass the time",
+      "widen my knowledge",
+      "maintain a healthy lifestyle"
+    ],
+    "answer": 3,
+    "explain": "\"maintain a healthy lifestyle\" = duy trì lối sống lành mạnh: \"Drinking plenty of water is essential to maintain a healthy lifestyle.\""
+  },
+  {
+    "id": "bm-off-23",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Kỹ Năng Mềm (Soft Skills)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích diễn tả \"kỹ năng công nghệ / kỹ năng tin học\" khi bạn học trực tuyến hoặc sử dụng máy tính?",
+    "options": [
+      "digital skills",
+      "regain my energy",
+      "stay healthy",
+      "improve my mood"
+    ],
+    "answer": 0,
+    "explain": "\"digital skills\" = kỹ năng công nghệ/tin học: \"Using computers daily helps me enhance my digital skills.\""
+  },
+  {
+    "id": "bm-off-24",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giáo Dục (Education)",
+    "question": "Khi đọc sách hoặc tập trung làm bài, cụm từ nào mang nghĩa \"nâng cao khả năng tập trung\"?",
+    "options": [
+      "forget about my worries",
+      "improve concentration",
+      "public speaking skills",
+      "escape from daily stress"
+    ],
+    "answer": 1,
+    "explain": "\"improve concentration\" = nâng cao sự tập trung: \"Listening to instrumental music helps me improve concentration while studying.\""
+  },
+  {
+    "id": "bm-off-25",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"phòng tránh một số vấn đề sức khỏe\" khi bạn thường xuyên vận động?",
+    "options": [
+      "stimulate creativity",
+      "communication skills",
+      "prevent some health problems",
+      "pass the time"
+    ],
+    "answer": 2,
+    "explain": "\"prevent some health problems\" = phòng ngừa các vấn đề sức khỏe: \"Regular exercise helps prevent some health problems like back pain.\""
+  },
+  {
+    "id": "bm-off-26",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Kỹ Năng Mềm (Soft Skills)",
+    "question": "Cụm từ nào trong nhóm Kỹ Năng Mềm mang nghĩa \"kỹ năng tự học\" khi bạn chủ động tra cứu và học từ vựng tại nhà?",
+    "options": [
+      "clear my mind",
+      "lose weight",
+      "avoid getting sick",
+      "self-learning skills"
+    ],
+    "answer": 3,
+    "explain": "\"self-learning skills\" = kỹ năng tự học: \"Studying online is a great way to practice self-learning skills.\""
+  },
+  {
+    "id": "bm-off-27",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích có nghĩa là \"luôn tràn đầy năng lượng\" sau một giấc ngủ ngon hoặc bữa sáng đầy đủ?",
+    "options": [
+      "stay energetic",
+      "money management skills",
+      "develop useful skills",
+      "forget about my worries"
+    ],
+    "answer": 0,
+    "explain": "\"stay energetic\" = luôn tràn đầy năng lượng: \"A healthy breakfast helps me stay energetic all morning.\""
+  },
+  {
+    "id": "bm-off-28",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Kỹ Năng Mềm (Soft Skills)",
+    "question": "Khi nói về việc chuẩn bị bài thuyết trình trước lớp, cụm từ nào mang nghĩa \"kỹ năng thuyết trình\"?",
+    "options": [
+      "reduce stress",
+      "presentation skills",
+      "sleep better",
+      "pass the time"
+    ],
+    "answer": 1,
+    "explain": "\"presentation skills\" = kỹ năng thuyết trình trước tập thể: \"Practicing speaking in front of a mirror helps improve presentation skills.\""
+  },
+  {
+    "id": "bm-off-29",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Giải Trí (Entertainment)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích có nghĩa là \"tận hưởng thời gian rảnh rỗi\" khi làm những điều mình yêu thích vào cuối tuần?",
+    "options": [
+      "avoid getting sick",
+      "digital skills",
+      "enjoy my free time",
+      "improve concentration"
+    ],
+    "answer": 2,
+    "explain": "\"enjoy my free time\" = tận hưởng thời gian rảnh rỗi: \"On Sunday, I like to hang out with friends to enjoy my free time.\""
+  },
+  {
+    "id": "bm-off-30",
+    "category": "benefit-matrix",
+    "categoryName": "📊 Bảng Lợi Ích",
+    "skill": "Speaking",
+    "level": "B1",
+    "topic": "Nhóm Sức Khỏe (Health)",
+    "question": "Cụm từ nào trong Bảng Lợi Ích mang nghĩa \"tạo lối sống cân bằng\" giữa việc học tập và nghỉ ngơi?",
+    "options": [
+      "lose weight",
+      "public speaking skills",
+      "regain my energy",
+      "create a balanced lifestyle"
+    ],
+    "answer": 3,
+    "explain": "\"create a balanced lifestyle\" = tạo dựng lối sống cân bằng: \"Balancing work and recreation helps create a balanced lifestyle.\""
+  },
+  {
     "id": "sv-off-1",
     "category": "speaking-vocab",
     "categoryName": "🗣️ Từ Vựng Speaking",
