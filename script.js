@@ -1049,6 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 
     const ALLOWED_CLASSES = ['CB210', 'CB211', 'CB213', 'ONB103', 'B209', 'B212', 'GV'];
+    const VALID_PASSWORDS = ['STUDYHARD', 'PRACTICELISTENING'];
     const REQUIRED_PASSWORD = 'STUDYHARD';
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
@@ -1173,8 +1174,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const cleanPass = passwordVal.toUpperCase().replace(/\s+/g, '');
-            if (cleanPass !== REQUIRED_PASSWORD && cleanPass !== 'PRACTICELISTENING') {
-                showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại! (Mật khẩu: STUDYHARD)');
+            if (!VALID_PASSWORDS.includes(cleanPass)) {
+                showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
                 if (studentPasswordInput) {
                     studentPasswordInput.focus();
                     studentPasswordInput.select();
