@@ -551,27 +551,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentPasswordInput = document.getElementById('studentPassword');
     const loginError = document.getElementById('loginError');
     const btnLogin = document.getElementById('btnLogin');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 
     const ALLOWED_CLASSES = ['CB210', 'CB211', 'CB213', 'ONB103', 'B209', 'B212', 'GV'];
-    const REQUIRED_PASSWORD = 'PRACTICELISTENING';
+    const REQUIRED_PASSWORD = 'STUDYHARD';
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
 
     function checkLoginState() {
         const isPreview = (typeof window !== 'undefined' && window.location.hash.includes('preview'));
-        const loggedIn = localStorage.getItem('vstep_student_logged_in') || sessionStorage.getItem('vstep_student_logged_in');
-        if (loggedIn === 'true' || isPreview) {
+        if (isPreview) {
             if (loginOverlay) loginOverlay.classList.add('hidden');
-            if (window.FlowerGarden) {
-                window.FlowerGarden.checkDailyLoginReward();
-            }
-        } else {
-            if (loginOverlay) loginOverlay.classList.remove('hidden');
-            const savedName = localStorage.getItem('vstep_student_name') || '';
-            const savedClass = localStorage.getItem('vstep_student_class') || '';
-            if (studentNameInput && savedName) studentNameInput.value = savedName;
-            if (studentClassInput && savedClass) studentClassInput.value = savedClass;
+            return;
         }
+
+        // Luôn luôn hiển thị màn hình đăng nhập khi mở hoặc tải lại trang
+        if (loginOverlay) {
+            loginOverlay.classList.remove('hidden');
+            loginOverlay.style.display = 'flex';
+        }
+
+        const savedName = localStorage.getItem('vstep_student_name') || '';
+        const savedClass = localStorage.getItem('vstep_student_class') || '';
+        if (studentNameInput && savedName) studentNameInput.value = savedName;
+        if (studentClassInput && savedClass) studentClassInput.value = savedClass;
+        if (studentPasswordInput) studentPasswordInput.value = '';
+        if (loginError) {
+            loginError.style.display = 'none';
+            loginError.textContent = '';
+        }
+
+        setTimeout(() => {
+            if (studentNameInput && !studentNameInput.value) {
+                studentNameInput.focus();
+            } else if (studentClassInput && !studentClassInput.value) {
+                studentClassInput.focus();
+            } else if (studentPasswordInput) {
+                studentPasswordInput.focus();
+            }
+        }, 200);
+    }
+
+    if (togglePasswordBtn && studentPasswordInput) {
+        togglePasswordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (studentPasswordInput.type === 'password') {
+                studentPasswordInput.type = 'text';
+                if (togglePasswordIcon) {
+                    togglePasswordIcon.className = 'fa-regular fa-eye-slash';
+                }
+            } else {
+                studentPasswordInput.type = 'password';
+                if (togglePasswordIcon) {
+                    togglePasswordIcon.className = 'fa-regular fa-eye';
+                }
+            }
+        });
     }
 
     function showLoginError(msg) {
@@ -586,13 +622,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const passwordVal = studentPasswordInput ? studentPasswordInput.value.trim() : '';
 
         if (!nameVal) {
-            showLoginError('Vui lòng nhập đầy đủ Họ và tên.');
+            showLoginError('Vui lòng nhập đầy đủ Họ và tên học viên.');
             if (studentNameInput) studentNameInput.focus();
             return;
         }
 
         const normName = nameVal.toUpperCase();
-        const isTeacher = (normName === 'PTMN' && (rawClassVal === 'GV' || !rawClassVal)) || (normName === 'PTMN' && rawClassVal === 'GV');
+        const isTeacher = (normName === 'PTMN' && (rawClassVal === 'GV' || !rawClassVal)) || 
+                          (normName === 'PTMN' && rawClassVal === 'GV') ||
+                          normName.includes('CÔ NGUYỆT') || normName.includes('CO NGUYET');
 
         if (isTeacher) {
             if (!rawClassVal) rawClassVal = 'GV';
@@ -604,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!rawClassVal) {
-                showLoginError('Vui lòng nhập Lớp học.');
+                showLoginError('Vui lòng nhập Mã lớp học.');
                 if (studentClassInput) studentClassInput.focus();
                 return;
             }
@@ -616,14 +654,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!passwordVal) {
-                showLoginError('Vui lòng nhập Mật khẩu.');
+                showLoginError('Vui lòng nhập Mật khẩu truy cập.');
                 if (studentPasswordInput) studentPasswordInput.focus();
                 return;
             }
 
             const cleanPass = passwordVal.toUpperCase().replace(/\s+/g, '');
-            if (cleanPass !== REQUIRED_PASSWORD && cleanPass !== 'STUDYHARD') {
-                showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại!');
+            if (cleanPass !== REQUIRED_PASSWORD && cleanPass !== 'PRACTICELISTENING') {
+                showLoginError('Mật khẩu không chính xác. Vui lòng kiểm tra lại! (Mật khẩu: STUDYHARD)');
                 if (studentPasswordInput) {
                     studentPasswordInput.focus();
                     studentPasswordInput.select();
@@ -634,7 +672,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (loginError) loginError.style.display = 'none';
         if (btnLogin) {
-            btnLogin.textContent = 'ĐANG VÀO LỚP...';
+            btnLogin.innerHTML = `<span>ĐANG VÀO LỚP...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
             btnLogin.disabled = true;
         }
 
@@ -644,25 +682,57 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('vstep_student_logged_in', 'true');
         sessionStorage.setItem('vstep_student_logged_in', 'true');
 
-        // Submit to Google Form (no-cors)
+        // Submit to Google Form (Multi-method guarantee)
         try {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN', { hour12: false }) + ' ' + now.toLocaleDateString('vi-VN');
+            const trackingPayload = `[LUYỆN NGHE TĂNG CƯỜNG] ${isTeacher ? 'PTMN (Giáo viên)' : nameVal} - Lớp: ${rawClassVal} - Vào học lúc ${timeString}`;
+
+            // Method 1: sendBeacon
+            if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+                try {
+                    const fd = new FormData();
+                    fd.append(GOOGLE_FORM_ENTRY, trackingPayload);
+                    fd.append('fvv', '1');
+                    fd.append('pageHistory', '0');
+                    navigator.sendBeacon(GOOGLE_FORM_URL, fd);
+                } catch (be) {}
+            }
+
+            // Method 2: Hidden iframe form
+            const gInput = document.getElementById('gform_hidden_input');
+            const gForm = document.getElementById('gform_hidden_form');
+            if (gInput && gForm) {
+                gInput.value = trackingPayload;
+                try { gForm.submit(); } catch (fe) {}
+            }
+
+            // Method 3: Parallel fetch call (no-cors)
             const formData = new URLSearchParams();
-            formData.append(GOOGLE_FORM_ENTRY, `${nameVal} - ${rawClassVal}`);
+            formData.append(GOOGLE_FORM_ENTRY, trackingPayload);
+            formData.append('fvv', '1');
+            formData.append('pageHistory', '0');
             fetch(GOOGLE_FORM_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData.toString()
-            }).catch(e => console.log('Log form info error', e));
+            }).catch(e => console.log('Log form error', e));
         } catch (e) {
             console.log('Log form error', e);
         }
 
         setTimeout(() => {
-            if (loginOverlay) loginOverlay.classList.add('hidden');
+            if (loginOverlay) {
+                loginOverlay.classList.add('hidden');
+                loginOverlay.style.display = 'none';
+            }
             if (btnLogin) {
-                btnLogin.textContent = 'BẮT ĐẦU HỌC NGAY';
+                btnLogin.innerHTML = `<span>BẮT ĐẦU HỌC</span> <i class="fa-solid fa-arrow-right"></i>`;
                 btnLogin.disabled = false;
+            }
+            if (window.FlowerGarden) {
+                window.FlowerGarden.checkDailyLoginReward();
             }
         }, 300);
     }

@@ -312,25 +312,72 @@
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-overlay">
-        <div class="login-card">
-            <div class="login-icon">
-                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
-                </svg>
+        <div class="login-card-custom">
+            <!-- Miss Nguyet Avatar Brand Ring -->
+            <div class="login-teacher-avatar-wrap">
+                <div class="login-teacher-halo">
+                    <img src="miss_nguyet.jpg" alt="Miss Nguyet" class="login-teacher-avatar" onerror="this.src='https://raw.githubusercontent.com/englishwithmsnguyet-dev/writingtask1practice-b2nangcao/main/miss_nguyet.jpg'">
+                </div>
+                <span class="login-teacher-badge"><i class="fa-solid fa-certificate"></i> Lead Instructor</span>
             </div>
-            <h2 class="login-title">CHÀO MỪNG BẠN ĐẾN VỚI LỚP<br>HỌC CỦA MISS NGUYET</h2>
-            <p class="login-subtitle">Vui lòng điền Họ tên và Lớp học của bạn để bắt đầu học. Kết quả luyện tập sẽ được ghi nhận và gửi báo cáo cho giáo viên.</p>
+
+            <div class="login-brand-tag">
+                <i class="fa-solid fa-graduation-cap"></i> Welcome to Miss Nguyet's Class!
+            </div>
+            <div class="login-course-title">VSTEP LISTENING – LUYỆN NGHE TĂNG CƯỜNG</div>
+            <h2 class="login-title-custom">NHẬP THÔNG TIN<br/>ĐỂ BẮT ĐẦU HỌC 🚀</h2>
             
-            <form id="loginForm" class="login-form" onsubmit="return false;">
-                <input type="text" id="studentName" placeholder="HỌ VÀ TÊN" autocomplete="name" spellcheck="false" required>
-                <input type="text" id="studentClass" placeholder="LỚP HỌC" autocomplete="off" spellcheck="false" required>
-                <input type="password" id="studentPassword" placeholder="MẬT KHẨU" autocomplete="current-password" spellcheck="false" required>
-                <p id="loginError" class="login-error" style="display: none;"></p>
-                <button type="submit" id="btnLogin" class="login-btn">BẮT ĐẦU HỌC NGAY</button>
+            <form id="loginForm" class="login-form-custom" onsubmit="return false;">
+                <div class="input-group-custom">
+                    <label for="studentName">
+                        <i class="fa-solid fa-user-pen" style="color: #6366f1;"></i> HỌ VÀ TÊN HỌC VIÊN:
+                    </label>
+                    <input type="text" id="studentName" placeholder="Nhập họ và tên học viên..." autocomplete="name" spellcheck="false" required>
+                </div>
+                
+                <div class="input-group-custom">
+                    <label for="studentClass">
+                        <i class="fa-solid fa-chalkboard-user" style="color: #0284c7;"></i> MÃ LỚP HỌC:
+                    </label>
+                    <input type="text" id="studentClass" placeholder="Nhập mã lớp học (VD: CB210, CB211...)" autocomplete="off" spellcheck="false" required>
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="studentPassword">
+                        <i class="fa-solid fa-key" style="color: #d97706;"></i> MẬT KHẨU TRUY CẬP:
+                    </label>
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="studentPassword" placeholder="Nhập mật khẩu..." autocomplete="current-password" spellcheck="false" required>
+                        <button type="button" id="togglePasswordBtn" class="btn-toggle-pwd" title="Hiện/Ẩn mật khẩu">
+                            <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p id="loginError" class="login-error-msg" style="display: none;"></p>
+
+                <button type="submit" id="btnLogin" class="btn-login-custom">
+                    <span>BẮT ĐẦU HỌC</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
             </form>
+
+            <div class="login-footer-signature">
+                <a href="https://www.facebook.com/nguyetpham28" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-facebook" style="color: #1877f2;"></i>
+                    <span>ENGLISH WITH MISS NGUYET</span>
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Hidden Google Form Target Iframe & Form for Student Login Tracking -->
+    <iframe name="gform_hidden_iframe" id="gform_hidden_iframe" style="display:none;" title="Google Form Submission Frame"></iframe>
+    <form id="gform_hidden_form" action="https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse" method="POST" target="gform_hidden_iframe" style="display:none;">
+        <input type="hidden" name="entry.1205151935" id="gform_hidden_input">
+        <input type="hidden" name="fvv" value="1">
+        <input type="hidden" name="pageHistory" value="0">
+    </form>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
