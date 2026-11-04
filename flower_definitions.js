@@ -20,7 +20,7 @@
       "color": "#10B981",
       "accentColor": "#059669",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(254, 240, 138, 0.55) 0%, rgba(52, 211, 153, 0.24) 45%, transparent 76%)",
-      "meaning": "May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu. Món quà diệu kỳ tiếp lửa cho học viên tự tin bứt phá mục tiêu band điểm VSTEP B1 - B2 - C1!",
+      "meaning": "May mắn ngập tràn, niềm tin, hy vọng và tình yêu vĩnh cửu. Món quà diệu kỳ tiếp lửa cho học viên tự tin bứt phá mục tiêu điểm số TOEIC (450 - 650 - 800+) & VSTEP (B1 - B2 - C1)!",
       "quote": "Bé cỏ 4 lá mang đến vạn sự may mắn, bình an và kết quả rực rỡ nhất! 🍀🌟",
       "growthDifficulty": "Hiếm có",
       "stages": [
@@ -41,7 +41,7 @@
       "color": "#F59E0B",
       "accentColor": "#D97706",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(254, 240, 138, 0.70) 0%, rgba(245, 158, 11, 0.28) 45%, transparent 76%)",
-      "meaning": "Biểu tượng của ý chí kiên định, luôn hướng về phía ánh sáng mặt trời và đỉnh cao tri thức. Tiếp thêm nguồn năng lượng tích cực, sự tự tin và nghị lực bền bỉ vượt qua mọi kỳ thi VSTEP!",
+      "meaning": "Biểu tượng của ý chí kiên định, luôn hướng về phía ánh sáng mặt trời và đỉnh cao tri thức. Tiếp thêm nguồn năng lượng tích cực, sự tự tin và nghị lực bền bỉ vượt qua mọi kỳ thi TOEIC & VSTEP!",
       "quote": "Như đóa hướng dương luôn hướng về vầng thái dương, chúc bạn luôn kiên định, tự tin và tỏa sáng rực rỡ trên mọi chặng đường! 🌻☀️",
       "growthDifficulty": "Yêu nắng",
       "stages": [
@@ -62,7 +62,7 @@
       "color": "#F43F5E",
       "accentColor": "#E11D48",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(254, 205, 211, 0.70) 0%, rgba(244, 63, 94, 0.28) 45%, transparent 76%)",
-      "meaning": "Biểu tượng của lòng nhiệt huyết, sự thanh lịch và niềm kiêu hãnh vươn mình. Thắp sáng ngọn lửa tự tin, tinh thần kỷ luật và bản lĩnh kiên cường để bứt phá band điểm VSTEP mơ ước!",
+      "meaning": "Biểu tượng của lòng nhiệt huyết, sự thanh lịch và niềm kiêu hãnh vươn mình. Thắp sáng ngọn lửa tự tin, tinh thần kỷ luật và bản lĩnh kiên cường để bứt phá band điểm TOEIC & VSTEP mơ ước!",
       "quote": "Như đóa tulip kiêu hãnh đón ngọn gió xuân, chúc bạn luôn thanh lịch, kiên cường và tỏa sáng rực rỡ với ước mơ của mình! 🌷✨",
       "growthDifficulty": "Yêu nước & gió nhẹ",
       "stages": [
@@ -83,7 +83,7 @@
       "color": "#0D9488",
       "accentColor": "#0F766E",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(204, 251, 241, 0.70) 0%, rgba(20, 184, 166, 0.28) 45%, transparent 76%)",
-      "meaning": "Biểu tượng của ý chí thép kiên cường, sức sống mãnh liệt vượt qua mọi nghịch cảnh và thử thách để bung nở đóa hoa diệu kỳ. Tiếp thêm bản lĩnh vững vàng và nghị lực phi thường để chinh phục đỉnh cao VSTEP!",
+      "meaning": "Biểu tượng của ý chí thép kiên cường, sức sống mãnh liệt vượt qua mọi nghịch cảnh và thử thách để bung nở đóa hoa diệu kỳ. Tiếp thêm bản lĩnh vững vàng và nghị lực phi thường để chinh phục đỉnh cao TOEIC & VSTEP!",
       "quote": "Dù giữa sa mạc khô cằn, xương rồng vẫn kiên cường nở hoa rực rỡ. Chúc bạn luôn bền bỉ, kiên định và tỏa sáng ngoạn mục! 🌵✨",
       "growthDifficulty": "Chịu hạn giỏi & bền bỉ",
       "stages": [
@@ -104,7 +104,7 @@
       "color": "#BE123C",
       "accentColor": "#9F1239",
       "bgGlow": "radial-gradient(circle at 50% 42%, rgba(254, 205, 211, 0.75) 0%, rgba(190, 18, 60, 0.28) 45%, transparent 76%)",
-      "meaning": "Biểu tượng của ngọn lửa đam mê, lòng nhiệt huyết cháy bỏng và khát khao vươn tới đỉnh cao tri thức. Tiếp thêm sự tự tin để bạn bứt phá, tỏa sáng và gặt hái chứng chỉ VSTEP xuất sắc!",
+      "meaning": "Biểu tượng của ngọn lửa đam mê, lòng nhiệt huyết cháy bỏng và khát khao vươn tới đỉnh cao tri thức. Tiếp thêm sự tự tin để bạn bứt phá, tỏa sáng và gặt hái chứng chỉ TOEIC & VSTEP xuất sắc!",
       "quote": "Như đóa hồng nhung đỏ thắm kiêu sa qua bao ngày chăm bón, chúc bạn luôn giữ trọn ngọn lửa đam mê, tự tin và vững bước tới tương lai tươi sáng! 🌹✨",
       "growthDifficulty": "Yêu nắng ấm & gió nhẹ",
       "stages": [
@@ -902,60 +902,88 @@
    */
   
   /**
-   * BẢNG CHIẾN LƯỢC ÔN THI VSTEP THỰC CHIẾN CỦA CÔ NGUYỆT (4 KỸ NĂNG: LISTENING, READING, WRITING, SPEAKING)
-   * Giúp học viên nắm chắc bí quyết làm bài, nhận diện bẫy và quản lý thời gian thi VSTEP B1 - B2 - C1 tối ưu.
+   * BẢNG CHIẾN LƯỢC ÔN THI TOEIC THỰC CHIẾN CỦA CÔ NGUYỆT (7 PARTS)
+   * Giúp học viên nắm chắc bí quyết làm bài, nhận diện bẫy ETS và quản lý thời gian thi TOEIC tối ưu.
    */
-  const VSTEP_OFFICIAL_STRATEGY_GUIDE = [
+  const TOEIC_OFFICIAL_STRATEGY_GUIDE = [
     {
-      skill: "Listening",
-      nameEn: "VSTEP LISTENING (35 CÂU - 40 PHÚT)",
-      nameVi: "Kỹ Năng Nghe Hiểu 3 Phần",
+      part: "Part 1",
+      nameEn: "PHOTOGRAPHS (Tranh Ảnh)",
+      nameVi: "Mô Tả Hình Ảnh (6 Câu)",
+      icon: "fa-camera",
+      color: "#3b82f6",
+      keyRule: "Quan sát tổng thể trước khi nghe: xác định người/vật, hành động chính và vị trí trong tranh.",
+      tips: [
+        "Bẫy thì tiếp diễn: Tranh KHÔNG CÓ NGƯỜI mà nghe 'is/are being + V3' (trừ display) -> Loại ngay!",
+        "Bẫy hành động vs trạng thái: 'wearing' (đang mặc trên người - trạng thái) vs 'putting on' (đang xỏ tay vào áo - hành động đang diễn ra).",
+        "Tập trung vào các danh từ chỉ vị trí: row, stacked, arranged, lined up, hung on the wall."
+      ]
+    },
+    {
+      part: "Part 2",
+      nameEn: "QUESTION - RESPONSE (Hỏi - Đáp)",
+      nameVi: "Hỏi & Đáp Nhanh (25 Câu)",
+      icon: "fa-comments",
+      color: "#8b5cf6",
+      keyRule: "Nắm chắc từ để hỏi (Wh- / How) hoặc trợ động từ (Do / Did / Have / Can) ở 3 từ đầu tiên.",
+      tips: [
+        "Bẫy từ phát âm na ná (Similar Sounds) hoặc lặp từ: 90% là bẫy sai!",
+        "Câu hỏi Wh- (Who, Where, When, Why, What): Tuyệt đối KHÔNG trả lời bằng Yes / No.",
+        "Câu trả lời gián tiếp (I don't know, It hasn't been decided yet, Check with Mary): 95% là đáp án ĐÚNG!",
+        "Câu hỏi lựa chọn (A or B): KHÔNG trả lời Yes / No, thường chọn một trong hai hoặc 'Either is fine' / 'Neither'."
+      ]
+    },
+    {
+      part: "Part 3 & 4",
+      nameEn: "CONVERSATIONS & TALKS",
+      nameVi: "Hội Thoại & Bài Nói Ngắn",
       icon: "fa-headphones-simple",
-      color: "#0284c7",
-      keyRule: "Tận dụng thời gian đọc trước câu hỏi và gạch chân từ khóa (Keywords) trước khi máy phát audio. Chú ý bẫy Paraphrase và bẫy phủ định.",
+      color: "#06b6d4",
+      keyRule: "Quy tắc vàng: ĐỌC TRƯỚC 3 CÂU HỎI & CÁC LỰA CHỌN trong lúc máy đọc hướng dẫn hoặc trước khi audio chạy.",
       tips: [
-        "Part 1 (8 câu): Nghe thông báo & chỉ dẫn ngắn nơi công cộng (sân bay, ga xe, bến xe, siêu thị). Chú ý số cổng bay (Gate), giờ delay và thay đổi phút chót.",
-        "Part 2 (12 câu): 3 cuộc hội thoại đời thường (mỗi bài 4 câu). Lắng nghe kỹ ý kiến người nam vs người nữ, xác định giải pháp sau cùng.",
-        "Part 3 (15 câu): 3 bài giảng / thuyết trình học thuật (mỗi bài 5 câu). Bắt nhịp thứ tự câu hỏi và ghi chú nhanh (Note-taking) từ khóa chính."
+        "Xác định từ khóa chính (Who, Where, What problem, What next action).",
+        "Bắt nhịp thứ tự câu hỏi: Thông tin câu 1 thường ở đầu đoạn, câu 2 ở giữa, câu 3 ở cuối.",
+        "Câu hỏi có bảng biểu / bản đồ (Graphic Questions): Đối chiếu thông tin nghe được với cột tương ứng trên hình.",
+        "Nếu bị lỡ 1 câu: Lập tức đoán nhanh và chuyển sang đọc 3 câu tiếp theo, tuyệt đối không chần chừ."
       ]
     },
     {
-      skill: "Reading",
-      nameEn: "VSTEP READING (40 CÂU - 60 PHÚT)",
-      nameVi: "Kỹ Năng Đọc Hiểu 4 Bài Văn Học Thuật",
-      icon: "fa-book-open-reader",
-      color: "#059669",
-      keyRule: "Phân bổ thời gian: 14 - 15 phút/bài đọc (10 câu). Tuyệt đối không đọc dịch từng chữ từ đầu đến cuối.",
-      tips: [
-        "Skimming: Đọc câu đầu tiên (Topic Sentence) và câu kết của mỗi đoạn để nắm ngay ý chính (Main Idea) toàn bài.",
-        "Scanning: Quét thật nhanh tìm các từ khóa độc nhất (tên riêng viết hoa, năm tháng, số liệu) để định vị câu trả lời.",
-        "Câu hỏi từ vựng (closest in meaning to): Đọc cả câu chứa từ vựng và câu liền kề để suy luận nghĩa chính xác theo ngữ cảnh."
-      ]
-    },
-    {
-      skill: "Writing",
-      nameEn: "VSTEP WRITING (2 TASKS - 60 PHÚT)",
-      nameVi: "Kỹ Năng Viết Thư & Viết Luận",
+      part: "Part 5",
+      nameEn: "INCOMPLETE SENTENCES",
+      nameVi: "Điền Vào Câu (30 Câu)",
       icon: "fa-pen-to-square",
-      color: "#db2777",
-      keyRule: "Task 1 chiếm 1/3 tổng điểm (20 phút, >= 120 từ). Task 2 chiếm 2/3 tổng điểm (40 phút, >= 250 từ).",
+      color: "#10b981",
+      keyRule: "Nhìn 4 phương án trước: Nếu cùng gốc từ -> Câu Ngữ Pháp (nhìn trước & sau chỗ trống). Nếu 4 từ khác nhau -> Câu Từ Vựng (dịch nghĩa theo ngữ cảnh công sở).",
       tips: [
-        "Task 1 (Thư Tương Tác): Xác định đúng văn phong Informal (bạn bè) vs Formal (xin việc, phàn nàn, đề nghị). Trả lời đủ 3 ý gợi ý.",
-        "Task 2 (Bài Luận Học Thuật): Xác định 1 trong 4 dạng (Thuận lợi/Bất lợi, Đồng ý/Không đồng ý, Nguyên nhân/Giải pháp, Thảo luận 2 chiều).",
-        "Bố cục Task 2 chuẩn 4 đoạn: Mở bài (Intro), Thân bài 1 (Body 1), Thân bài 2 (Body 2), Kết luận (Conclusion)."
+        "Vị trí từ loại: Đứng trước Danh từ là Tính từ (hoặc Noun ghép); Đứng trước Tính từ / Động từ / cuối câu là Trạng từ (-ly).",
+        "Phân biệt Cụm Danh Từ (Noun) vs Mệnh Đề (Clause): Due to / Because of / Despite / In spite of + Noun Phrase. Because / Although / While + S + V.",
+        "Thời gian làm bài: Tối đa 30 giây/câu, dành 10 - 12 phút cho toàn bộ 30 câu Part 5."
       ]
     },
     {
-      skill: "Speaking",
-      nameEn: "VSTEP SPEAKING (3 PHẦN - 12 PHÚT)",
-      nameVi: "Kỹ Năng Nói Trực Tiếp Trên Máy Tính",
-      icon: "fa-microphone-lines",
-      color: "#7c3aed",
-      keyRule: "Nói to, rõ ràng, trôi chảy. Tránh im lặng quá 3 giây. Áp dụng công thức P.E.E (Point - Explanation - Example).",
+      part: "Part 6",
+      nameEn: "TEXT COMPLETION",
+      nameVi: "Điền Đoạn Văn (16 Câu)",
+      icon: "fa-file-lines",
+      color: "#f59e0b",
+      keyRule: "Luyện kỹ năng điền câu hoàn chỉnh (Sentence Insertion): Đọc câu phía trước và phía sau chỗ trống để tìm từ nối logic.",
       tips: [
-        "Part 1 (3 phút - Tương tác xã hội): Trả lời 2 chủ đề quen thuộc (3 - 4 câu hoàn chỉnh mỗi câu hỏi, luôn nêu lý do 'because').",
-        "Part 2 (4 phút - Thảo luận giải pháp): 1 tình huống với 3 phương án. Cấu trúc 4 bước: Chọn giải pháp tốt nhất, nêu ưu điểm, và bác bỏ 2 giải pháp còn lại.",
-        "Part 3 (5 phút - Phát triển chủ đề): Triển khai mind-map với 3 gợi ý + 1 ý tưởng riêng, sau đó trả lời 2 câu hỏi mở rộng."
+        "Chú ý thì của toàn đoạn văn (thư báo, thông báo tuyển dụng, hóa đơn).",
+        "Các liên từ liên kết đoạn văn hay gặp: However, Therefore, In addition, Consequently, As a result.",
+        "Phân bổ thời gian: Khoảng 8 - 10 phút cho 4 đoạn (16 câu)."
+      ]
+    },
+    {
+      part: "Part 7",
+      nameEn: "READING COMPREHENSION",
+      nameVi: "Đọc Hiểu Đoạn Đơn & Đoạn Kép (54 Câu)",
+      icon: "fa-book-open-reader",
+      color: "#ec4899",
+      keyRule: "Kỹ năng Skimming & Scanning: Đọc tiêu đề, người gửi/nhận, chủ đề email trước khi đọc câu hỏi.",
+      tips: [
+        "Với đoạn kép/ba (Double / Triple Passages): Câu hỏi số 3, 4, 5 thường yêu cầu liên kết thông tin giữa 2 văn bản khác nhau.",
+        "Bẫy từ đồng nghĩa (Paraphrasing): Đáp án đúng thường dùng từ đồng nghĩa, ít khi dùng lại nguyên si từ trên bài đọc.",
+        "Quản lý thời gian: Dành trọn vẹn 55 phút cho Part 7. Không sa đà quá lâu vào một câu khó."
       ]
     }
   ];
@@ -1054,209 +1082,209 @@
    * Phân chia chính xác theo 4 chuyên đề thực tế của Cô Nguyệt.
    */
   const EXAM_QUIZ_QUESTIONS = [
-  {
-    "id": "vstep-read-1",
-    "category": "vstep-reading",
-    "categoryName": "📖 VSTEP Reading",
-    "skill": "Reading",
-    "level": "B2",
-    "topic": "Kỹ năng Skimming xác định Ý chính",
-    "question": "Khi làm bài VSTEP Reading, để xác định nhanh ý chính (Main Idea) của một đoạn văn học thuật, thí sinh nên tập trung đọc kỹ những vị trí nào?",
-    "options": [
-      "Câu đầu tiên (Topic Sentence) và câu kết luận của đoạn văn",
-      "Chỉ đọc các số liệu phần trăm và năm tháng trong đoạn văn",
-      "Đọc ngược từ từ cuối cùng lên từ đầu tiên của bài đọc",
-      "Chỉ đọc các danh từ riêng được viết hoa trong đoạn văn"
-    ],
-    "answer": 0,
-    "explain": "Trong văn bản học thuật VSTEP, câu chủ đề (Topic Sentence) thường nằm ở đầu đoạn văn, và câu chốt ý/tổng kết nằm ở cuối đoạn. Skimming 2 vị trí này giúp nắm bắt 80% ý chính của đoạn văn mà không mất thời gian đọc từng chữ."
-  },
-  {
-    "id": "vstep-read-2",
-    "category": "vstep-reading",
-    "categoryName": "📖 VSTEP Reading",
-    "skill": "Reading",
-    "level": "B2",
-    "topic": "Từ vựng theo ngữ cảnh (Context Clues)",
-    "question": "Trong câu: 'Regular exercise is imperative for maintaining cardiovascular health and longevity.', từ 'imperative' gần nghĩa nhất với từ nào?",
-    "options": [
-      "optional",
-      "essential",
-      "dangerous",
-      "temporary"
-    ],
-    "answer": 1,
-    "explain": "'Imperative' (tính từ) nghĩa là 'vô cùng cấp thiết, bắt buộc, cốt yếu' (= essential, crucial, vital), rất phổ biến trong các bài đọc VSTEP chủ đề Sức khỏe và Đời sống."
-  },
-  {
-    "id": "vstep-read-3",
-    "category": "vstep-reading",
-    "categoryName": "📖 VSTEP Reading",
-    "skill": "Reading",
-    "level": "B1-B2",
-    "topic": "Đại từ quy chiếu (Reference Question)",
-    "question": "Trong câu: 'Renewable energy sources reduce pollution. Moreover, they are inexhaustible.', từ 'they' quy chiếu về danh từ nào trước đó?",
-    "options": [
-      "Renewable energy sources",
-      "Pollution",
-      "Fossil fuels",
-      "Greenhouse gases"
-    ],
-    "answer": 0,
-    "explain": "Đại từ số nhiều 'they' đứng đầu câu sau đóng vai trò chủ ngữ, quy chiếu về cụm danh từ số nhiều làm chủ ngữ ở câu trước: 'Renewable energy sources' (các nguồn năng lượng tái tạo)."
-  },
-  {
-    "id": "vstep-read-4",
-    "category": "vstep-reading",
-    "categoryName": "📖 VSTEP Reading",
-    "skill": "Reading",
-    "level": "B2-C1",
-    "topic": "Phân bổ thời gian thi Reading",
-    "question": "Bài thi VSTEP Reading gồm 4 bài đọc với tổng cộng 40 câu hỏi trong 60 phút. Chiến thuật phân bổ thời gian làm bài tối ưu nhất là gì?",
-    "options": [
-      "Dành 30 phút cho bài đọc 1, 3 bài còn lại làm trong 30 phút",
-      "Phân bổ đều khoảng 14 - 15 phút cho mỗi bài đọc (10 câu hỏi)",
-      "Làm bài đọc 4 trước tiên vì bài này ngắn và dễ nhất",
-      "Đọc dịch toàn bộ bài rồi mới nhìn vào câu hỏi trắc nghiệm"
-    ],
-    "answer": 1,
-    "explain": "Phân bổ 14 - 15 phút/bài (10 câu) giúp thí sinh giữ vững nhịp độ làm bài ổn định, không bị áp lực thời gian dồn vào các bài đọc cuối cùng."
-  },
-  {
-    "id": "vstep-lis-1",
-    "category": "vstep-listening",
-    "categoryName": "🎧 VSTEP Listening",
-    "skill": "Listening",
-    "level": "B1",
-    "topic": "Listening Part 1: Bẫy Thông Báo Sân Bay",
-    "question": "Trong VSTEP Listening Part 1, khi nghe thông báo về cổng bay (Gate), nếu phát thanh viên nói: 'Flight VN123 was originally scheduled for Gate 12, but will now depart from Gate 18', cổng bay hành khách cần đến là cổng nào?",
-    "options": [
-      "Gate 12",
-      "Gate 18",
-      "Gate 30",
-      "Gate 6"
-    ],
-    "answer": 1,
-    "explain": "Từ 'originally' (ban đầu) chỉ kế hoạch cũ đã bị hủy. Từ 'now' chỉ sự thay đổi thực tế hiện tại: 'will now depart from Gate 18'. Thí sinh cần đến Gate 18."
-  },
-  {
-    "id": "vstep-lis-2",
-    "category": "vstep-listening",
-    "categoryName": "🎧 VSTEP Listening",
-    "skill": "Listening",
-    "level": "B2",
-    "topic": "Listening Part 2: Đối thoại học đường",
-    "question": "Trong VSTEP Listening Part 2, quy tắc vàng giúp thí sinh bắt kịp nội dung cuộc hội thoại 4 câu hỏi là gì?",
-    "options": [
-      "Chờ nghe hết toàn bộ đoạn hội thoại rồi mới đọc câu hỏi",
-      "Tranh thủ đọc trước câu hỏi và gạch chân từ khóa chính trước khi audio phát",
-      "Chỉ tập trung nghe giọng của người nam và bỏ qua người nữ",
-      "Ghi chép lại từng chữ người nói vào nháp"
-    ],
-    "answer": 1,
-    "explain": "Đọc trước câu hỏi và từ khóa chính (Keywords) giúp não bộ định hướng trước thông tin cần nghe, chủ động bắt nhịp khi câu trả lời xuất hiện trong đoạn thoại."
-  },
-  {
-    "id": "vstep-lis-3",
-    "category": "vstep-listening",
-    "categoryName": "🎧 VSTEP Listening",
-    "skill": "Listening",
-    "level": "B2-C1",
-    "topic": "Listening Part 3: Ghi chú bài giảng học thuật",
-    "question": "Trong VSTEP Listening Part 3 (Bài giảng của giáo sư), kỹ năng Note-taking hiệu quả nhất là gì?",
-    "options": [
-      "Cố gắng viết nguyên văn toàn bộ câu nói của giảng viên",
-      "Chỉ viết các mạo từ (a, an, the) và giới từ",
-      "Ghi lại từ khóa mang thông tin chính (Danh từ, Động từ, Số liệu, Từ nối chỉ nguyên nhân - kết quả)",
-      "Không cần ghi chép gì, chỉ ngồi nghe bằng tai"
-    ],
-    "answer": 2,
-    "explain": "Note-taking thông minh chỉ ghi Content Words (danh từ, động từ chính, số liệu) và Transition Words (However, Because, As a result) bằng từ viết tắt hoặc ký hiệu mũi tên."
-  },
-  {
-    "id": "vstep-lis-4",
-    "category": "vstep-listening",
-    "categoryName": "🎧 VSTEP Listening",
-    "skill": "Listening",
-    "level": "B2",
-    "topic": "Nhận diện bẫy Paraphrase trong Listening",
-    "question": "Trong bài nghe VSTEP, nếu audio nói: 'The museum charges no admission fee on Sundays', phương án trắc nghiệm đúng thường diễn đạt (paraphrase) lại như thế nào?",
-    "options": [
-      "The museum is closed on Sundays.",
-      "Visitors can enter the museum for free on Sundays.",
-      "The admission fee is very expensive on Sundays.",
-      "Visitors must book expensive tickets in advance."
-    ],
-    "answer": 1,
-    "explain": "'charges no admission fee' (không thu phí vào cửa) được paraphrase thành 'enter for free' (vào cửa miễn phí). Đây là dạng bẫy paraphrase kinh điển trong đề thi VSTEP."
-  },
-  {
-    "id": "vstep-speak-1",
-    "category": "vstep-speaking",
-    "categoryName": "🗣️ VSTEP Speaking",
-    "skill": "Speaking",
-    "level": "B1-B2",
-    "topic": "Speaking Part 2: Cấu trúc Thảo luận giải pháp",
-    "question": "Trong VSTEP Speaking Part 2 (Solution Discussion), sau khi chọn giải pháp tốt nhất trong 3 phương án đề bài cho, thí sinh CẦN làm gì tiếp theo để đạt điểm trọn vẹn?",
-    "options": [
-      "Dừng lại ngay và không cần nói thêm gì nữa",
-      "Biện minh lý do chọn phương án đó VÀ nêu lý do bác bỏ 2 phương án còn lại",
-      "Nói rằng cả 3 phương án đều tệ như nhau",
-      "Đọc lại y nguyên đề bài cho hết 3 phút"
-    ],
-    "answer": 1,
-    "explain": "Tiêu chí chấm điểm Part 2 yêu cầu thí sinh phải biện minh giải pháp lựa chọn (chỉ ra ưu điểm) VÀ so sánh, phản biện bác bỏ 2 phương án còn lại (chỉ ra nhược điểm/không khả thi)."
-  },
-  {
-    "id": "vstep-speak-2",
-    "category": "vstep-speaking",
-    "categoryName": "🗣️ VSTEP Speaking",
-    "skill": "Speaking",
-    "level": "B2",
-    "topic": "Speaking Part 3: Công thức P.E.E phát triển luận điểm",
-    "question": "Công thức kinh điển P.E.E trong VSTEP Speaking Part 3 giúp mở rộng câu trả lời sâu sắc và mạch lạc gồm 3 thành phần nào?",
-    "options": [
-      "Point (Luận điểm) - Explanation (Giải thích) - Example (Ví dụ thực tế)",
-      "Past (Quá khứ) - Present (Hiện tại) - Future (Tương lai)",
-      "Problem (Vấn đề) - Error (Lỗi sai) - Ending (Kết thúc)",
-      "Passive (Bị động) - Active (Chủ động) - Complex (Câu phức)"
-    ],
-    "answer": 0,
-    "explain": "Công thức P.E.E (Point - Explanation - Example) là kim chỉ nam giúp học viên phát triển câu trả lời dài từ 4 - 6 câu thuyết phục, không bị cạn ý khi nói trước máy tính."
-  },
-  {
-    "id": "vstep-write-1",
-    "category": "vstep-writing",
-    "categoryName": "✍️ VSTEP Writing",
-    "skill": "Writing",
-    "level": "B1-B2",
-    "topic": "Writing Task 1: Viết thư trang trọng (Formal Letter)",
-    "question": "Khi viết một bức thư trang trọng (Formal Letter) để khiếu nại dịch vụ trong VSTEP Writing Task 1, câu mở đầu nào chuẩn mực và lịch sự nhất?",
-    "options": [
-      "Hey guy, your service sucks and I want my money back!",
-      "I am writing to express my strong dissatisfaction with the poor service I recently experienced.",
-      "How are you doing? Let's talk about the hotel room.",
-      "Hi there, I hope you are having fun today."
-    ],
-    "answer": 1,
-    "explain": "'I am writing to express my dissatisfaction with...' là cấu trúc thư trang trọng (Formal Letter) chuẩn mực để nêu mục đích viết thư phàn nàn/khiếu nại dịch vụ trong VSTEP Task 1."
-  },
-  {
-    "id": "vstep-write-2",
-    "category": "vstep-writing",
-    "categoryName": "✍️ VSTEP Writing",
-    "skill": "Writing",
-    "level": "B2-C1",
-    "topic": "Writing Task 2: Cấu trúc bài luận 4 đoạn",
-    "question": "Yêu cầu về độ dài và bố cục chuẩn mực của bài luận VSTEP Writing Task 2 là gì?",
-    "options": [
-      "Tối thiểu 120 từ, viết thành 1 đoạn văn duy nhất",
-      "Tối thiểu 250 từ, bố cục rõ ràng 4 đoạn (Mở bài, Thân bài 1, Thân bài 2, Kết bài)",
-      "Tối thiểu 500 từ, không cần chia đoạn",
-      "Chỉ cần viết 10 gạch đầu dòng tóm tắt các ý"
-    ],
-    "answer": 1,
-    "explain": "VSTEP Task 2 yêu cầu tối thiểu 250 từ (chiếm 2/3 tổng điểm bài thi Writing), bố cục chuẩn 4 đoạn: Introduction (Mở bài), Body 1 (Thân bài 1), Body 2 (Thân bài 2) và Conclusion (Kết luận)."
+{
+  "id": "toeic-q1",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Từ Loại",
+  "skill": "Reading",
+  "level": "TOEIC 500+",
+  "topic": "Trạng từ bổ nghĩa Tính từ",
+  "question": "The new marketing campaign was _______ successful in boosting online sales across Southeast Asia.",
+  "options": [
+    "extreme",
+    "extremely",
+    "extremity",
+    "extremist"
+  ],
+  "answer": 1,
+  "explain": "Trước tính từ 'successful', ta cần một TRẠNG TỪ (Adverb) để bổ nghĩa: 'extremely successful' (cực kỳ thành công)."
+},
+{
+  "id": "toeic-q2",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Từ Loại",
+  "skill": "Reading",
+  "level": "TOEIC 500+",
+  "topic": "Vị trí Danh từ (Approval)",
+  "question": "All employees must obtain written _______ from the department manager before ordering office equipment.",
+  "options": [
+    "approve",
+    "approved",
+    "approving",
+    "approval"
+  ],
+  "answer": 3,
+  "explain": "Sau tính từ 'written', ta cần một DANH TỪ làm tân ngữ cho động từ 'obtain'. 'Approval' (sự phê duyệt) là danh từ có đuôi -al đặc biệt."
+},
+{
+  "id": "toeic-q3",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Liên Từ & Giới Từ",
+  "skill": "Reading",
+  "level": "TOEIC 600+",
+  "topic": "Despite vs Although",
+  "question": "_______ the heavy traffic on Highway 101, Ms. Jenkins arrived at the board meeting on schedule.",
+  "options": [
+    "Although",
+    "Despite",
+    "Because",
+    "Even though"
+  ],
+  "answer": 1,
+  "explain": "'the heavy traffic...' là một Cụm danh từ (Noun Phrase). Ta dùng giới từ 'Despite' (+ Cụm N/V-ing) mang nghĩa 'mặc dù'. ('Although' / 'Even though' phải đi với Mệnh đề S + V)."
+},
+{
+  "id": "toeic-q4",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Liên Từ & Giới Từ",
+  "skill": "Reading",
+  "level": "TOEIC 650+",
+  "topic": "During vs While",
+  "question": "Please turn off all mobile devices _______ the takeoff and landing of the aircraft.",
+  "options": [
+    "during",
+    "while",
+    "as",
+    "whereas"
+  ],
+  "answer": 0,
+  "explain": "'the takeoff and landing' là Cụm danh từ. Giới từ 'during' (+ Noun) mang nghĩa 'trong suốt khoảng thời gian diễn ra...'. 'While' phải đi với Mệnh đề (S + V) hoặc V-ing."
+},
+{
+  "id": "toeic-q5",
+  "category": "toeic-vocab",
+  "categoryName": "💼 TOEIC Business Vocab",
+  "skill": "Reading",
+  "level": "TOEIC 600+",
+  "topic": "Complimentary Breakfast",
+  "question": "Hotel guests are entitled to a _______ breakfast buffet at the rooftop lounge every morning.",
+  "options": [
+    "complimentary",
+    "compliment",
+    "complaining",
+    "complicated"
+  ],
+  "answer": 0,
+  "explain": "'Complimentary' (tính từ) là từ vựng TOEIC rất kinh điển, có nghĩa là 'miễn phí' (bằng với free of charge). Cụm 'complimentary breakfast' = bữa sáng miễn phí."
+},
+{
+  "id": "toeic-q6",
+  "category": "toeic-vocab",
+  "categoryName": "💼 TOEIC Business Vocab",
+  "skill": "Reading",
+  "level": "TOEIC 650+",
+  "topic": "Accommodate",
+  "question": "The newly renovated auditorium is large enough to _______ up to 500 attendees comfortably.",
+  "options": [
+    "accommodate",
+    "negotiate",
+    "investigate",
+    "participate"
+  ],
+  "answer": 0,
+  "explain": "'Accommodate' trong văn cảnh TOEIC thường mang nghĩa 'có đủ chỗ chứa, đáp ứng không gian cho' (contain or provide space for)."
+},
+{
+  "id": "toeic-q7",
+  "category": "toeic-listening",
+  "categoryName": "🎧 TOEIC Listening Part 1",
+  "skill": "Listening",
+  "level": "TOEIC 500+",
+  "topic": "Bẫy 'being + V3' trong Tranh Tả Vật",
+  "question": "Trong TOEIC Listening Part 1, nếu bức tranh chỉ có VẬT (không hề có NGƯỜI) mà nghe thấy cấu trúc nào sau đây thì 99% là đáp án SAI (bẫy)?",
+  "options": [
+    "has been placed on the table",
+    "is being loaded onto the truck",
+    "is arranged in a row",
+    "has been displayed on the shelf"
+  ],
+  "answer": 1,
+  "explain": "Cấu trúc 'is/are BEING + V3' mô tả hành động đang có người tác động vào vật ở thời điểm nói. Nếu tranh tĩnh không có người, đáp án có 'being' gần như chắc chắn là bẫy sai!"
+},
+{
+  "id": "toeic-q8",
+  "category": "toeic-listening",
+  "categoryName": "🎧 TOEIC Listening Part 2",
+  "skill": "Listening",
+  "level": "TOEIC 600+",
+  "topic": "Bẫy Âm Tương Đồng (Similar Sounds)",
+  "question": "Khi nghe câu hỏi Part 2 có từ 'coffee' mà một phương án trả lời có từ 'copy', hoặc 'stationery' với 'station', đây là dạng bẫy gì trong TOEIC?",
+  "options": [
+    "Bẫy đồng nghĩa (Synonym Trap)",
+    "Bẫy từ phát âm gần giống nhau (Same/Similar Sound Trap)",
+    "Bẫy thì quá khứ",
+    "Bẫy câu hỏi đuôi"
+  ],
+  "answer": 1,
+  "explain": "ETS rất hay dùng 'Same sound / Similar sound trap' (từ phát âm giống hoặc na ná từ trên câu hỏi) để đánh lừa thí sinh nghe không rõ. Đáp án có từ na ná âm thường là đáp án SAI!"
+},
+{
+  "id": "toeic-q9",
+  "category": "toeic-listening",
+  "categoryName": "🎧 TOEIC Listening Part 2",
+  "skill": "Listening",
+  "level": "TOEIC 650+",
+  "topic": "Câu trả lời gián tiếp (Indirect Answers)",
+  "question": "Với câu hỏi: 'When will the project report be finalized?', câu trả lời nào sau đây là 'Câu trả lời gián tiếp' thường là đáp án đúng trong đề thi TOEIC?",
+  "options": [
+    "Yes, I really liked the report.",
+    "At 50 dollars per page.",
+    "Ask Mr. Tanaka, he is in charge of it.",
+    "In the conference room on the second floor."
+  ],
+  "answer": 2,
+  "explain": "Câu hỏi 'When' nhưng đáp án không trả lời trực tiếp mốc thời gian mà trả lời gián tiếp: 'Hãy hỏi anh Tanaka, anh ấy phụ trách việc này'. Đây là xu hướng ra đề rất phổ biến của Part 2 TOEIC hiện đại."
+},
+{
+  "id": "toeic-q10",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Cụm Giới Từ",
+  "skill": "Reading",
+  "level": "TOEIC 600+",
+  "topic": "Prior to (= Before)",
+  "question": "All attendees are requested to register online _______ to the commencement of the international seminar.",
+  "options": [
+    "prior",
+    "ahead",
+    "advance",
+    "before"
+  ],
+  "answer": 0,
+  "explain": "Cụm cố định 'prior to' (= before) mang nghĩa 'trước khi'. 'ahead' phải đi với 'of' (ahead of), 'in advance of', còn 'before' là giới từ đứng một mình không kèm 'to'."
+},
+{
+  "id": "toeic-q11",
+  "category": "toeic-vocab",
+  "categoryName": "💼 TOEIC Business Vocab",
+  "skill": "Reading",
+  "level": "TOEIC 700+",
+  "topic": "Salary Increase",
+  "question": "Due to exceptional performance, Ms. Robinson was offered a substantial salary _______ and a promotion to Vice President.",
+  "options": [
+    "increase",
+    "expand",
+    "develop",
+    "achieve"
+  ],
+  "answer": 0,
+  "explain": "Cụm danh từ 'salary increase' (hoặc pay raise) mang nghĩa 'sự tăng lương'. Các từ còn lại là động từ không đứng sau tính từ 'substantial' để làm cụm danh từ phù hợp."
+},
+{
+  "id": "toeic-q12",
+  "category": "toeic-grammar",
+  "categoryName": "📝 TOEIC Part 5: Đại Từ Phản Thân",
+  "skill": "Reading",
+  "level": "TOEIC 550+",
+  "topic": "Đại từ phản thân (Herself)",
+  "question": "The CEO inspected the new manufacturing facility _______ to ensure strict adherence to international safety standards.",
+  "options": [
+    "she",
+    "her",
+    "herself",
+    "hers"
+  ],
+  "answer": 2,
+  "explain": "Đại từ phản thân 'herself' đứng cuối mệnh đề để nhấn mạnh chính chủ ngữ tự mình làm hành động đó: 'Đích thân tổng giám đốc đã đi thanh tra cơ sở sản xuất mới'."
   },
   {
     "id": "bm-off-1",
@@ -2458,23 +2486,19 @@
     ` : '';
 
     // 5 Growth Stages Asset Resolver
-    // Stage 1 (0-19%): Sprout nestled in soil (stage_1.png compact scale)
-    // Stage 2 (20-39%): Seedling rising tall (stage_1.png taller scale)
+    // Stage 1 (0-19%): Sprout nestled in soil (stage_1.png compact)
+    // Stage 2 (20-39%): Seedling rising tall (stage_1.png full)
     // Stage 3 (40-59%): Foliage growth & branching out (stage_2.png)
-    // Stage 4 (60-79%): Bushy vigorous plant (stage_2.png full scale)
-    // Stage 5 Budding (80-99%): Plant with emerging flower buds (stage_3.png)
-    // Stage 5 Bloomed (100%): Full glorious blooming flower (stage_4.png)
-    const isBloomed = (progress >= 100);
-    const ASSET_VER = '20261104_v9';
+    // Stage 4 (60-79%): Bushy plant with budding flower (stage_3.png)
+    // Stage 5 (80-100%): Full glorious blooming flower (stage_4.png)
     const stageImgMap = {
       1: `assets/garden/${fid}_stage_1.png`,
       2: `assets/garden/${fid}_stage_1.png`,
       3: `assets/garden/${fid}_stage_2.png`,
-      4: `assets/garden/${fid}_stage_2.png`,
-      5: isBloomed ? `assets/garden/${fid}_stage_4.png` : `assets/garden/${fid}_stage_3.png`
+      4: `assets/garden/${fid}_stage_3.png`,
+      5: `assets/garden/${fid}_stage_4.png`
     };
-    const baseImgSrc = stageImgMap[stage] || `assets/garden/${fid}_stage_1.png`;
-    const stageImgSrc = `${baseImgSrc}?v=${ASSET_VER}`;
+    const stageImgSrc = stageImgMap[stage] || `assets/garden/${fid}_stage_1.png`;
 
     const flowerNames = {
       sunflower: 'Hoa Hướng Dương Rực Rỡ',
@@ -2486,10 +2510,10 @@
       succulent: 'Sen Đá Ngọc Bền Bỉ',
       clover: 'Cỏ 4 Lá May Mắn'
     };
-    const altText = `${flowerNames[fid] || 'Cây Vườn'} - Giai đoạn ${stage}/5${isBloomed ? ' (Nở Rộ)' : ''}`;
+    const altText = `${flowerNames[fid] || 'Cây Vườn'} - Giai đoạn ${stage}/5`;
 
     return `
-      <div class="clover-living-stage clover-stage-${stage} ${isBloomed ? 'is-bloomed' : ''} flower-type-${fid}" data-stage="${stage}" data-flower="${fid}">
+      <div class="clover-living-stage clover-stage-${stage} flower-type-${fid}" data-stage="${stage}" data-flower="${fid}">
         <div class="clover-ground-shadow" aria-hidden="true"></div>
         <div class="clover-aura-halo" aria-hidden="true"></div>
         <div class="clover-breeze-rig">
@@ -2600,7 +2624,7 @@
   root.VSTEP_SPEAKING_VOCAB_GUIDE = VSTEP_SPEAKING_VOCAB_GUIDE;
   root.VSTEP_OFFICIAL_LETTER_TYPES = VSTEP_OFFICIAL_LETTER_TYPES;
   root.VSTEP_OFFICIAL_ESSAY_TYPES = VSTEP_OFFICIAL_ESSAY_TYPES;
-  root.VSTEP_OFFICIAL_STRATEGY_GUIDE = typeof VSTEP_OFFICIAL_STRATEGY_GUIDE !== 'undefined' ? VSTEP_OFFICIAL_STRATEGY_GUIDE : [];
+  root.TOEIC_OFFICIAL_STRATEGY_GUIDE = typeof TOEIC_OFFICIAL_STRATEGY_GUIDE !== 'undefined' ? TOEIC_OFFICIAL_STRATEGY_GUIDE : [];
   root.EXAM_QUIZ_QUESTIONS = EXAM_QUIZ_QUESTIONS;
   root.getNextNonRepeatingQuizQuestion = getNextNonRepeatingQuizQuestion;
   root.resetQuizSeenHistory = resetQuizSeenHistory;
