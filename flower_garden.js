@@ -1333,7 +1333,7 @@
         const fl = catalog[fid] || {};
         const isCurrent = currentFid === fid;
         const harvestCount = (this.state.basket && this.state.basket[fid]) || 0;
-        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
+        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
         const theme = themeMap[fid] || themeMap.clover;
         const unit = theme.unit;
         const badgeBg = theme.badgeBg;
@@ -1851,7 +1851,7 @@
           <button class="modal-close-btn" id="btn-close-harvest-modal">&times;</button>
           <div class="harvest-celebration-head">
             <div class="harvest-clover-sparkle-halo">
-              <img src="assets/garden/clover_stage_4.png?v=20261104_v9" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
+              <img src="assets/garden/clover_stage_4.png?v=20261104_v10" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
             </div>
             <span class="harvest-pill-badge" id="harvest-pill-badge">🍀 CÀNH CỎ 4 LÁ THỨ #1 ĐÃ BỪNG NỞ!</span>
             <h3 class="harvest-main-title">THÔNG ĐIỆP HÔM NAY</h3>
@@ -1903,7 +1903,7 @@
       const celebImg = document.getElementById('harvest-celebration-img');
 
       if (celebImg) {
-        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
+        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
         celebImg.alt = flower.name;
       }
 
@@ -2071,7 +2071,7 @@
                 </button>
               </div>
               <button class="btn btn-primary btn-small" id="btn-quiz-done" style="background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important; color:#FFFFFF !important; font-weight:700 !important;">
-                <i class="fa-solid fa-seedling"></i> Về Chậu Cây Cỏ May Mắn
+                <i class="fa-solid fa-seedling"></i> Về Vườn Hoa VSTEP
               </button>
             </div>
           </div>
@@ -3162,7 +3162,7 @@
       }
 
       const studentName = this.getStudentName();
-      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
+      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
       const heroBadgeMap = {
         clover: '🍀 CỎ 4 LÁ MAY MẮN',
         sunflower: '🌻 HOA HƯỚNG DƯƠNG RỰC RỠ',
@@ -3420,7 +3420,7 @@
         const prevFlower = potWrapper.dataset.flowerId;
         const prevBloomed = potWrapper.dataset.isBloomed;
         const isBloomed = (p >= 100) ? 'true' : 'false';
-        if (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed || !potWrapper.querySelector('.clover-living-stage') || !potWrapper.querySelector('img')) {
+        if (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed || !potWrapper.querySelector('.clover-living-stage')) {
           potWrapper.innerHTML = root.renderFlowerPotSvg(fid, p);
           potWrapper.dataset.cloverStage = String(targetStage);
           potWrapper.dataset.flowerId = fid;
