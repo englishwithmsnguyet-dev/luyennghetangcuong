@@ -394,8 +394,7 @@
         if (contentArea) {
           gardenPane = document.createElement('section');
           gardenPane.id = 'flower-garden';
-          gardenPane.className = 'tab-pane view-panel hidden fade-in garden-dedicated-view';
-          gardenPane.style.display = 'none';
+          gardenPane.className = 'tab-pane view-panel fade-in garden-dedicated-view';
           if (contentArea.firstElementChild) {
             contentArea.insertBefore(gardenPane, contentArea.firstElementChild);
           } else {
@@ -585,11 +584,12 @@
 
     wireSidebarNavClick(navItem) {
       navItem.addEventListener('click', (e) => {
-        // If site handles tab switching via custom activateTab, trigger it or handle directly
+        e.preventDefault();
         if (typeof window.switchTab === 'function') {
           window.switchTab('flower-garden');
+        } else if (window.app && typeof window.app.switchView === 'function') {
+          window.app.switchView('flower-garden');
         } else {
-          e.preventDefault();
           this.openGardenTab();
         }
       });
@@ -598,8 +598,23 @@
     },
 
     openGardenTab() {
+      if (this._switchingGardenTab) return;
+      if (typeof window.switchTab === 'function') {
+        this._switchingGardenTab = true;
+        try {
+          window.switchTab('flower-garden');
+        } finally {
+          this._switchingGardenTab = false;
+        }
+        return;
+      }
+      if (window.app && typeof window.app.switchView === 'function') {
+        window.app.switchView('flower-garden');
+        return;
+      }
+
       // 1. Update active state on sidebar items
-      document.querySelectorAll('.nav-item, .menu-item, .test-item, .sub-tab-link').forEach(el => {
+      document.querySelectorAll('.nav-item, .menu-item, .test-item, .sub-tab-link, .sidebar-nav-item').forEach(el => {
         el.classList.remove('active');
       });
       const navItem = document.getElementById('sidebar-nav-garden') || document.querySelector('[data-target="flower-garden"], [data-view="flower-garden"]');
@@ -608,6 +623,7 @@
       // 2. Hide all other tab panes / views
       document.querySelectorAll('.tab-pane, .view-panel, .lesson-section').forEach(pane => {
         if (pane.id !== 'flower-garden' && pane.id !== 'view-flower-garden' && pane.id !== 'sec-flower-garden') {
+          pane.classList.remove('active');
           pane.classList.add('hidden');
           pane.style.display = 'none';
         }
@@ -616,13 +632,14 @@
       // 3. For SPEAKING MOCK TESTS: hide mock dashboard grid & welcome header
       const dashGrid = document.querySelector('.dashboard-grid');
       if (dashGrid) dashGrid.style.display = 'none';
-      const welcomeHeader = document.querySelector('.welcome-header');
+      const welcomeHeader = document.querySelector('.welcome-header-center, .welcome-header');
       if (welcomeHeader) welcomeHeader.style.display = 'none';
 
       // 4. Show flower garden pane
       const gardenPane = document.getElementById('flower-garden') || document.getElementById('view-flower-garden') || document.getElementById('sec-flower-garden');
       if (gardenPane) {
         gardenPane.classList.remove('hidden');
+        gardenPane.classList.add('active');
         gardenPane.style.display = 'block';
         gardenPane.classList.remove('fade-in');
         void gardenPane.offsetWidth;
@@ -659,14 +676,22 @@
           const gardenPane = document.getElementById('flower-garden') || document.getElementById('view-flower-garden') || document.getElementById('sec-flower-garden');
           if (gardenPane) {
             gardenPane.classList.add('hidden');
+            gardenPane.classList.remove('active');
             gardenPane.style.display = 'none';
           }
 
+          // Unhide other panes if fallback openGardenTab had hidden them with inline style
+          document.querySelectorAll('.tab-pane, .view-panel, .lesson-section').forEach(p => {
+            if (p !== gardenPane) {
+              p.style.display = '';
+            }
+          });
+
           // Restore mock test dashboard if returning to TRANG CHỦ
-          if (otherNav.classList.contains('test-item') && otherNav.querySelector('a[href="index.html"]')) {
+          if (otherNav.classList.contains('test-item') && (otherNav.querySelector('a[href="index.html"]') || otherNav.dataset.target === 'home' || otherNav.id === 'sidebar-nav-home')) {
             const dashGrid = document.querySelector('.dashboard-grid');
             if (dashGrid) dashGrid.style.display = '';
-            const welcomeHeader = document.querySelector('.welcome-header');
+            const welcomeHeader = document.querySelector('.welcome-header-center, .welcome-header');
             if (welcomeHeader) welcomeHeader.style.display = '';
           }
         }

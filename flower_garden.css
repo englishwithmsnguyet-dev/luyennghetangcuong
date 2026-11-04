@@ -4264,3 +4264,9 @@ a.garden-nav-item.active span {
     width: 100%;
 }
 
+.garden-dedicated-view.active,
+.tab-pane#flower-garden.active,
+.view-panel#view-flower-garden.active {
+    display: block !important;
+}
+
