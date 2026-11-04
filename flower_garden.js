@@ -386,51 +386,44 @@
 
     ensureGardenContainerDom() {
       if (typeof document === 'undefined') return;
-      let container = document.getElementById('garden-container');
-      if (container && container.querySelector('#garden-pot-wrapper')) {
-        return; // Đã có đầy đủ cấu trúc
+
+      // 1. Ensure dedicated "CHĂM HOA CHĂM HỌC" tab pane exists
+      let gardenPane = document.getElementById('flower-garden') || document.getElementById('view-flower-garden') || document.getElementById('sec-flower-garden');
+      if (!gardenPane) {
+        const contentArea = document.querySelector('.content-area, .app-main, main, #main-content, .main-content, #app');
+        if (contentArea) {
+          gardenPane = document.createElement('section');
+          gardenPane.id = 'flower-garden';
+          gardenPane.className = 'tab-pane view-panel hidden fade-in garden-dedicated-view';
+          gardenPane.style.display = 'none';
+          if (contentArea.firstElementChild) {
+            contentArea.insertBefore(gardenPane, contentArea.firstElementChild);
+          } else {
+            contentArea.appendChild(gardenPane);
+          }
+        }
       }
 
-      let targetParent = null;
-      let insertBeforeEl = null;
+      // 2. Ensure sidebar item exists at the very top of sidebar
+      this.ensureSidebarNavItem();
 
+      // 3. Ensure container is mounted inside gardenPane
+      let container = document.getElementById('garden-container');
       if (!container) {
-        // Case 1: Tab Overview in Speaking sites (speaking-part1/2/3)
-        const overviewPane = document.getElementById('overview');
-        if (overviewPane) {
-          targetParent = overviewPane;
-          const teacherCard = overviewPane.querySelector('.teacher-brand-card');
-          if (teacherCard && teacherCard.nextElementSibling) {
-            insertBeforeEl = teacherCard.nextElementSibling;
-          } else {
-            insertBeforeEl = overviewPane.firstChild;
-          }
-        }
-
-        // Case 2: Speaking Mock Tests (.app-main)
-        if (!targetParent) {
-          const appMain = document.querySelector('.app-main');
-          if (appMain) {
-            targetParent = appMain;
-            const dashboardGrid = appMain.querySelector('.dashboard-grid');
-            if (dashboardGrid) {
-              insertBeforeEl = dashboardGrid;
-            }
-          }
-        }
-
-        // Case 3: Generic fallback
-        if (!targetParent) {
-          const main = document.querySelector('.main-content, #main-content, main, .content-area, #app');
-          if (main) {
-            targetParent = main;
-            insertBeforeEl = main.firstChild;
-          }
-        }
-
-        if (!targetParent) return;
         container = document.createElement('div');
         container.id = 'garden-container';
+      }
+
+      const targetParent = gardenPane || document.querySelector('.content-area, .app-main, main, #main-content, .main-content, #app');
+      if (targetParent && container.parentNode !== targetParent) {
+        if (container.parentNode) {
+          container.parentNode.removeChild(container);
+        }
+        targetParent.appendChild(container);
+      }
+
+      if (container.querySelector('#garden-pot-wrapper')) {
+        return; // Đã có đầy đủ cấu trúc
       }
 
       container.className = 'home-card garden-container';
@@ -522,12 +515,162 @@
       `;
 
       if (!container.parentNode && targetParent) {
-        if (insertBeforeEl) {
-          targetParent.insertBefore(container, insertBeforeEl);
-        } else {
-          targetParent.appendChild(container);
-        }
+        targetParent.appendChild(container);
       }
+    },
+
+    ensureSidebarNavItem() {
+      if (typeof document === 'undefined') return;
+      if (document.getElementById('sidebar-nav-garden')) return;
+
+      // Check if there is already a garden nav item in HTML
+      const existing = document.querySelector('[data-target="flower-garden"], [data-view="flower-garden"], [data-section="flower-garden"], a[href="#flower-garden"]');
+      if (existing) {
+        existing.id = 'sidebar-nav-garden';
+        existing.classList.add('garden-nav-item');
+        this.wireSidebarNavClick(existing);
+        return;
+      }
+
+      // Find the sidebar navigation list
+      const navList = document.querySelector('.nav-list, .sidebar-menu, .test-list, .nav-links, .sidebar-nav');
+      if (!navList) return;
+
+      let navItem;
+      if (navList.classList.contains('sidebar-menu') && navList.tagName.toLowerCase() === 'nav') {
+        // LISTENING VSTEP style: direct <a> items
+        navItem = document.createElement('a');
+        navItem.id = 'sidebar-nav-garden';
+        navItem.className = 'menu-item garden-nav-item';
+        navItem.href = '#flower-garden';
+        navItem.setAttribute('data-view', 'flower-garden');
+        navItem.innerHTML = `
+          <span style="font-size: 1.15rem; margin-right: 6px;">🌱</span>
+          <span>CHĂM HOA CHĂM HỌC</span>
+        `;
+      } else if (navList.classList.contains('test-list')) {
+        // SPEAKING MOCK TESTS style: <li><a ...>
+        navItem = document.createElement('li');
+        navItem.id = 'sidebar-nav-garden';
+        navItem.className = 'test-item garden-nav-item';
+        navItem.innerHTML = `
+          <a href="#flower-garden">
+            <span class="test-icon"><i class="fa-solid fa-seedling" style="color: #10b981;"></i></span>
+            <span class="test-name">CHĂM HOA CHĂM HỌC</span>
+          </a>
+        `;
+      } else {
+        // Standard .nav-list / .nav-links (Speaking, Reading, etc.)
+        navItem = document.createElement('li');
+        navItem.id = 'sidebar-nav-garden';
+        navItem.className = 'nav-item garden-nav-item';
+        navItem.setAttribute('data-target', 'flower-garden');
+        navItem.innerHTML = `
+          <a href="#flower-garden">
+            <i class="fa-solid fa-seedling" style="color: #10b981;"></i>
+            <span>CHĂM HOA CHĂM HỌC</span>
+          </a>
+        `;
+      }
+
+      // Insert as the VERY FIRST item in the sidebar list
+      if (navList.firstElementChild) {
+        navList.insertBefore(navItem, navList.firstElementChild);
+      } else {
+        navList.appendChild(navItem);
+      }
+
+      this.wireSidebarNavClick(navItem);
+    },
+
+    wireSidebarNavClick(navItem) {
+      navItem.addEventListener('click', (e) => {
+        // If site handles tab switching via custom activateTab, trigger it or handle directly
+        if (typeof window.switchTab === 'function') {
+          window.switchTab('flower-garden');
+        } else {
+          e.preventDefault();
+          this.openGardenTab();
+        }
+      });
+
+      this.wireOtherNavClicks();
+    },
+
+    openGardenTab() {
+      // 1. Update active state on sidebar items
+      document.querySelectorAll('.nav-item, .menu-item, .test-item, .sub-tab-link').forEach(el => {
+        el.classList.remove('active');
+      });
+      const navItem = document.getElementById('sidebar-nav-garden') || document.querySelector('[data-target="flower-garden"], [data-view="flower-garden"]');
+      if (navItem) navItem.classList.add('active');
+
+      // 2. Hide all other tab panes / views
+      document.querySelectorAll('.tab-pane, .view-panel, .lesson-section').forEach(pane => {
+        if (pane.id !== 'flower-garden' && pane.id !== 'view-flower-garden' && pane.id !== 'sec-flower-garden') {
+          pane.classList.add('hidden');
+          pane.style.display = 'none';
+        }
+      });
+
+      // 3. For SPEAKING MOCK TESTS: hide mock dashboard grid & welcome header
+      const dashGrid = document.querySelector('.dashboard-grid');
+      if (dashGrid) dashGrid.style.display = 'none';
+      const welcomeHeader = document.querySelector('.welcome-header');
+      if (welcomeHeader) welcomeHeader.style.display = 'none';
+
+      // 4. Show flower garden pane
+      const gardenPane = document.getElementById('flower-garden') || document.getElementById('view-flower-garden') || document.getElementById('sec-flower-garden');
+      if (gardenPane) {
+        gardenPane.classList.remove('hidden');
+        gardenPane.style.display = 'block';
+        gardenPane.classList.remove('fade-in');
+        void gardenPane.offsetWidth;
+        gardenPane.classList.add('fade-in');
+      }
+
+      // 5. Update top title if present
+      const topTitle = document.getElementById('top-title');
+      if (topTitle) topTitle.textContent = 'CHĂM HOA CHĂM HỌC';
+
+      // 6. In mobile, close sidebar drawer
+      const sidebar = document.getElementById('sidebar') || document.getElementById('app-sidebar') || document.querySelector('.sidebar, .test-sidebar');
+      if (sidebar && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+
+      // 7. Scroll smoothly to top & render
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.render();
+    },
+
+    wireOtherNavClicks() {
+      if (this._wiredOtherNavClicks) return;
+      this._wiredOtherNavClicks = true;
+
+      document.addEventListener('click', (e) => {
+        const otherNav = e.target.closest('.nav-item:not(#sidebar-nav-garden):not([data-target="flower-garden"]), .menu-item:not(#sidebar-nav-garden):not([data-view="flower-garden"]), .test-item:not(#sidebar-nav-garden), .sub-tab-link:not(#sidebar-nav-garden):not([data-section="flower-garden"])');
+        if (otherNav) {
+          // Remove active from garden nav
+          const gardenNav = document.getElementById('sidebar-nav-garden') || document.querySelector('[data-target="flower-garden"], [data-view="flower-garden"]');
+          if (gardenNav) gardenNav.classList.remove('active');
+
+          // Hide garden pane
+          const gardenPane = document.getElementById('flower-garden') || document.getElementById('view-flower-garden') || document.getElementById('sec-flower-garden');
+          if (gardenPane) {
+            gardenPane.classList.add('hidden');
+            gardenPane.style.display = 'none';
+          }
+
+          // Restore mock test dashboard if returning to TRANG CHỦ
+          if (otherNav.classList.contains('test-item') && otherNav.querySelector('a[href="index.html"]')) {
+            const dashGrid = document.querySelector('.dashboard-grid');
+            if (dashGrid) dashGrid.style.display = '';
+            const welcomeHeader = document.querySelector('.welcome-header');
+            if (welcomeHeader) welcomeHeader.style.display = '';
+          }
+        }
+      });
     },
 
     init() {
@@ -565,7 +708,9 @@
       const hash = window.location.hash;
       if (!hash) return;
 
-      if (hash === '#quiz') {
+      if (hash === '#flower-garden') {
+        setTimeout(() => this.openGardenTab(), 150);
+      } else if (hash === '#quiz') {
         setTimeout(() => this.openQuizModal(), 200);
       } else if (hash === '#quiz-benefits') {
         setTimeout(() => this.openQuizModal(null, 'benefits'), 200);

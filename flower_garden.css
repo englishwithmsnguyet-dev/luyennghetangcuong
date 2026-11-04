@@ -4213,3 +4213,54 @@ button#btn-harvest-flower {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
     line-height: 1.2 !important;
 }
+
+/* ==========================================================================
+   SIDEBAR NAVIGATION ITEM: CHĂM HOA CHĂM HỌC
+   ========================================================================== */
+.garden-nav-item,
+li.garden-nav-item,
+a.garden-nav-item {
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+li.garden-nav-item a,
+a.garden-nav-item {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.10) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
+    border: 1.5px dashed rgba(16, 185, 129, 0.45) !important;
+    color: #047857 !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.4rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
+}
+
+li.garden-nav-item:hover a,
+a.garden-nav-item:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(245, 158, 11, 0.20) 100%) !important;
+    border-color: #10b981 !important;
+    color: #065f46 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.20);
+}
+
+li.garden-nav-item.active a,
+a.garden-nav-item.active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border: 1.5px solid #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.38) !important;
+}
+
+li.garden-nav-item.active a i,
+li.garden-nav-item.active a span,
+a.garden-nav-item.active i,
+a.garden-nav-item.active span {
+    color: #ffffff !important;
+}
+
+.garden-dedicated-view {
+    padding: 1.25rem 0.5rem;
+    width: 100%;
+}
+
