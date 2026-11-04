@@ -499,10 +499,10 @@
         <!-- Care Actions Container (Water, Sun, Quiz / Harvest) -->
         <div class="garden-actions-container" id="garden-actions-container">
             <div class="garden-care-row" id="garden-care-row">
-                <button class="btn btn-secondary btn-small garden-btn" id="btn-water-flower" title="Tưới nước cho hoa (-10💧, +20% lớn)">
+                <button class="btn btn-secondary btn-small garden-btn garden-btn-water" id="btn-water-flower" title="Tưới nước cho hoa (-10💧, +20% lớn)">
                     <span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧 (+20%)</span>
                 </button>
-                <button class="btn btn-secondary btn-small garden-btn" id="btn-sun-flower" title="Cho hoa tắm nắng (-10☀️ tia nắng, +20% lớn)">
+                <button class="btn btn-secondary btn-small garden-btn garden-btn-sun" id="btn-sun-flower" title="Cho hoa tắm nắng (-10☀️ tia nắng, +20% lớn)">
                     <span class="action-icon">☀️</span> Tắm nắng <span class="action-cost-tag">10☀️ (+20%)</span>
                 </button>
             </div>
@@ -1333,7 +1333,7 @@
         const fl = catalog[fid] || {};
         const isCurrent = currentFid === fid;
         const harvestCount = (this.state.basket && this.state.basket[fid]) || 0;
-        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
+        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
         const theme = themeMap[fid] || themeMap.clover;
         const unit = theme.unit;
         const badgeBg = theme.badgeBg;
@@ -1851,7 +1851,7 @@
           <button class="modal-close-btn" id="btn-close-harvest-modal">&times;</button>
           <div class="harvest-celebration-head">
             <div class="harvest-clover-sparkle-halo">
-              <img src="assets/garden/clover_stage_4.png?v=20261104_v10" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
+              <img src="assets/garden/clover_stage_4.png?v=20261104_v11" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
             </div>
             <span class="harvest-pill-badge" id="harvest-pill-badge">🍀 CÀNH CỎ 4 LÁ THỨ #1 ĐÃ BỪNG NỞ!</span>
             <h3 class="harvest-main-title">THÔNG ĐIỆP HÔM NAY</h3>
@@ -1903,7 +1903,7 @@
       const celebImg = document.getElementById('harvest-celebration-img');
 
       if (celebImg) {
-        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
+        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
         celebImg.alt = flower.name;
       }
 
@@ -3162,7 +3162,7 @@
       }
 
       const studentName = this.getStudentName();
-      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v10`;
+      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
       const heroBadgeMap = {
         clover: '🍀 CỎ 4 LÁ MAY MẮN',
         sunflower: '🌻 HOA HƯỚNG DƯƠNG RỰC RỠ',
@@ -3541,7 +3541,7 @@
           btnWater.classList.add('btn-revive-pulse');
           btnWater.title = 'Cây đang bị héo do 1 ngày chưa tưới nước! Mau tưới 10💧 để hồi sinh nhé!';
         } else {
-          btnWater.innerHTML = '<span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧 (+20%)</span>';
+          btnWater.classList.add('garden-btn-water'); btnWater.innerHTML = '<span class="action-icon">💧</span> Tưới nước <span class="action-cost-tag">10💧 (+20%)</span>';
           btnWater.classList.remove('btn-revive-pulse');
           btnWater.title = `Tưới nước cho ${flower.name} (-10💧, +20% lớn)`;
         }
@@ -3550,14 +3550,14 @@
       // Dynamic Sun Button (Shows 10☀️ cost)
       const btnSun = document.getElementById('btn-sun-flower');
       if (btnSun) {
-        btnSun.innerHTML = '<span class="action-icon">☀️</span> Tắm nắng <span class="action-cost-tag">10☀️ (+20%)</span>';
+        btnSun.classList.add('garden-btn-sun'); btnSun.innerHTML = '<span class="action-icon">☀️</span> Tắm nắng <span class="action-cost-tag">10☀️ (+20%)</span>';
         btnSun.title = `Cho ${flower.name} tắm nắng (-10☀️ tia nắng, +20% lớn)`;
       }
 
       // Dynamic Quiz Button (Shows +10💧 & +10☀️ reward)
       const btnQuiz = document.getElementById('btn-quiz-flower');
       if (btnQuiz) {
-        btnQuiz.innerHTML = '<span class="action-icon">🎯</span> Đố Vui Nhận Thưởng <span class="action-gain-tag">+10💧 & +10☀️</span>';
+        btnQuiz.classList.add('garden-btn-quiz'); btnQuiz.innerHTML = '<span class="action-icon">🎯</span> Đố Vui Nhận Thưởng <span class="action-gain-tag">+10💧 & +10☀️</span>';
         btnQuiz.title = 'Làm câu hỏi đố vui nhận ngay +10💧 Nước & +10☀️ Nắng Nỗ Lực';
       }
 
