@@ -339,6 +339,12 @@
     will-change: transform;
 }
 
+.clover-picture-wrap {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .clover-living-art {
     width: 100%;
     height: 100%;
