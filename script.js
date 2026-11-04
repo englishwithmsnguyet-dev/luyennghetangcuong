@@ -1054,6 +1054,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdqFdVQOLW3pppSaS5790jOCNAq-qS1Wv3D0TUqBjbuO3OxiA/formResponse';
     const GOOGLE_FORM_ENTRY = 'entry.1205151935';
 
+    function getVietnamHour() {
+        try {
+            const hourStr = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Ho_Chi_Minh',
+                hour: 'numeric',
+                hour12: false
+            }).format(new Date());
+            return parseInt(hourStr, 10) % 24;
+        } catch (e) {
+            return (new Date().getUTCHours() + 7) % 24;
+        }
+    }
+
     function checkLoginState() {
         const isPreview = (typeof window !== 'undefined' && window.location.hash.includes('preview'));
         if (isPreview) {
@@ -1069,7 +1082,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const savedName = localStorage.getItem('vstep_student_name') || '';
         const savedClass = localStorage.getItem('vstep_student_class') || '';
-        const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN');
+        const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN' || savedName.toLowerCase().includes('cô nguyệt'));
         updateSidebarUserProfile();
 
         if (studentNameInput) studentNameInput.value = isTeacherSaved ? 'PTMN' : savedName;
@@ -1078,9 +1091,17 @@ document.addEventListener('DOMContentLoaded', () => {
             studentPasswordInput.value = '';
             studentPasswordInput.placeholder = 'Nhập mật khẩu...';
         }
+
+        const currentVnHour = getVietnamHour();
+        const isQuietHours = currentVnHour >= 22 || currentVnHour < 5;
+
         if (loginError) {
-            loginError.style.display = 'none';
-            loginError.textContent = '';
+            if (!isTeacherSaved && isQuietHours) {
+                showLoginError('Miss Nguyệt đóng cửa tiễn khách rồi. Hãy ngủ sớm và quay lại sau 05:00 sáng nhé! 😴');
+            } else {
+                loginError.style.display = 'none';
+                loginError.textContent = '';
+            }
         }
 
         setTimeout(() => {
@@ -1099,9 +1120,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (studentNameInput) {
         studentNameInput.addEventListener('input', () => {
             const val = studentNameInput.value.trim().toUpperCase();
-            if (val === 'PTMN') {
+            if (val === 'PTMN' || val.includes('PTMN')) {
                 if (studentClassInput && (!studentClassInput.value || studentClassInput.value.trim() === '')) {
                     studentClassInput.value = 'GV';
+                }
+                const currentVnHour = getVietnamHour();
+                const isQuietHours = currentVnHour >= 22 || currentVnHour < 5;
+                if (loginError && isQuietHours) {
+                    loginError.style.display = 'none';
+                    loginError.textContent = '';
                 }
             }
         });
@@ -1148,7 +1175,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isTeacher) {
             if (!rawClassVal) rawClassVal = 'GV';
             // Không yêu cầu mật khẩu đối với Giáo viên PTMN
+            // Giáo viên được phép truy cập bất kỳ lúc nào, kể cả ban đêm
         } else {
+            // Giới hạn thời gian đăng nhập cho học viên: Không cho đăng nhập từ 22:00 đến 05:00 sáng (Giờ Việt Nam)
+            const vnH = getVietnamHour();
+            if (vnH >= 22 || vnH < 5) {
+                showLoginError('Miss Nguyệt đóng cửa tiễn khách rồi. Hãy ngủ sớm và quay lại sau 05:00 sáng nhé! 😴');
+                return;
+            }
+
             if (rawClassVal === 'GV') {
                 showLoginError('Mã lớp GV chỉ dành riêng cho tài khoản Giáo viên (PTMN)!');
                 if (studentNameInput) studentNameInput.focus();
@@ -1275,6 +1310,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Kiểm tra định kỳ giờ giới nghiêm (22:00 - 05:00): Nếu đang học mà qua 22:00 sẽ tự động khóa lại
+    setInterval(() => {
+        const savedName = localStorage.getItem('vstep_student_name') || '';
+        const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN' || savedName.toLowerCase().includes('cô nguyệt'));
+        if (isTeacherSaved) return;
+
+        const vnH = getVietnamHour();
+        if (vnH >= 22 || vnH < 5) {
+            if (loginOverlay) {
+                loginOverlay.classList.remove('hidden');
+                loginOverlay.style.display = 'flex';
+                showLoginError('Miss Nguyệt đóng cửa tiễn khách rồi. Hãy ngủ sớm và quay lại sau 05:00 sáng nhé! 😴');
+            }
+        }
+    }, 60000);
 
     init();
 });

@@ -2499,6 +2499,8 @@
       5: `assets/garden/${fid}_stage_4.png`
     };
     const stageImgSrc = stageImgMap[stage] || `assets/garden/${fid}_stage_1.png`;
+    const cloverStageIdx = (stage <= 2 ? 1 : (stage <= 3 ? 2 : (stage <= 4 ? 3 : 4)));
+    const webpSrc = (fid === 'clover') ? `assets/garden/clover_stage_${cloverStageIdx}.webp` : '';
 
     const flowerNames = {
       sunflower: 'Hoa Hướng Dương Rực Rỡ',
@@ -2517,10 +2519,15 @@
         <div class="clover-ground-shadow" aria-hidden="true"></div>
         <div class="clover-aura-halo" aria-hidden="true"></div>
         <div class="clover-breeze-rig">
-          <img src="${stageImgSrc}"
-               alt="${altText}"
-               class="clover-living-art"
-               draggable="false" />
+          <picture class="clover-picture-wrap">
+            ${webpSrc ? `<source type="image/webp" srcset="${webpSrc}">` : ''}
+            <img src="${stageImgSrc}"
+                 alt="${altText}"
+                 class="clover-living-art"
+                 draggable="false"
+                 loading="eager"
+                 decoding="async" />
+          </picture>
           <svg viewBox="0 0 100 100" class="clover-dew-overlay" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             ${glintMarkup}
             ${stage5Accents}

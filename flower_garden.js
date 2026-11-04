@@ -3420,7 +3420,7 @@
         const prevFlower = potWrapper.dataset.flowerId;
         const prevBloomed = potWrapper.dataset.isBloomed;
         const isBloomed = (p >= 100) ? 'true' : 'false';
-        if (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed || !potWrapper.querySelector('.clover-living-stage')) {
+        if (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed || !potWrapper.querySelector('.clover-living-stage') || !potWrapper.querySelector('img')) {
           potWrapper.innerHTML = root.renderFlowerPotSvg(fid, p);
           potWrapper.dataset.cloverStage = String(targetStage);
           potWrapper.dataset.flowerId = fid;
