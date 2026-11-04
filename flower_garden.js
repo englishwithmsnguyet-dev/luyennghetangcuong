@@ -531,6 +531,12 @@
     },
 
     init() {
+      if (this._hasRunInit) {
+        this.handleHashRoute();
+        this.render();
+        return;
+      }
+      this._hasRunInit = true;
       this.ensureGardenContainerDom();
       this.currentActiveAccountId = this.getAccountId();
       this.loadState();
@@ -549,155 +555,166 @@
       }
 
       if (typeof window !== 'undefined') {
-        const hash = window.location.hash;
-        if (hash === '#quiz') {
-          setTimeout(() => this.openQuizModal(), 300);
-        } else if (hash === '#quiz-benefits') {
-          setTimeout(() => this.openQuizModal(null, 'benefits'), 300);
-        } else if (hash === '#quiz-speaking') {
-          setTimeout(() => this.openQuizModal(null, 'speaking'), 300);
-        } else if (hash === '#quiz-writing') {
-          setTimeout(() => this.openQuizModal(null, 'writing'), 300);
-        } else if (hash === '#harvest-test') {
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#earn-water') {
-          setTimeout(() => this.openEarnWaterModal(), 300);
-        } else if (hash === '#basket' || hash === '#basket-test') {
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#seed' || hash === '#seed-test') {
-          setTimeout(() => this.openFlowerSelectorModal(), 300);
-        } else if (hash === '#sunflower-test') {
-          this.switchFlower('sunflower');
-          this.state.progress = 65;
-          this.render();
-        } else if (hash === '#sunflower-bloom') {
-          this.switchFlower('sunflower');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#sunflower-harvest') {
-          this.switchFlower('sunflower');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#basket-both') {
-          this.state.basket = { clover: 4, sunflower: 3 };
-          this.state.harvestCount = 7;
-          this.state.currentFlowerId = 'sunflower';
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#tulip-test') {
-          this.switchFlower('tulip');
-          this.state.progress = 65;
-          this.render();
-        } else if (hash === '#tulip-bloom') {
-          this.switchFlower('tulip');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#tulip-harvest') {
-          this.switchFlower('tulip');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#basket-three') {
-          this.state.basket = { clover: 5, sunflower: 3, tulip: 2 };
-          this.state.harvestCount = 10;
-          this.state.currentFlowerId = 'tulip';
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#cactus-test') {
-          this.switchFlower('cactus');
-          this.state.progress = 65;
-          this.render();
-        } else if (hash === '#cactus-bloom') {
-          this.switchFlower('cactus');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#cactus-harvest') {
-          this.switchFlower('cactus');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#rose-test') {
-          this.switchFlower('rose');
-          this.state.progress = 65;
-          this.render();
-        } else if (hash === '#rose-bloom') {
-          this.switchFlower('rose');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#rose-harvest') {
-          this.switchFlower('rose');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#lavender-test') {
-          this.switchFlower('lavender');
-          this.state.progress = 60;
-          this.render();
-        } else if (hash === '#lavender-bloom') {
-          this.switchFlower('lavender');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#lavender-harvest') {
-          this.switchFlower('lavender');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#daisy-test') {
-          this.switchFlower('daisy');
-          this.state.progress = 60;
-          this.render();
-        } else if (hash === '#daisy-bloom') {
-          this.switchFlower('daisy');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#daisy-harvest') {
-          this.switchFlower('daisy');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#succulent-test') {
-          this.switchFlower('succulent');
-          this.state.progress = 60;
-          this.render();
-        } else if (hash === '#succulent-bloom') {
-          this.switchFlower('succulent');
-          this.state.progress = 100;
-          this.render();
-        } else if (hash === '#succulent-harvest') {
-          this.switchFlower('succulent');
-          this.state.progress = 100;
-          setTimeout(() => this.harvest(), 400);
-        } else if (hash === '#basket-four') {
-          this.state.basket = { clover: 5, sunflower: 3, tulip: 2, cactus: 2 };
-          this.state.harvestCount = 12;
-          this.state.currentFlowerId = 'cactus';
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#basket-five') {
-          this.state.basket = { clover: 5, sunflower: 3, tulip: 2, cactus: 2, rose: 2 };
-          this.state.harvestCount = 14;
-          this.state.currentFlowerId = 'rose';
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#basket-all') {
-          this.state.basket = { clover: 6, sunflower: 4, tulip: 3, cactus: 3, rose: 3, lavender: 2, daisy: 2, succulent: 2 };
-          this.state.harvestCount = 25;
-          this.state.currentFlowerId = 'lavender';
-          setTimeout(() => this.openBasketModal(), 300);
-        } else if (hash === '#wilted' || hash === '#wilt-test') {
-          // Dedicated debug hash for testing wilted plant state
-          this.state.lastWateredDate = '2026-01-01';
-          this.state.moisture = 10;
-          this.checkWiltingStatus();
-          this.render();
-          this.updateSpeechBubble(`🥀 Em khát nước quá rồi... Đã 1 ngày ${this.getStudentName()} chưa tưới nước, lá cỏ đang bị héo rũ mất rồi! Mau tưới cho em 10💧 nước để hồi sinh nhé! 🥺💧`);
-        } else if (hash === '#stage1-test') {
-          this.state.progress = 0;
-          this.render();
-        } else if (hash === '#stage2-test') {
-          this.state.progress = 20;
-          this.render();
-        } else if (hash === '#stage3-test') {
-          this.state.progress = 40;
-          this.render();
-        } else if (hash === '#stage4-test') {
-          this.state.progress = 60;
-          this.render();
-        } else if (hash === '#stage5-test') {
-          this.state.progress = 80;
-          this.render();
-        }
+        window.addEventListener('hashchange', () => this.handleHashRoute());
+        this.handleHashRoute();
+      }
+    },
+
+    handleHashRoute() {
+      if (typeof window === 'undefined') return;
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      if (hash === '#quiz') {
+        setTimeout(() => this.openQuizModal(), 200);
+      } else if (hash === '#quiz-benefits') {
+        setTimeout(() => this.openQuizModal(null, 'benefits'), 200);
+      } else if (hash === '#quiz-speaking') {
+        setTimeout(() => this.openQuizModal(null, 'speaking'), 200);
+      } else if (hash === '#quiz-writing') {
+        setTimeout(() => this.openQuizModal(null, 'writing'), 200);
+      } else if (hash === '#harvest-test') {
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#earn-water') {
+        setTimeout(() => this.openEarnWaterModal(), 200);
+      } else if (hash === '#basket' || hash === '#basket-test') {
+        setTimeout(() => this.openBasketModal(), 200);
+      } else if (hash === '#seed' || hash === '#seed-test') {
+        setTimeout(() => this.openFlowerSelectorModal(), 200);
+      } else if (hash === '#sunflower-test') {
+        this.switchFlower('sunflower');
+        this.state.progress = 65;
+        this.render();
+      } else if (hash === '#sunflower-bloom') {
+        this.switchFlower('sunflower');
+        this.state.progress = 100;
+        this.render();
+      } else if (hash === '#sunflower-harvest') {
+        this.switchFlower('sunflower');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#basket-both') {
+        this.state.basket = { clover: 4, sunflower: 3 };
+        this.state.harvestCount = 7;
+        this.state.currentFlowerId = 'sunflower';
+        setTimeout(() => this.openBasketModal(), 200);
+      } else if (hash === '#tulip-test') {
+        this.switchFlower('tulip');
+        this.state.progress = 65;
+        this.render();
+      } else if (hash === '#tulip-bloom') {
+        this.switchFlower('tulip');
+        this.state.progress = 100;
+        this.render();
+      } else if (hash === '#tulip-harvest') {
+        this.switchFlower('tulip');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#basket-three') {
+        this.state.basket = { clover: 5, sunflower: 3, tulip: 2 };
+        this.state.harvestCount = 10;
+        this.state.currentFlowerId = 'tulip';
+        setTimeout(() => this.openBasketModal(), 200);
+      } else if (hash === '#cactus-test') {
+        this.switchFlower('cactus');
+        this.state.progress = 65;
+        this.render();
+      } else if (hash === '#cactus-bloom') {
+        this.switchFlower('cactus');
+        this.state.progress = 100;
+        this.render();
+      } else if (hash === '#cactus-harvest') {
+        this.switchFlower('cactus');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#rose-test') {
+        this.switchFlower('rose');
+        this.state.progress = 65;
+        this.render();
+      } else if (hash === '#rose-bloom') {
+        this.switchFlower('rose');
+        this.state.progress = 100;
+        this.render();
+      } else if (hash === '#rose-harvest') {
+        this.switchFlower('rose');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#lavender-test') {
+        this.switchFlower('lavender');
+        this.state.progress = 60;
+        this.render();
+      } else if (hash === '#lavender-bloom') {
+        this.switchFlower('lavender');
+        this.state.progress = 100;
+        this.saveState();
+        this.render();
+      } else if (hash === '#lavender-harvest') {
+        this.switchFlower('lavender');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#daisy-test') {
+        this.switchFlower('daisy');
+        this.state.progress = 60;
+        this.render();
+      } else if (hash === '#daisy-bloom') {
+        this.switchFlower('daisy');
+        this.state.progress = 100;
+        this.saveState();
+        this.render();
+      } else if (hash === '#daisy-harvest') {
+        this.switchFlower('daisy');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#succulent-test') {
+        this.switchFlower('succulent');
+        this.state.progress = 60;
+        this.render();
+      } else if (hash === '#succulent-bloom') {
+        this.switchFlower('succulent');
+        this.state.progress = 100;
+        this.saveState();
+        this.render();
+      } else if (hash === '#succulent-harvest') {
+        this.switchFlower('succulent');
+        this.state.progress = 100;
+        setTimeout(() => this.harvest(), 300);
+      } else if (hash === '#basket-four') {
+        this.state.basket = { clover: 5, sunflower: 3, tulip: 2, cactus: 2 };
+        this.state.harvestCount = 12;
+        this.state.currentFlowerId = 'cactus';
+        setTimeout(() => this.openBasketModal(), 200);
+      } else if (hash === '#basket-five') {
+        this.state.basket = { clover: 5, sunflower: 3, tulip: 2, cactus: 2, rose: 2 };
+        this.state.harvestCount = 14;
+        this.state.currentFlowerId = 'rose';
+        setTimeout(() => this.openBasketModal(), 200);
+      } else if (hash === '#basket-all') {
+        this.state.basket = { clover: 6, sunflower: 4, tulip: 3, cactus: 3, rose: 3, lavender: 2, daisy: 2, succulent: 2 };
+        this.state.harvestCount = 25;
+        this.state.currentFlowerId = 'lavender';
+        this.saveState();
+        setTimeout(() => this.openBasketModal(0), 200);
+      } else if (hash === '#wilted' || hash === '#wilt-test') {
+        this.state.lastWateredDate = '2026-01-01';
+        this.state.moisture = 10;
+        this.checkWiltingStatus();
+        this.render();
+        this.updateSpeechBubble(`🥀 Em khát nước quá rồi... Đã 1 ngày ${this.getStudentName()} chưa tưới nước, lá cỏ đang bị héo rũ mất rồi! Mau tưới cho em 10💧 nước để hồi sinh nhé! 🥺💧`);
+      } else if (hash === '#stage1-test') {
+        this.state.progress = 0;
+        this.render();
+      } else if (hash === '#stage2-test') {
+        this.state.progress = 20;
+        this.render();
+      } else if (hash === '#stage3-test') {
+        this.state.progress = 40;
+        this.render();
+      } else if (hash === '#stage4-test') {
+        this.state.progress = 60;
+        this.render();
+      } else if (hash === '#stage5-test') {
+        this.state.progress = 80;
+        this.render();
       }
     },
 
@@ -1316,7 +1333,7 @@
         const fl = catalog[fid] || {};
         const isCurrent = currentFid === fid;
         const harvestCount = (this.state.basket && this.state.basket[fid]) || 0;
-        const previewImg = `assets/garden/${fid}_stage_4.png`;
+        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
         const theme = themeMap[fid] || themeMap.clover;
         const unit = theme.unit;
         const badgeBg = theme.badgeBg;
@@ -1834,7 +1851,7 @@
           <button class="modal-close-btn" id="btn-close-harvest-modal">&times;</button>
           <div class="harvest-celebration-head">
             <div class="harvest-clover-sparkle-halo">
-              <img src="assets/garden/clover_stage_4.png" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
+              <img src="assets/garden/clover_stage_4.png?v=20261104_v9" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
             </div>
             <span class="harvest-pill-badge" id="harvest-pill-badge">🍀 CÀNH CỎ 4 LÁ THỨ #1 ĐÃ BỪNG NỞ!</span>
             <h3 class="harvest-main-title">THÔNG ĐIỆP HÔM NAY</h3>
@@ -1886,7 +1903,7 @@
       const celebImg = document.getElementById('harvest-celebration-img');
 
       if (celebImg) {
-        celebImg.src = `assets/garden/${fid}_stage_4.png`;
+        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
         celebImg.alt = flower.name;
       }
 
@@ -2000,8 +2017,8 @@
         <div class="modal-card garden-quiz-card vstep-hub-card">
           <div class="modal-header">
             <div>
-              <h3>🎯 ĐỐ VUI ÔN THI THỰC CHIẾN (TOEIC & VSTEP)</h3>
-              <p class="modal-subtext mb-0">Luyện tập câu hỏi chuẩn TOEIC (Listening, Grammar, Vocab) & VSTEP (4 Kỹ Năng) nhận ngay +10💧 Nước & +10☀️ Nắng Nỗ Lực!</p>
+              <h3>🎯 ĐỐ VUI ÔN THI VSTEP THỰC CHIẾN</h3>
+              <p class="modal-subtext mb-0">Luyện tập câu hỏi chuẩn VSTEP (Listening, Reading, Writing, Speaking B1 - B2 - C1) nhận ngay +10💧 Nước & +10☀️ Nắng Nỗ Lực!</p>
             </div>
             <button class="modal-close-btn" id="btn-close-quiz-modal">&times;</button>
           </div>
@@ -2011,8 +2028,8 @@
             <button class="quiz-tab-btn active" data-tab="practice">
               <span class="tab-icon">🎯</span> Luyện Đề (+10💧)
             </button>
-            <button class="quiz-tab-btn" data-tab="toeic">
-              <span class="tab-icon">💼</span> Bí Quyết TOEIC
+            <button class="quiz-tab-btn" data-tab="strategy">
+              <span class="tab-icon">🧭</span> Chiến Lược VSTEP
             </button>
             <button class="quiz-tab-btn" data-tab="benefits">
               <span class="tab-icon">📊</span> Bảng Lợi Ích
@@ -2030,9 +2047,10 @@
             <!-- Category Filter Pills -->
             <div class="quiz-filter-bar" id="quiz-filter-bar">
               <button class="quiz-filter-pill active" data-cat="all">🌟 Tất cả</button>
-              <button class="quiz-filter-pill" data-cat="toeic-grammar">📝 TOEIC Part 5</button>
-              <button class="quiz-filter-pill" data-cat="toeic-vocab">💼 TOEIC Từ Vựng</button>
-              <button class="quiz-filter-pill" data-cat="toeic-listening">🎧 TOEIC Listening</button>
+              <button class="quiz-filter-pill" data-cat="vstep-reading">📖 VSTEP Reading</button>
+              <button class="quiz-filter-pill" data-cat="vstep-listening">🎧 VSTEP Listening</button>
+              <button class="quiz-filter-pill" data-cat="vstep-speaking">🗣️ VSTEP Speaking</button>
+              <button class="quiz-filter-pill" data-cat="vstep-writing">✍️ VSTEP Writing</button>
               <button class="quiz-filter-pill" data-cat="benefit-matrix">📊 VSTEP Lợi Ích</button>
               <button class="quiz-filter-pill" data-cat="speaking-vocab">🗣️ Từ Vựng Speaking</button>
               <button class="quiz-filter-pill" data-cat="writing-letter">✉️ 7 Dạng Thư Task 1</button>
@@ -2058,7 +2076,12 @@
             </div>
           </div>
 
-          <!-- Tab Panel 2: Benefits Matrix Reference -->
+          <!-- Tab Panel 2: Strategy Reference -->
+          <div class="quiz-tab-panel" id="quiz-panel-strategy">
+            ${this.renderStrategyTabHtml()}
+          </div>
+
+          <!-- Tab Panel 3: Benefits Matrix Reference -->
           <div class="quiz-tab-panel" id="quiz-panel-benefits">
             ${this.renderBenefitsTabHtml()}
           </div>
@@ -2156,6 +2179,59 @@
       });
 
       this.loadNextQuizQuestion();
+    },
+
+    renderStrategyTabHtml() {
+      const guides = root.VSTEP_OFFICIAL_STRATEGY_GUIDE || [];
+      const skillJumpMap = {
+        Listening: 'vstep-listening',
+        Reading: 'vstep-reading',
+        Writing: 'vstep-writing',
+        Speaking: 'vstep-speaking'
+      };
+
+      return `
+        <div class="vstep-guide-wrap">
+          <div class="vstep-guide-hero" style="background:linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border-left:4px solid #2563EB;">
+            <div class="hero-text">
+              <h4><i class="fa-solid fa-compass" style="color:#2563EB;"></i> CHIẾN LƯỢC ÔN THI VSTEP THỰC CHIẾN (4 KỸ NĂNG B1 - B2 - C1)</h4>
+              <p>Bí quyết làm bài, nhận diện bẫy đề thi và phương pháp phân bổ thời gian chuẩn xác nhất của Cô Nguyệt dành cho học viên.</p>
+            </div>
+          </div>
+
+          <div class="vstep-strategy-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 14px;">
+            ${guides.map(g => {
+              const jumpCat = skillJumpMap[g.skill] || 'all';
+              return `
+                <div class="vstep-strategy-card" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:14px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; flex-direction:column; justify-content:space-between;">
+                  <div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                      <span style="background:${g.color}; color:#FFFFFF; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; letter-spacing:0.5px;">
+                        <i class="fa-solid ${g.icon}"></i> ${g.skill.toUpperCase()}
+                      </span>
+                      <small style="font-weight:700; color:#64748B;">Chuẩn VSTEP</small>
+                    </div>
+                    <h5 style="font-size:14px; font-weight:800; color:#1E293B; margin-bottom:4px;">${g.nameEn}</h5>
+                    <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:8px;">${g.nameVi}</div>
+
+                    <div style="background:#F8FAFC; border-left:3px solid ${g.color}; padding:8px 10px; border-radius:6px; font-size:12px; color:#334155; margin-bottom:10px; line-height:1.45;">
+                      <b><i class="fa-solid fa-lightbulb" style="color:#F59E0B;"></i> Quy tắc cốt lõi:</b> ${g.keyRule}
+                    </div>
+
+                    <ul style="margin:0 0 12px; padding-left:18px; font-size:12px; color:#475569; line-height:1.5;">
+                      ${(g.tips || []).map(t => `<li style="margin-bottom:6px;">${t}</li>`).join('')}
+                    </ul>
+                  </div>
+
+                  <button class="btn btn-secondary btn-small" data-jump-cat="${jumpCat}" style="background:#F1F5F9 !important; border:1px solid #CBD5E1 !important; color:#0F172A !important; font-weight:700 !important; width:100%; border-radius:8px;">
+                    <i class="fa-solid fa-play" style="color:${g.color}; font-size:11px; margin-right:4px;"></i> Luyện Đề ${g.skill} (+10💧)
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
     },
 
     renderBenefitsTabHtml() {
@@ -2752,8 +2828,8 @@
             <div class="earn-method-item" id="earn-action-quiz" role="button" tabindex="0" title="Bấm để mở bộ đề ôn thi VSTEP nhận +10💧 & +10☀️">
               <div class="earn-icon-wrap" style="background:#EFF6FF; color:#2563EB;">🎯</div>
               <div class="earn-info">
-                <h4>ĐỐ VUI ÔN THI (TOEIC & VSTEP)</h4>
-                <p>Luyện tập các câu hỏi chuẩn TOEIC & VSTEP nhận ngay <b>+10💧 & +10☀️</b> cho mỗi câu trả lời đúng.</p>
+                <h4>🎯 ĐỐ VUI ÔN THI VSTEP THỰC CHIẾN</h4>
+                <p>Luyện tập các câu hỏi chuẩn VSTEP (4 Kỹ Năng B1 - B2 - C1) nhận ngay <b>+10💧 & +10☀️</b> cho mỗi câu trả lời đúng.</p>
               </div>
               <span class="earn-action-badge action-primary"><i class="fa-solid fa-play"></i> Luyện ngay</span>
             </div>
@@ -3086,7 +3162,7 @@
       }
 
       const studentName = this.getStudentName();
-      const heroImg = `assets/garden/${fid}_stage_4.png`;
+      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v9`;
       const heroBadgeMap = {
         clover: '🍀 CỎ 4 LÁ MAY MẮN',
         sunflower: '🌻 HOA HƯỚNG DƯƠNG RỰC RỠ',
@@ -3110,6 +3186,7 @@
         succulent: `"Như đóa sen đá ngọc kiên trì chắt chiu từng giọt sương, chúc <b>${this.escapeHtml(studentName)}</b> luôn bền chí, kiên định và vững bước trên hành trình vươn tới thành công! 🪷✨"`
       };
       const heroQuote = heroQuoteMap[fid] || `"${flower.quote || 'Chúc bạn luôn tự tin và đạt kết quả thật cao!'}"`;
+      const heroTitle = flower.name;
 
       const currentCount = basket[fid] || 0;
       const unit = fid === 'clover' ? 'cành may mắn' : (fid === 'succulent' ? 'đóa sen đá ngọc' : `đóa ${flower.shortName || flower.name}`);
@@ -3341,11 +3418,14 @@
       if (potWrapper && typeof root.renderFlowerPotSvg === 'function') {
         const prevStage = potWrapper.dataset.cloverStage;
         const prevFlower = potWrapper.dataset.flowerId;
-        if (prevStage !== String(targetStage) || prevFlower !== fid || !potWrapper.querySelector('.clover-living-stage')) {
+        const prevBloomed = potWrapper.dataset.isBloomed;
+        const isBloomed = (p >= 100) ? 'true' : 'false';
+        if (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed || !potWrapper.querySelector('.clover-living-stage')) {
           potWrapper.innerHTML = root.renderFlowerPotSvg(fid, p);
           potWrapper.dataset.cloverStage = String(targetStage);
           potWrapper.dataset.flowerId = fid;
-          if (prevStage && (prevStage !== String(targetStage) || prevFlower !== fid)) {
+          potWrapper.dataset.isBloomed = isBloomed;
+          if (prevStage && (prevStage !== String(targetStage) || prevFlower !== fid || prevBloomed !== isBloomed)) {
             potWrapper.classList.remove('stage-evolving');
             void potWrapper.offsetWidth;
             potWrapper.classList.add('stage-evolving');
@@ -3424,14 +3504,22 @@
           stageBadge.className = 'garden-stage-badge stage-wilted';
         } else {
           const stages = flower.stages || [];
-          const stageInfo = stages[targetStage - 1];
           const stageClasses = ['stage-seeding', 'stage-sprouting', 'stage-vegetative', 'stage-budding', 'stage-blooming'];
-          if (stageInfo) {
-            stageBadge.textContent = `${stageInfo.icon || '🌱'} ${stageInfo.name}`;
-            stageBadge.className = `garden-stage-badge stage-badge ${stageClasses[targetStage - 1] || 'stage-seeding'}`;
+          if (p >= 100) {
+            stageBadge.textContent = `${flower.icon} ${flower.shortName || flower.name} Bừng Nở Rực Rỡ!`;
+            stageBadge.className = 'garden-stage-badge stage-badge stage-blooming';
+          } else if (p >= 80) {
+            stageBadge.textContent = `🌸 Nụ Hoa E Ấp (${p}%)`;
+            stageBadge.className = 'garden-stage-badge stage-badge stage-budding';
           } else {
-            stageBadge.textContent = p >= 100 ? `${flower.icon} Bừng Nở Rực Rỡ!` : `🌱 Mầm Non Đang Phát Triển (${p}%)`;
-            stageBadge.className = `garden-stage-badge stage-badge ${stageClasses[targetStage - 1] || 'stage-seeding'}`;
+            const stageInfo = stages[targetStage - 1];
+            if (stageInfo) {
+              stageBadge.textContent = `${stageInfo.icon || '🌱'} ${stageInfo.name} (${p}%)`;
+              stageBadge.className = `garden-stage-badge stage-badge ${stageClasses[targetStage - 1] || 'stage-seeding'}`;
+            } else {
+              stageBadge.textContent = `🌱 Mầm Non Đang Phát Triển (${p}%)`;
+              stageBadge.className = `garden-stage-badge stage-badge ${stageClasses[targetStage - 1] || 'stage-seeding'}`;
+            }
           }
         }
       }

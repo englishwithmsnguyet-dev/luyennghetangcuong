@@ -71,21 +71,24 @@
     width: 100%;
     margin-bottom: 8px;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .garden-header-row h3 {
     margin: 0;
-    font-size: 17px;
+    font-size: 16.5px;
     font-weight: 800;
     color: #BE185D;
-    line-height: 1.25;
+    line-height: 1.3;
+    flex: 1 1 200px;
+    min-width: 0;
 }
 
 .garden-header-actions {
     display: flex;
     align-items: center;
     gap: 6px;
-    flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
 .garden-subtitle {
@@ -109,7 +112,7 @@
 .garden-stage {
     position: relative;
     width: 100%;
-    height: 232px;
+    height: 245px;
     background:
         radial-gradient(ellipse 85% 42% at 50% 92%, rgba(180, 130, 80, 0.14) 0%, transparent 72%),
         linear-gradient(180deg, #FEF9C3 0%, #FEF3C7 34%, #ECFDF5 72%, #D1FAE5 100%);
@@ -119,7 +122,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 4px;
+    padding-bottom: 8px;
     overflow: hidden;
     cursor: pointer;
     margin-bottom: 14px;
@@ -225,8 +228,8 @@
 /* Flower Pot & Lifelike Botanical Clover Rig */
 .garden-pot-wrapper {
     position: relative;
-    width: 222px;
-    height: 222px;
+    width: 175px;
+    height: 175px;
     z-index: 2;
     display: flex;
     align-items: flex-end;
@@ -235,7 +238,7 @@
     transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.35s ease;
 }
 .garden-pot-wrapper:hover {
-    transform: translateY(-2px) scale(1.022);
+    transform: translateY(-2px) scale(1.02);
 }
 .garden-pot-wrapper.plant-bouncing {
     animation: plantBounce 0.62s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -284,11 +287,45 @@
     z-index: 1;
     animation: cloverAuraBreathe 4.2s ease-in-out infinite;
 }
-.clover-stage-4 .clover-aura-halo {
+.clover-stage-4 .clover-aura-halo,
+.clover-stage-5 .clover-aura-halo {
     top: 4%;
-    width: 86%;
-    height: 70%;
-    background: radial-gradient(circle, rgba(254, 240, 138, 0.48) 0%, rgba(110, 231, 183, 0.30) 46%, transparent 74%);
+    width: 88%;
+    height: 72%;
+    background: radial-gradient(circle, rgba(254, 240, 138, 0.52) 0%, rgba(110, 231, 183, 0.32) 46%, transparent 74%);
+    animation: cloverAuraBreathe 3.4s ease-in-out infinite;
+}
+
+/* 5 Discrete Growth Stage Visual Transforms (Gradual, proportional organic progression) */
+.clover-living-stage.clover-stage-1 .clover-living-art {
+    transform: scale(0.70) translateY(18px) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.clover-living-stage.clover-stage-2 .clover-living-art {
+    transform: scale(0.80) translateY(10px) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.clover-living-stage.clover-stage-3 .clover-living-art {
+    transform: scale(0.86) translateY(6px) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.clover-living-stage.clover-stage-4 .clover-living-art {
+    transform: scale(0.92) translateY(2px) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.clover-living-stage.clover-stage-5 .clover-living-art {
+    transform: scale(0.96) translateY(0) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.clover-living-stage.clover-stage-5.is-bloomed .clover-living-art {
+    transform: scale(1.0) translateY(0) !important;
+    transform-origin: 50% 92% !important;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
 /* Bottom-Anchored Breeze Rig: Pot Base Stays 100% Grounded While Stems & Canopy Sway Naturally */
@@ -538,6 +575,7 @@
 }
 .stage-seeding { background: #FEF3C7; color: #B45309; }
 .stage-sprouting { background: #DCFCE7; color: #15803D; }
+.stage-vegetative { background: #E0F2FE; color: #0369A1; }
 .stage-budding { background: #FCE7F3; color: #BE185D; }
 .stage-blooming { background: #FDF2F8; color: #BE123C; border: 1px solid #FDA4AF; animation: pulseBorder 1.8s infinite; }
 
@@ -1226,6 +1264,14 @@
     user-select: none !important;
 }
 
+.harvest-action-btn .harvest-btn-ico {
+    font-size: 16px !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
 .harvest-action-btn i {
     font-size: 14px !important;
     line-height: 1 !important;
@@ -1273,7 +1319,7 @@
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16) !important;
 }
 
-/* 3. Nút Vun Trồng Mầm Cỏ Tiếp Theo (Primary CTA Gradient) */
+/* 3. Nút Vun Trồng Mầm Tiếp Theo (Primary CTA Gradient with Flower Themes) */
 .harvest-action-btn.btn-harvest-next {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
     color: #FFFFFF !important;
@@ -1281,13 +1327,84 @@
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
     font-weight: 800 !important;
     letter-spacing: -0.2px !important;
-}
-.harvest-action-btn.btn-harvest-next i {
-    color: #A7F3D0 !important;
+    padding: 12px 26px !important;
 }
 .harvest-action-btn.btn-harvest-next:hover {
     background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+}
+
+/* Specific Dynamic Color Themes for Next Plant Button */
+.harvest-action-btn.btn-harvest-theme-sunflower {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+    border-color: #D97706 !important;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35) !important;
+}
+.harvest-action-btn.btn-harvest-theme-sunflower:hover {
+    background: linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-tulip {
+    background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%) !important;
+    border-color: #E11D48 !important;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35) !important;
+}
+.harvest-action-btn.btn-harvest-theme-tulip:hover {
+    background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%) !important;
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-cactus {
+    background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%) !important;
+    border-color: #0F766E !important;
+    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35) !important;
+}
+.harvest-action-btn.btn-harvest-theme-cactus:hover {
+    background: linear-gradient(135deg, #0F766E 0%, #115E59 100%) !important;
+    box-shadow: 0 6px 20px rgba(15, 118, 110, 0.45) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-rose {
+    background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%) !important;
+    border-color: #BE123C !important;
+    box-shadow: 0 4px 14px rgba(190, 18, 60, 0.40) !important;
+}
+.harvest-action-btn.btn-harvest-theme-rose:hover {
+    background: linear-gradient(135deg, #BE123C 0%, #9F1239 100%) !important;
+    box-shadow: 0 6px 20px rgba(190, 18, 60, 0.50) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-lavender {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%) !important;
+    border-color: #7C3AED !important;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.40) !important;
+}
+.harvest-action-btn.btn-harvest-theme-lavender:hover {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.50) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-daisy {
+    background: linear-gradient(135deg, #FACC15 0%, #EAB308 100%) !important;
+    color: #78350F !important;
+    border-color: #CA8A04 !important;
+    box-shadow: 0 4px 14px rgba(202, 138, 4, 0.35) !important;
+}
+.harvest-action-btn.btn-harvest-theme-daisy:hover {
+    background: linear-gradient(135deg, #EAB308 0%, #CA8A04 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(202, 138, 4, 0.45) !important;
+}
+
+.harvest-action-btn.btn-harvest-theme-succulent {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%) !important;
+    border-color: #047857 !important;
+    box-shadow: 0 4px 14px rgba(4, 120, 87, 0.35) !important;
+}
+.harvest-action-btn.btn-harvest-theme-succulent:hover {
+    background: linear-gradient(135deg, #047857 0%, #065F46 100%) !important;
+    box-shadow: 0 6px 20px rgba(4, 120, 87, 0.45) !important;
 }
 
 /* Generic Fallback Button Styles for All Garden Modals */
@@ -3202,8 +3319,8 @@
    ENHANCED BASKET SHOWCASE MODAL (HIỂN THỊ ĐỀU & ĐẸP)
    ======================================================== */
 .garden-basket-modal-card {
-    max-width: 580px !important;
-    width: 92% !important;
+    max-width: 660px !important;
+    width: 95% !important;
     border-radius: 20px !important;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16) !important;
 }
@@ -3296,8 +3413,16 @@
     color: #065F46 !important;
 }
 
-/* 2. Symmetrical 3-Column Stats Row */
-.basket-stats-row {
+/* 2. Symmetrical Stats Container (Row 1: 4 Hoa, Row 2: 3 Nguồn Lực) */
+.basket-stats-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
+}
+
+.basket-stats-flowers-row {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 8px !important;
@@ -3305,10 +3430,44 @@
     box-sizing: border-box !important;
 }
 
-@media (max-width: 600px) {
+.basket-stats-resources-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+    .basket-stats-flowers-row {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 520px) {
+    .basket-stats-flowers-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .basket-stats-resources-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.basket-stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 480px) {
     .basket-stats-row {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px !important;
+        gap: 6px !important;
     }
 }
 
@@ -3316,16 +3475,45 @@
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 10px 10px !important;
-    border-radius: 14px !important;
+    padding: 8px 10px !important;
+    border-radius: 12px !important;
     border: 1.5px solid transparent !important;
     transition: all 0.2s ease !important;
     box-sizing: border-box !important;
+    min-width: 0 !important;
 }
 
 .basket-mini-stat.stat-clover {
     background: #F0FDF4 !important;
     border-color: #BBF7D0 !important;
+}
+.basket-mini-stat.stat-sunflower {
+    background: #FFFBEB !important;
+    border-color: #FDE68A !important;
+}
+.basket-mini-stat.stat-tulip {
+    background: #FFF1F2 !important;
+    border-color: #FECDD3 !important;
+}
+.basket-mini-stat.stat-cactus {
+    background: #F0FDFA !important;
+    border-color: #99F6E4 !important;
+}
+.basket-mini-stat.stat-rose {
+    background: #FFF1F2 !important;
+    border-color: #FECDD3 !important;
+}
+.basket-mini-stat.stat-lavender {
+    background: #F5F3FF !important;
+    border-color: #DDD6FE !important;
+}
+.basket-mini-stat.stat-daisy {
+    background: #FEFCE8 !important;
+    border-color: #FEF08A !important;
+}
+.basket-mini-stat.stat-succulent {
+    background: #ECFDF5 !important;
+    border-color: #A7F3D0 !important;
 }
 .basket-mini-stat.stat-water {
     background: #F0F9FF !important;
@@ -3341,7 +3529,7 @@
 }
 
 .mini-stat-icon {
-    font-size: 22px !important;
+    font-size: 19px !important;
     line-height: 1 !important;
     flex-shrink: 0 !important;
 }
@@ -3353,22 +3541,31 @@
 }
 
 .mini-stat-num {
-    font-size: 14px !important;
+    font-size: 12.5px !important;
     font-weight: 800 !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
 }
 
 .stat-clover .mini-stat-num { color: #047857 !important; }
+.stat-sunflower .mini-stat-num { color: #D97706 !important; }
+.stat-tulip .mini-stat-num { color: #E11D48 !important; }
+.stat-cactus .mini-stat-num { color: #0F766E !important; }
+.stat-rose .mini-stat-num { color: #BE123C !important; }
+.stat-lavender .mini-stat-num { color: #7C3AED !important; }
+.stat-daisy .mini-stat-num { color: #CA8A04 !important; }
+.stat-succulent .mini-stat-num { color: #047857 !important; }
 .stat-water .mini-stat-num { color: #0284C7 !important; }
 .stat-sun .mini-stat-num { color: #D97706 !important; }
 .stat-streak .mini-stat-num { color: #EA580C !important; }
 
 .mini-stat-label {
-    font-size: 11px !important;
+    font-size: 10px !important;
     color: #64748B !important;
     font-weight: 600 !important;
     white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 /* 3. Milestone Progression Box */
@@ -3480,5 +3677,201 @@
     color: #059669 !important;
     font-weight: 600 !important;
 }
+
+/* ==========================================================================
+   FLOWER SEED SELECTOR MODAL & DIVERSE FLOWER SYSTEM
+   ========================================================================== */
+.btn-switch-seed {
+    background: #FFFBEB !important;
+    color: #B45309 !important;
+    border: 1.5px solid #FDE68A !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    user-select: none !important;
+}
+.btn-switch-seed:hover {
+    background: #FEF3C7 !important;
+    border-color: #F59E0B !important;
+    color: #92400E !important;
+    transform: translateY(-1.5px) !important;
+    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.22) !important;
+}
+.btn-change-flower-tag {
+    background: #F8FAFC !important;
+    color: #475569 !important;
+    border: 1px solid #CBD5E1 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 3px 9px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.18s ease !important;
+    margin-left: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+}
+.btn-change-flower-tag:hover {
+    background: #EFF6FF !important;
+    color: #1D4ED8 !important;
+    border-color: #93C5FD !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Seed Selector Modal */
+.flower-seed-modal .garden-modal-dialog {
+    max-width: 1120px !important;
+    width: 96% !important;
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+}
+.flower-seed-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+}
+@media (max-width: 992px) {
+    .flower-seed-cards-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+@media (max-width: 640px) {
+    .flower-seed-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+@media (max-width: 440px) {
+    .flower-seed-cards-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+.seed-option-card {
+    background: #FFFFFF !important;
+    border: 2px solid #E2E8F0 !important;
+    border-radius: 18px !important;
+    padding: 16px 14px 14px 14px !important;
+    text-align: center !important;
+    position: relative !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+.seed-option-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08) !important;
+}
+.seed-option-card.selected {
+    background: #FFFEF9 !important;
+}
+.seed-card-badge {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    padding: 3px 10px !important;
+    border-radius: 9999px !important;
+    border: 1px solid transparent !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
+    margin-bottom: 10px !important;
+    display: inline-block !important;
+}
+.seed-preview-img-wrap {
+    width: 120px !important;
+    height: 120px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 10px !important;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.12)) !important;
+}
+.seed-preview-img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    pointer-events: none !important;
+}
+.seed-option-card:hover .seed-preview-img {
+    transform: scale(1.06) !important;
+}
+.seed-flower-name {
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    margin: 0 0 6px 0 !important;
+    line-height: 1.3 !important;
+}
+.seed-flower-desc {
+    font-size: 12px !important;
+    color: #64748B !important;
+    line-height: 1.45 !important;
+    margin: 0 0 12px 0 !important;
+    flex: 1 !important;
+}
+.btn-seed-select {
+    width: 100% !important;
+    padding: 10px 16px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    border: 1.5px solid #CBD5E1 !important;
+    background: #F8FAFC !important;
+    color: #334155 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+.btn-seed-select:hover {
+    background: #F1F5F9 !important;
+    color: #0F172A !important;
+    border-color: #94A3B8 !important;
+}
+.btn-seed-select.btn-seed-active {
+    cursor: default !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Sunflower theme glow & breeze sway */
+.flower-type-sunflower .clover-ground-shadow {
+    background: radial-gradient(ellipse at center, rgba(180, 83, 9, 0.25) 0%, transparent 72%) !important;
+}
+.flower-type-sunflower .clover-aura-halo {
+    background: radial-gradient(circle, rgba(254, 240, 138, 0.55) 0%, rgba(245, 158, 11, 0.18) 45%, transparent 70%) !important;
+}
+
+/* Tulip theme glow & breeze sway */
+.flower-type-tulip .clover-ground-shadow {
+    background: radial-gradient(ellipse at center, rgba(225, 29, 72, 0.22) 0%, transparent 72%) !important;
+}
+.flower-type-tulip .clover-aura-halo {
+    background: radial-gradient(circle, rgba(254, 205, 211, 0.60) 0%, rgba(244, 63, 94, 0.20) 45%, transparent 72%) !important;
+}
+
+/* Cactus theme glow & breeze sway */
+.flower-type-cactus .clover-ground-shadow {
+    background: radial-gradient(ellipse at center, rgba(15, 118, 110, 0.22) 0%, transparent 72%) !important;
+}
+.flower-type-cactus .clover-aura-halo {
+    background: radial-gradient(circle, rgba(204, 251, 241, 0.60) 0%, rgba(20, 184, 166, 0.20) 45%, transparent 72%) !important;
+}
+
+/* Rose theme glow & breeze sway */
+.flower-type-rose .clover-ground-shadow {
+    background: radial-gradient(ellipse at center, rgba(190, 18, 60, 0.22) 0%, transparent 72%) !important;
+}
+.flower-type-rose .clover-aura-halo {
+    background: radial-gradient(circle, rgba(254, 205, 211, 0.65) 0%, rgba(190, 18, 60, 0.22) 45%, transparent 72%) !important;
+}
+
 
 
