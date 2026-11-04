@@ -1333,7 +1333,7 @@
         const fl = catalog[fid] || {};
         const isCurrent = currentFid === fid;
         const harvestCount = (this.state.basket && this.state.basket[fid]) || 0;
-        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
+        const previewImg = `assets/garden/${fid}_stage_4.png?v=20261104_v12`;
         const theme = themeMap[fid] || themeMap.clover;
         const unit = theme.unit;
         const badgeBg = theme.badgeBg;
@@ -1851,7 +1851,7 @@
           <button class="modal-close-btn" id="btn-close-harvest-modal">&times;</button>
           <div class="harvest-celebration-head">
             <div class="harvest-clover-sparkle-halo">
-              <img src="assets/garden/clover_stage_4.png?v=20261104_v11" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
+              <img src="assets/garden/clover_stage_4.png?v=20261104_v12" alt="Hoa May Mắn Nở Hoa" class="harvest-clover-img" id="harvest-celebration-img" />
             </div>
             <span class="harvest-pill-badge" id="harvest-pill-badge">🍀 CÀNH CỎ 4 LÁ THỨ #1 ĐÃ BỪNG NỞ!</span>
             <h3 class="harvest-main-title">THÔNG ĐIỆP HÔM NAY</h3>
@@ -1903,7 +1903,7 @@
       const celebImg = document.getElementById('harvest-celebration-img');
 
       if (celebImg) {
-        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
+        celebImg.src = `assets/garden/${fid}_stage_4.png?v=20261104_v12`;
         celebImg.alt = flower.name;
       }
 
@@ -3162,7 +3162,7 @@
       }
 
       const studentName = this.getStudentName();
-      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v11`;
+      const heroImg = `assets/garden/${fid}_stage_4.png?v=20261104_v12`;
       const heroBadgeMap = {
         clover: '🍀 CỎ 4 LÁ MAY MẮN',
         sunflower: '🌻 HOA HƯỚNG DƯƠNG RỰC RỠ',
