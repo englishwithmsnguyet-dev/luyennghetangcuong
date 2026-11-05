@@ -1116,8 +1116,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN' || savedName.toLowerCase().includes('cô nguyệt'));
         updateSidebarUserProfile();
 
-        if (studentNameInput) studentNameInput.value = isTeacherSaved ? 'PTMN' : savedName;
-        if (studentClassInput) studentClassInput.value = isTeacherSaved ? 'GV' : savedClass;
+        if (studentNameInput) {
+            studentNameInput.value = '';
+            studentNameInput.placeholder = 'Nhập họ và tên học viên...';
+        }
+        if (studentClassInput) {
+            studentClassInput.value = '';
+            studentClassInput.placeholder = 'Nhập mã lớp học (VD: CB210, CB211...)';
+        }
         if (studentPasswordInput) {
             studentPasswordInput.value = '';
             studentPasswordInput.placeholder = 'Nhập mật khẩu...';
@@ -1152,9 +1158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         studentNameInput.addEventListener('input', () => {
             const val = studentNameInput.value.trim().toUpperCase();
             if (val === 'PTMN' || val.includes('PTMN')) {
-                if (studentClassInput && (!studentClassInput.value || studentClassInput.value.trim() === '')) {
-                    studentClassInput.value = 'GV';
-                }
                 const currentVnHour = getVietnamHour();
                 const isQuietHours = currentVnHour >= 22 || currentVnHour < 5;
                 if (loginError && isQuietHours) {
