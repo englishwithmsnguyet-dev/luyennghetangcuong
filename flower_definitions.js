@@ -907,6 +907,7 @@
    */
   const VSTEP_OFFICIAL_STRATEGY_GUIDE = [
     {
+      skill: "Listening",
       part: "Kỹ Năng Nghe (Listening)",
       nameEn: "VSTEP LISTENING (3 PARTS - 35 QUESTIONS)",
       nameVi: "3 Phần Thi Nghe Hiểu (40 Phút)",
@@ -920,6 +921,7 @@
       ]
     },
     {
+      skill: "Reading",
       part: "Kỹ Năng Đọc (Reading)",
       nameEn: "VSTEP READING (4 PASSAGES - 40 QUESTIONS)",
       nameVi: "4 Bài Đọc Hiểu Học Thuật (60 Phút)",
@@ -933,6 +935,7 @@
       ]
     },
     {
+      skill: "Writing",
       part: "Kỹ Năng Viết (Writing)",
       nameEn: "VSTEP WRITING (2 TASKS - 60 MINUTES)",
       nameVi: "2 Phần Viết Thư & Luận (60 Phút)",
@@ -946,6 +949,7 @@
       ]
     },
     {
+      skill: "Speaking",
       part: "Kỹ Năng Nói (Speaking)",
       nameEn: "VSTEP SPEAKING (3 PARTS - 12 MINUTES)",
       nameVi: "3 Phần Vấn Đáp Thực Chiến (12 Phút)",

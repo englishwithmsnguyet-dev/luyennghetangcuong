@@ -736,6 +736,8 @@
         setTimeout(() => this.openGardenTab(), 150);
       } else if (hash === '#quiz') {
         setTimeout(() => this.openQuizModal(), 200);
+      } else if (hash === '#quiz-strategy') {
+        setTimeout(() => this.openQuizModal(null, 'strategy'), 200);
       } else if (hash === '#quiz-benefits') {
         setTimeout(() => this.openQuizModal(null, 'benefits'), 200);
       } else if (hash === '#quiz-speaking') {
@@ -2155,27 +2157,31 @@
     },
 
     openQuizModal(targetCategory = null, targetTab = null) {
-      let modal = document.getElementById('garden-quiz-modal');
-      if (!modal) {
-        modal = this.createQuizModalDom();
-        document.body.appendChild(modal);
-      }
-      if (targetTab) {
-        this.switchQuizTab(targetTab);
-      }
-      if (targetCategory) {
-        this.setQuizCategory(targetCategory);
-      } else if (!this.quizState.currentQuestion) {
-        this.loadNextQuizQuestion();
-      }
+      try {
+        let modal = document.getElementById('garden-quiz-modal');
+        if (!modal) {
+          modal = this.createQuizModalDom();
+          document.body.appendChild(modal);
+        }
+        if (targetTab) {
+          this.switchQuizTab(targetTab);
+        }
+        if (targetCategory) {
+          this.setQuizCategory(targetCategory);
+        } else if (!this.quizState.currentQuestion) {
+          this.loadNextQuizQuestion();
+        }
 
-      const doneBtn = modal.querySelector('#btn-quiz-done');
-      if (doneBtn) {
-        const fl = this.getCurrentFlower();
-        doneBtn.innerHTML = `<span style="margin-right:4px;">${fl.icon || '🌱'}</span> Về Chậu ${fl.shortName || fl.name}`;
-      }
+        const doneBtn = modal.querySelector('#btn-quiz-done');
+        if (doneBtn) {
+          const fl = this.getCurrentFlower();
+          doneBtn.innerHTML = `<span style="margin-right:4px;">${fl.icon || '🌱'}</span> Về Chậu ${fl.shortName || fl.name}`;
+        }
 
-      modal.classList.add('active');
+        modal.classList.add('active');
+      } catch (err) {
+        console.error('Error in openQuizModal:', err);
+      }
     },
 
     createQuizModalDom() {
@@ -2247,22 +2253,22 @@
 
           <!-- Tab Panel 2: Strategy Reference -->
           <div class="quiz-tab-panel" id="quiz-panel-strategy">
-            ${this.renderStrategyTabHtml()}
+            ${(() => { try { return this.renderStrategyTabHtml(); } catch (e) { console.error('Strategy tab render error:', e); return '<p style="padding:20px;text-align:center;">Đang cập nhật chiến lược VSTEP...</p>'; } })()}
           </div>
 
           <!-- Tab Panel 3: Benefits Matrix Reference -->
           <div class="quiz-tab-panel" id="quiz-panel-benefits">
-            ${this.renderBenefitsTabHtml()}
+            ${(() => { try { return this.renderBenefitsTabHtml(); } catch (e) { console.error('Benefits tab render error:', e); return '<p style="padding:20px;text-align:center;">Đang cập nhật bảng lợi ích...</p>'; } })()}
           </div>
 
           <!-- Tab Panel 3: Speaking Vocab & Formulas Reference -->
           <div class="quiz-tab-panel" id="quiz-panel-speaking">
-            ${this.renderSpeakingVocabTabHtml()}
+            ${(() => { try { return this.renderSpeakingVocabTabHtml(); } catch (e) { console.error('Speaking tab render error:', e); return '<p style="padding:20px;text-align:center;">Đang cập nhật từ vựng speaking...</p>'; } })()}
           </div>
 
           <!-- Tab Panel 4: Writing Letters & Essays Identification Reference -->
           <div class="quiz-tab-panel" id="quiz-panel-writing">
-            ${this.renderWritingGuideTabHtml()}
+            ${(() => { try { return this.renderWritingGuideTabHtml(); } catch (e) { console.error('Writing tab render error:', e); return '<p style="padding:20px;text-align:center;">Đang cập nhật cẩm nang viết...</p>'; } })()}
           </div>
         </div>
       `;
@@ -2370,21 +2376,25 @@
 
           <div class="vstep-strategy-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 14px;">
             ${guides.map(g => {
-              const jumpCat = skillJumpMap[g.skill] || 'all';
+              const skillName = g.skill || (g.part && g.part.includes('Nghe') ? 'Listening' : g.part && g.part.includes('Đọc') ? 'Reading' : g.part && g.part.includes('Viết') ? 'Writing' : 'Speaking');
+              const jumpCat = skillJumpMap[skillName] || 'all';
+              const displaySkill = (skillName || 'VSTEP').toUpperCase();
+              const cardColor = g.color || '#2563EB';
+              const cardIcon = g.icon || 'fa-star';
               return `
                 <div class="vstep-strategy-card" style="background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:14px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; flex-direction:column; justify-content:space-between;">
                   <div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-                      <span style="background:${g.color}; color:#FFFFFF; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; letter-spacing:0.5px;">
-                        <i class="fa-solid ${g.icon}"></i> ${g.skill.toUpperCase()}
+                      <span style="background:${cardColor}; color:#FFFFFF; font-size:11px; font-weight:800; padding:4px 10px; border-radius:12px; letter-spacing:0.5px;">
+                        <i class="fa-solid ${cardIcon}"></i> ${displaySkill}
                       </span>
                       <small style="font-weight:700; color:#64748B;">Chuẩn VSTEP</small>
                     </div>
-                    <h5 style="font-size:14px; font-weight:800; color:#1E293B; margin-bottom:4px;">${g.nameEn}</h5>
-                    <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:8px;">${g.nameVi}</div>
+                    <h5 style="font-size:14px; font-weight:800; color:#1E293B; margin-bottom:4px;">${g.nameEn || ''}</h5>
+                    <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:8px;">${g.nameVi || ''}</div>
 
-                    <div style="background:#F8FAFC; border-left:3px solid ${g.color}; padding:8px 10px; border-radius:6px; font-size:12px; color:#334155; margin-bottom:10px; line-height:1.45;">
-                      <b><i class="fa-solid fa-lightbulb" style="color:#F59E0B;"></i> Quy tắc cốt lõi:</b> ${g.keyRule}
+                    <div style="background:#F8FAFC; border-left:3px solid ${cardColor}; padding:8px 10px; border-radius:6px; font-size:12px; color:#334155; margin-bottom:10px; line-height:1.45;">
+                      <b><i class="fa-solid fa-lightbulb" style="color:#F59E0B;"></i> Quy tắc cốt lõi:</b> ${g.keyRule || ''}
                     </div>
 
                     <ul style="margin:0 0 12px; padding-left:18px; font-size:12px; color:#475569; line-height:1.5;">
@@ -2393,7 +2403,7 @@
                   </div>
 
                   <button class="btn btn-secondary btn-small" data-jump-cat="${jumpCat}" style="background:#F1F5F9 !important; border:1px solid #CBD5E1 !important; color:#0F172A !important; font-weight:700 !important; width:100%; border-radius:8px;">
-                    <i class="fa-solid fa-play" style="color:${g.color}; font-size:11px; margin-right:4px;"></i> Luyện Đề ${g.skill} (+10💧)
+                    <i class="fa-solid fa-play" style="color:${cardColor}; font-size:11px; margin-right:4px;"></i> Luyện Đề ${skillName} (+10💧)
                   </button>
                 </div>
               `;
