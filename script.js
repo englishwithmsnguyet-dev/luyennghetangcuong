@@ -85,6 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Sidebar Menu
     function renderSidebar() {
         dayMenuEl.innerHTML = '';
+
+        // Dedicated Garden tab (#1)
+        const gardenItem = document.createElement('div');
+        gardenItem.className = 'menu-item garden-nav-item';
+        gardenItem.id = 'sidebar-nav-garden';
+        gardenItem.innerHTML = '<span style="font-size:1.15rem; margin-right:6px;">🌱</span><span>CHĂM HOA CHĂM HỌC</span>';
+        gardenItem.addEventListener('click', () => {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            gardenItem.classList.add('active');
+            const flowerGardenEl = document.getElementById('flower-garden');
+            if (flowerGardenEl) flowerGardenEl.style.display = 'block';
+            if (activeDayContent) activeDayContent.style.display = 'none';
+            if (placeholderContent) placeholderContent.style.display = 'none';
+            if (window.FlowerGarden) {
+                setTimeout(() => window.FlowerGarden.render(), 100);
+            }
+        });
+        dayMenuEl.appendChild(gardenItem);
+
         appData.forEach((day, index) => {
             const menuItem = document.createElement('div');
             menuItem.className = 'menu-item';
@@ -100,6 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItem.textContent = day.title;
             
             menuItem.addEventListener('click', () => {
+                const flowerGardenEl = document.getElementById('flower-garden');
+                if (flowerGardenEl) flowerGardenEl.style.display = 'none';
+                if (activeDayContent) activeDayContent.style.display = 'block';
+
                 if (currentPartIndex !== index) {
                     currentPartIndex = index;
                     
@@ -113,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
                     menuItem.classList.add('active');
                     loadDay(index);
+                } else {
+                    document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+                    menuItem.classList.add('active');
                 }
             });
             

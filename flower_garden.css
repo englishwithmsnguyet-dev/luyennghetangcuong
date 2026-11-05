@@ -4219,13 +4219,16 @@ button#btn-harvest-flower {
    ========================================================================== */
 .garden-nav-item,
 li.garden-nav-item,
-a.garden-nav-item {
+a.garden-nav-item,
+div.garden-nav-item {
     position: relative;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap !important;
 }
 
 li.garden-nav-item a,
-a.garden-nav-item {
+a.garden-nav-item,
+div.garden-nav-item {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.10) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
     border: 1.5px dashed rgba(16, 185, 129, 0.45) !important;
     color: #047857 !important;
@@ -4233,10 +4236,32 @@ a.garden-nav-item {
     margin-bottom: 0.4rem !important;
     border-radius: 12px !important;
     box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 10px 12px !important;
+    font-size: 0.83rem !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+li.garden-nav-item a span,
+a.garden-nav-item span,
+div.garden-nav-item span,
+.garden-nav-item span {
+    white-space: nowrap !important;
+    display: inline-block !important;
+    font-size: 0.83rem !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.2 !important;
 }
 
 li.garden-nav-item:hover a,
-a.garden-nav-item:hover {
+a.garden-nav-item:hover,
+div.garden-nav-item:hover {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(245, 158, 11, 0.20) 100%) !important;
     border-color: #10b981 !important;
     color: #065f46 !important;
@@ -4245,7 +4270,8 @@ a.garden-nav-item:hover {
 }
 
 li.garden-nav-item.active a,
-a.garden-nav-item.active {
+a.garden-nav-item.active,
+div.garden-nav-item.active {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
     border: 1.5px solid #059669 !important;
     color: #ffffff !important;
@@ -4255,7 +4281,9 @@ a.garden-nav-item.active {
 li.garden-nav-item.active a i,
 li.garden-nav-item.active a span,
 a.garden-nav-item.active i,
-a.garden-nav-item.active span {
+a.garden-nav-item.active span,
+div.garden-nav-item.active i,
+div.garden-nav-item.active span {
     color: #ffffff !important;
 }
 
