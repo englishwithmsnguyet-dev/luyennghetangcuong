@@ -96,10 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
             gardenItem.classList.add('active');
             const flowerGardenEl = document.getElementById('flower-garden');
             if (flowerGardenEl) flowerGardenEl.style.display = 'block';
+            const quoteCard = document.getElementById('daily-quote-card');
+            if (quoteCard) quoteCard.style.display = 'none';
             if (activeDayContent) activeDayContent.style.display = 'none';
             if (placeholderContent) placeholderContent.style.display = 'none';
             if (window.FlowerGarden) {
-                setTimeout(() => window.FlowerGarden.render(), 100);
+                FlowerGarden.ensureGardenContainerDom();
+                window.FlowerGarden.render();
             }
         });
         dayMenuEl.appendChild(gardenItem);
@@ -121,6 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItem.addEventListener('click', () => {
                 const flowerGardenEl = document.getElementById('flower-garden');
                 if (flowerGardenEl) flowerGardenEl.style.display = 'none';
+                const quoteCard = document.getElementById('daily-quote-card');
+                if (quoteCard) quoteCard.style.display = 'none';
                 if (activeDayContent) activeDayContent.style.display = 'block';
 
                 if (currentPartIndex !== index) {

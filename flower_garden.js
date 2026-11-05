@@ -413,12 +413,11 @@
         container.id = 'garden-container';
       }
 
-      const targetParent = gardenPane || document.querySelector('.content-area, .app-main, main, #main-content, .main-content, #app');
-      if (targetParent && container.parentNode !== targetParent) {
-        if (container.parentNode) {
-          container.parentNode.removeChild(container);
+      if (!container.parentNode) {
+        const targetParent = gardenPane || document.querySelector('.garden-dedicated-view, #flower-garden, #view-flower-garden, .content-area, .app-main, main, #main-content, .main-content, #app');
+        if (targetParent) {
+          targetParent.appendChild(container);
         }
-        targetParent.appendChild(container);
       }
 
       if (container.querySelector('#garden-pot-wrapper')) {
@@ -3572,6 +3571,15 @@
     // VISUAL RENDERING
     // ==========================================
     render() {
+      // Self-heal: Ensure container DOM and initialization are guaranteed
+      if (!this._hasRunInit || !document.getElementById('garden-pot-wrapper')) {
+        this.ensureGardenContainerDom();
+        if (!this._hasRunInit) {
+          this.init();
+          return;
+        }
+      }
+
       const flower = this.getCurrentFlower();
       const fid = flower.id || 'clover';
       const p = Math.round(this.state.progress || 0);
@@ -3866,7 +3874,7 @@
   // Plug-and-play auto initialization on any website
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     const autoInit = () => {
-      if (document.getElementById('garden-container') && !FlowerGarden._initialized) {
+      if (!FlowerGarden._initialized) {
         FlowerGarden._initialized = true;
         FlowerGarden.init();
       }

@@ -2411,6 +2411,22 @@
   };
 
   /**
+   * Resolves the exact absolute or relative base directory for garden assets.
+   */
+  function getGardenAssetBase() {
+    if (typeof document !== 'undefined') {
+      const script = document.querySelector('script[src*="flower_definitions.js"]');
+      if (script && script.src) {
+        const idx = script.src.indexOf('flower_definitions.js');
+        if (idx !== -1) {
+          return script.src.substring(0, idx) + 'assets/garden/';
+        }
+      }
+    }
+    return 'assets/garden/';
+  }
+
+  /**
    * Renders the lifelike painterly potted flower stage with grounded shadow,
    * bottom-anchored organic wind sway, and synchronized morning dewdrop glints.
    * Supports 'clover', 'sunflower', 'tulip', 'cactus', and 'rose'.
@@ -2463,14 +2479,16 @@
     // Stage 3 (40-59%): Foliage growth & branching out (stage_2.png)
     // Stage 4 (60-79%): Bushy plant with budding flower (stage_3.png)
     // Stage 5 (80-100%): Full glorious blooming flower (stage_4.png)
+    const assetBase = getGardenAssetBase();
     const stageImgMap = {
-      1: `assets/garden/${fid}_stage_1.png`,
-      2: `assets/garden/${fid}_stage_1.png`,
-      3: `assets/garden/${fid}_stage_2.png`,
-      4: `assets/garden/${fid}_stage_3.png`,
-      5: `assets/garden/${fid}_stage_4.png`
+      1: `${assetBase}${fid}_stage_1.png`,
+      2: `${assetBase}${fid}_stage_1.png`,
+      3: `${assetBase}${fid}_stage_2.png`,
+      4: `${assetBase}${fid}_stage_3.png`,
+      5: `${assetBase}${fid}_stage_4.png`
     };
-    const stageImgSrc = stageImgMap[stage] || `assets/garden/${fid}_stage_1.png`;
+    const stageImgSrc = stageImgMap[stage] || `${assetBase}${fid}_stage_1.png`;
+    const fallbackSrc = `assets/garden/${fid}_stage_1.png`;
 
     const flowerNames = {
       sunflower: 'Hoa Hướng Dương Rực Rỡ',
@@ -2492,7 +2510,8 @@
           <img src="${stageImgSrc}"
                alt="${altText}"
                class="clover-living-art"
-               draggable="false" />
+               draggable="false"
+               onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='${fallbackSrc}';}" />
           <svg viewBox="0 0 100 100" class="clover-dew-overlay" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             ${glintMarkup}
             ${stage5Accents}
