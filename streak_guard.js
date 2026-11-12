@@ -12,7 +12,7 @@
   'use strict';
 
   // Dán link Google Apps Script Web App sau khi deploy (dạng https://script.google.com/macros/s/.../exec)
-  const DEFAULT_STREAK_API_URL = '';
+  const DEFAULT_STREAK_API_URL = 'https://script.google.com/macros/s/AKfycbxaceuculd0u8GXgITmQraUN8VguLha7-iF6PhGtQJwmP1rSO4pjfsAL_un_d7W3NoK/exec';
   const TEACHER_ADMIN_KEY = 'PTMN_VSTEP_2026';
   const LS_URL_OVERRIDE_KEY = 'vstep_streak_api_url_override';
   const LS_STREAK_CACHE_PREFIX = 'vstep_streak_cache_';
