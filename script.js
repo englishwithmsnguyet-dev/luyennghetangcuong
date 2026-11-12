@@ -608,6 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const rewardDrops = Math.max(5, realScore * 2);
             window.FlowerGarden.addWaterDrops(rewardDrops, `Hoàn thành bài luyện nghe (${realScore}/${total} câu đúng)`);
         }
+
+        // Mark today's listening streak activity complete
+        if (window.StreakGuard) {
+            window.StreakGuard.markTodayActivityDone('Nộp bài luyện nghe');
+        }
     });
 
     // Results Actions
@@ -1191,7 +1196,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loginError.style.display = 'block';
     }
 
-    function handleLoginSubmit() {
+    async function handleLoginSubmit() {
+        if (btnLogin && btnLogin.disabled) return;
         const nameVal = studentNameInput ? studentNameInput.value.trim() : '';
         let rawClassVal = studentClassInput ? studentClassInput.value.trim().toUpperCase().replace(/\s+/g, '') : '';
         const passwordVal = studentPasswordInput ? studentPasswordInput.value.trim() : '';
@@ -1255,8 +1261,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (loginError) loginError.style.display = 'none';
         if (btnLogin) {
-            btnLogin.innerHTML = `<span>ĐANG VÀO LỚP...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
+            btnLogin.innerHTML = isTeacher
+                ? `<span>ĐANG VÀO LỚP...</span> <i class="fa-solid fa-spinner fa-spin"></i>`
+                : `<span>ĐANG KIỂM TRA CHUỖI...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
             btnLogin.disabled = true;
+        }
+
+        if (window.StreakGuard) {
+            if (isTeacher) {
+                window.StreakGuard.onTeacherLoggedIn();
+            } else {
+                const streakRes = await window.StreakGuard.checkStudentLogin(nameVal, rawClassVal);
+                if (!streakRes || !streakRes.allowed) {
+                    if (btnLogin) {
+                        btnLogin.innerHTML = `<span>BẮT ĐẦU HỌC</span> <i class="fa-solid fa-arrow-right"></i>`;
+                        btnLogin.disabled = false;
+                    }
+                    return;
+                }
+            }
+        }
+
+        if (btnLogin) {
+            btnLogin.innerHTML = `<span>ĐANG VÀO LỚP...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
         }
 
         // Save student info to storage
