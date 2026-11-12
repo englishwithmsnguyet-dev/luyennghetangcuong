@@ -58,6 +58,10 @@
       .replace(/^_+|_+$/g, '') || 'unknown';
   }
 
+  function isChongDiecRow(student) {
+    return /^CĐ\s*-/i.test(String((student && student.classCode) || ''));
+  }
+
   function makeStudentKey(name, classCode) {
     return slugifyName(name) + '|' + String(classCode || '').trim().toUpperCase().replace(/\s+/g, '');
   }
@@ -112,6 +116,7 @@
     lastAudioTimeMap: new WeakMap(),
     activityMarkedToday: false,
     currentFilter: 'all',
+    currentCourseScope: 'tc',
     currentSearch: '',
     cachedStudents: [],
     cachedConfig: {
@@ -262,6 +267,13 @@
                     <option value="ALLOW_SUNDAY_OFF">Miễn Chủ Nhật</option>
                   </select>
                 </label>
+                <label style="font-size:0.78rem;font-weight:800;">
+                  Danh sách:
+                  <select id="sa-cfg-scope" class="streak-select" style="margin-left:6px;">
+                    <option value="tc">📚 Chỉ Tăng Cường</option>
+                    <option value="all">📋 Cả 2 trang web</option>
+                  </select>
+                </label>
               </div>
               <button type="button" class="btn-s-action btn-s-unlock-keep" id="btn-sa-refresh">
                 <i class="fa-solid fa-arrows-rotate"></i> Tải lại danh sách
@@ -316,6 +328,14 @@
       const refreshBtn = document.getElementById('btn-sa-refresh');
       if (refreshBtn) {
         refreshBtn.addEventListener('click', () => this.fetchAndRenderAdminList());
+      }
+
+      const scopeEl = document.getElementById('sa-cfg-scope');
+      if (scopeEl) {
+        scopeEl.addEventListener('change', () => {
+          this.currentCourseScope = scopeEl.value || 'tc';
+          this.renderAdminList();
+        });
       }
 
       const saveUrlBtn = document.getElementById('btn-save-streak-url');
@@ -477,7 +497,7 @@
       if (res && res.ok && Array.isArray(res.students)) {
         this.cachedStudents = res.students;
         this.cachedConfig = res.config || this.cachedConfig;
-        const lockedCount = res.students.filter(
+        const lockedCount = res.students.filter((s) => !isChongDiecRow(s)).filter(
           (s) => s.status === 'LOCKED' || s.willBeLockedOnNextLogin
         ).length;
         this.updateTeacherBadges(lockedCount);
@@ -710,16 +730,19 @@
       const enabledEl = document.getElementById('sa-cfg-enabled');
       const activityEl = document.getElementById('sa-cfg-activity');
       const sundayEl = document.getElementById('sa-cfg-sunday');
+      const scopeEl = document.getElementById('sa-cfg-scope');
       if (enabledEl) enabledEl.value = this.cachedConfig.SystemEnabled ? 'true' : 'false';
       if (activityEl) activityEl.value = this.cachedConfig.RequireActivity || 'ACTIVITY';
       if (sundayEl) sundayEl.value = this.cachedConfig.StreakMode || 'STRICT_DAILY';
+      if (scopeEl) scopeEl.value = this.currentCourseScope || 'tc';
     },
 
     renderAdminList() {
       const listEl = document.getElementById('sa-student-list');
       if (!listEl) return;
 
-      const all = this.cachedStudents || [];
+      const rawAll = this.cachedStudents || [];
+      const all = this.currentCourseScope === 'all' ? rawAll : rawAll.filter((s) => !isChongDiecRow(s));
       const lockedList = all.filter((s) => s.status === 'LOCKED' || s.willBeLockedOnNextLogin);
       const reqList = all.filter((s) => s.unlockRequested);
       const activeList = all.filter((s) => s.status !== 'LOCKED' && !s.willBeLockedOnNextLogin);
@@ -732,7 +755,8 @@
       setTxt('sa-stat-active', activeList.length);
       setTxt('sa-stat-locked', lockedList.length);
       setTxt('sa-stat-req', reqList.length);
-      this.updateTeacherBadges(lockedList.length);
+      const tcLockedCount = rawAll.filter((s) => !isChongDiecRow(s)).filter((s) => s.status === 'LOCKED' || s.willBeLockedOnNextLogin).length;
+      this.updateTeacherBadges(tcLockedCount);
 
       let filtered = all;
       if (this.currentFilter === 'locked') {
