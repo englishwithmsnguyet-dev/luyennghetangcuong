@@ -62,6 +62,27 @@
     return /^CĐ\s*-/i.test(String((student && student.classCode) || ''));
   }
 
+  function getCompletedDaysFromStorage() {
+    try {
+      const raw = localStorage.getItem('vstepListeningAnswers');
+      if (!raw) return 1;
+      const answersObj = JSON.parse(raw);
+      if (!answersObj || typeof answersObj !== 'object' || Array.isArray(answersObj)) {
+        return 1;
+      }
+      let completedCount = 0;
+      Object.keys(answersObj).forEach((title) => {
+        const entry = answersObj[title];
+        if (entry && typeof entry === 'object' && !Array.isArray(entry) && Object.keys(entry).length > 0) {
+          completedCount += 1;
+        }
+      });
+      return Math.max(1, completedCount);
+    } catch (e) {
+      return 1;
+    }
+  }
+
   function makeStudentKey(name, classCode) {
     return slugifyName(name) + '|' + String(classCode || '').trim().toUpperCase().replace(/\s+/g, '');
   }
@@ -420,10 +441,13 @@
         return { allowed: true, unconfigured: true };
       }
 
+      const initialStreak = getCompletedDaysFromStorage();
+
       const res = await callApi({
         action: 'checkLogin',
         name: name,
-        classCode: classCode
+        classCode: classCode,
+        initialStreak: initialStreak
       });
 
       const cacheKey = LS_STREAK_CACHE_PREFIX + this.currentStudent.key;
