@@ -675,10 +675,13 @@
 
       if (!this.isConfigured()) return;
 
+      const initialStreak = getCompletedDaysFromStorage();
+
       const res = await callApi({
         action: 'recordActivity',
         name: this.currentStudent.name,
-        classCode: this.currentStudent.classCode
+        classCode: this.currentStudent.classCode,
+        initialStreak: initialStreak
       });
 
       if (res && res.ok) {
@@ -821,6 +824,12 @@
              </div>`
           : '';
 
+        const editBtn = `
+          <button type="button" class="btn-s-action btn-s-edit" data-action="edit-streak" data-key="${escapeHtml(s.studentKey)}" data-name="${escapeHtml(s.fullName)}" data-streak="${s.streakCount}" title="Sửa trực tiếp số ngày chuỗi cho học viên">
+            <i class="fa-solid fa-pen-to-square"></i> Sửa chuỗi
+          </button>
+        `;
+
         const actionBtns = isLocked
           ? `
               <button type="button" class="btn-s-action btn-s-unlock" data-action="unlock" data-key="${escapeHtml(s.studentKey)}" title="Mở khóa và đặt lại chuỗi về 1">
@@ -829,11 +838,13 @@
               <button type="button" class="btn-s-action btn-s-unlock-keep" data-action="unlock-keep" data-key="${escapeHtml(s.studentKey)}" title="Mở khóa và giữ nguyên số ngày chuỗi cũ">
                 <i class="fa-solid fa-heart"></i> Mở & Giữ chuỗi
               </button>
+              ${editBtn}
             `
           : `
               <button type="button" class="btn-s-action btn-s-lock" data-action="lock" data-key="${escapeHtml(s.studentKey)}">
                 <i class="fa-solid fa-lock"></i> Khóa thủ công
               </button>
+              ${editBtn}
             `;
 
         return `
@@ -894,6 +905,31 @@
           studentKey: key,
           reason: reason
         });
+      } else if (actionType === 'edit-streak') {
+        const studentName = btn.dataset.name || 'học viên';
+        const currentStreak = btn.dataset.streak || '1';
+        const inputVal = prompt(`Nhập số ngày chuỗi mới cho "${studentName}" (VD: 9):`, currentStreak);
+        if (inputVal === null) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+          return;
+        }
+        const newStreak = parseInt(inputVal.trim(), 10);
+        if (isNaN(newStreak) || newStreak < 0 || newStreak > 999) {
+          alert('Vui lòng nhập một số ngày chuỗi hợp lệ (từ 0 đến 999)!');
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+          return;
+        }
+        res = await callApi({
+          action: 'updateStudentStreak',
+          adminKey: TEACHER_ADMIN_KEY,
+          studentKey: key,
+          newStreak: String(newStreak)
+        });
+        if (res && res.ok && typeof window.showToast === 'function') {
+          window.showToast(`✏️ Đã cập nhật chuỗi cho ${studentName} thành ${newStreak} ngày!`);
+        }
       }
 
       if (res && res.ok) {

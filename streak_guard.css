@@ -629,9 +629,20 @@ body.light-theme .streak-student-note {
     color: #f87171;
 }
 
+.btn-s-edit {
+    background: rgba(168, 85, 247, 0.18);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    color: #c084fc;
+}
+
 body.light-theme .btn-s-lock {
     color: #dc2626;
     background: #fee2e2;
+}
+
+body.light-theme .btn-s-edit {
+    color: #7c3aed;
+    background: #ede9fe;
 }
 
 .streak-setup-box {

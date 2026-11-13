@@ -283,20 +283,18 @@ function handleAction(params) {
       const st = found.student;
       const rNum = found.rowNumber;
 
-      // Bổ sung chuỗi cũ nếu học viên vừa đăng nhập lần đầu hôm nay trước khi có tính năng tự cộng chuỗi
+      // Tự động nâng chuỗi nếu học viên có lịch sử bài làm trên máy (initStreak) cao hơn chuỗi hiện có trong Sheet
+      // (Áp dụng khi học viên chưa bị cô khóa, giúp các bạn đã học nhiều ngày trước đó không bị kẹt ở chuỗi 1-2 ngày)
       let seededFromHistory = false;
       if (
         initStreak > 1 &&
         st.status === 'ACTIVE' &&
-        st.firstLoginDate === today &&
-        st.lastActiveDate === today &&
-        st.totalDays === 1 &&
-        st.streakCount === 1 &&
-        !st.unlockedByTeacherAt
+        !st.unlockedByTeacherAt &&
+        (initStreak > st.streakCount || initStreak > st.totalDays)
       ) {
-        st.streakCount = initStreak;
+        st.streakCount = Math.max(st.streakCount, initStreak);
         st.bestStreak = Math.max(st.bestStreak, initStreak);
-        st.totalDays = initStreak;
+        st.totalDays = Math.max(st.totalDays, initStreak);
         seededFromHistory = true;
         studentSheet.getRange(rNum, 4).setValue(st.streakCount);
         studentSheet.getRange(rNum, 5).setValue(st.bestStreak);
@@ -434,6 +432,23 @@ function handleAction(params) {
 
       const st = found.student;
       const rNum = found.rowNumber;
+
+      const rawInit = parseInt(params.initialStreak, 10);
+      const initStreak = (!isNaN(rawInit) && rawInit >= 1 && rawInit <= 365) ? rawInit : 1;
+      if (
+        initStreak > 1 &&
+        st.status === 'ACTIVE' &&
+        !st.unlockedByTeacherAt &&
+        (initStreak > st.streakCount || initStreak > st.totalDays)
+      ) {
+        st.streakCount = Math.max(st.streakCount, initStreak);
+        st.bestStreak = Math.max(st.bestStreak, initStreak);
+        st.totalDays = Math.max(st.totalDays, initStreak);
+        studentSheet.getRange(rNum, 4).setValue(st.streakCount);
+        studentSheet.getRange(rNum, 5).setValue(st.bestStreak);
+        studentSheet.getRange(rNum, 8).setValue(st.totalDays);
+      }
+
       if (st.lastActiveDate === today) {
         return { ok: true, streakCount: st.streakCount, bestStreak: st.bestStreak, todayDone: true };
       }
@@ -582,6 +597,34 @@ function handleAction(params) {
       if (!found) return { ok: false, error: 'Không tìm thấy học viên' };
       studentSheet.deleteRow(found.rowNumber);
       return { ok: true, deleted: studentKey };
+    }
+
+    // 9. UPDATE STUDENT STREAK (Giáo viên điều chỉnh chuỗi học viên thủ công)
+    if (action === 'updateStudentStreak') {
+      const studentKey = String(params.studentKey || '').trim();
+      const rawStreak = parseInt(params.newStreak, 10);
+      if (isNaN(rawStreak) || rawStreak < 0 || rawStreak > 999) {
+        return { ok: false, error: 'Số ngày chuỗi không hợp lệ (nhập số từ 0 đến 999)' };
+      }
+      const found = findStudentRow(studentSheet, studentKey);
+      if (!found) return { ok: false, error: 'Không tìm thấy học viên' };
+
+      const rNum = found.rowNumber;
+      const st = found.student;
+      st.streakCount = rawStreak;
+      st.bestStreak = Math.max(st.bestStreak, rawStreak);
+      st.totalDays = Math.max(st.totalDays, rawStreak);
+      studentSheet.getRange(rNum, 4).setValue(st.streakCount);
+      studentSheet.getRange(rNum, 5).setValue(st.bestStreak);
+      studentSheet.getRange(rNum, 8).setValue(st.totalDays);
+      studentSheet.getRange(rNum, 16).setValue(nowStr);
+      return {
+        ok: true,
+        studentKey: studentKey,
+        streakCount: rawStreak,
+        bestStreak: st.bestStreak,
+        totalDays: st.totalDays
+      };
     }
 
     return { ok: false, error: 'Unknown action: ' + action };
