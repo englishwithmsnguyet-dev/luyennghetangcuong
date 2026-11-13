@@ -104,6 +104,93 @@ function makeStudentKey(name, classCode) {
   return slugifyName(name) + '|' + normClass;
 }
 
+function parseFormTimestamp(val) {
+  if (!val) return '';
+  if (val instanceof Date) {
+    return Utilities.formatDate(val, VN_TZ, 'yyyy-MM-dd');
+  }
+  const s = String(val).trim();
+  const mIso = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if (mIso) {
+    return mIso[1] + '-' + mIso[2].padStart(2, '0') + '-' + mIso[3].padStart(2, '0');
+  }
+  const mVn = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+  if (mVn) {
+    return mVn[3] + '-' + mVn[2].padStart(2, '0') + '-' + mVn[1].padStart(2, '0');
+  }
+  return '';
+}
+
+function parseFormPayload(text) {
+  if (!text) return null;
+  const s = String(text).trim();
+  const m1 = s.match(/^(?:\[[^\]]+\]\s*)?([^-]+?)\s*-\s*Lớp:\s*([^-]+?)(?:\s*-\s*Vào học lúc.*)?$/i);
+  if (m1) {
+    return { fullName: m1[1].trim(), classCode: m1[2].trim().toUpperCase().replace(/\s+/g, '') };
+  }
+  const m2 = s.match(/^([^-]+?)\s*-\s*([^-]+?)$/);
+  if (m2) {
+    return { fullName: m2[1].trim(), classCode: m2[2].trim().toUpperCase().replace(/\s+/g, '') };
+  }
+  return null;
+}
+
+function calculateStreakStats(datesArray, todayStr, allowSundayOff) {
+  const uniqueDates = [];
+  const seen = {};
+  for (let i = 0; i < datesArray.length; i++) {
+    const d = datesArray[i];
+    if (d && !seen[d]) {
+      seen[d] = true;
+      uniqueDates.push(d);
+    }
+  }
+  uniqueDates.sort();
+
+  if (uniqueDates.length === 0) {
+    return { totalDays: 0, streakCount: 0, bestStreak: 0, lastActiveDate: '' };
+  }
+
+  const totalDays = uniqueDates.length;
+  const lastActiveDate = uniqueDates[uniqueDates.length - 1];
+
+  let best = 1;
+  let cur = 1;
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const gap = diffDaysYMD(uniqueDates[i - 1], uniqueDates[i]);
+    if (gap === 1) {
+      cur += 1;
+    } else if (gap === 2 && allowSundayOff) {
+      const p = uniqueDates[i - 1].split('-').map(Number);
+      const prev = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+      prev.setUTCDate(prev.getUTCDate() + 1);
+      if (prev.getUTCDay() === 0) cur += 1;
+      else cur = 1;
+    } else {
+      cur = 1;
+    }
+    if (cur > best) best = cur;
+  }
+
+  let currentStreak = 1;
+  for (let i = uniqueDates.length - 1; i > 0; i--) {
+    const gap = diffDaysYMD(uniqueDates[i - 1], uniqueDates[i]);
+    if (gap === 1) {
+      currentStreak += 1;
+    } else if (gap === 2 && allowSundayOff) {
+      const p = uniqueDates[i - 1].split('-').map(Number);
+      const prev = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+      prev.setUTCDate(prev.getUTCDate() + 1);
+      if (prev.getUTCDay() === 0) currentStreak += 1;
+      else break;
+    } else {
+      break;
+    }
+  }
+
+  return { totalDays: totalDays, streakCount: currentStreak, bestStreak: Math.max(best, currentStreak), lastActiveDate: lastActiveDate };
+}
+
 function ensureSheets() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -624,6 +711,171 @@ function handleAction(params) {
         streakCount: rawStreak,
         bestStreak: st.bestStreak,
         totalDays: st.totalDays
+      };
+    }
+
+    // 10. SYNC FROM GOOGLE FORM RESPONSES (Tự động quét & gộp chuỗi từ câu trả lời Google Form)
+    if (action === 'syncFromForm') {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      let formSheet = null;
+
+      // 1. Tìm sheet câu trả lời biểu mẫu trong cùng file Spreadsheet
+      const allSheets = ss.getSheets();
+      for (let i = 0; i < allSheets.length; i++) {
+        const sh = allSheets[i];
+        const sName = sh.getName();
+        if (sName === SHEET_STUDENTS || sName === SHEET_CONFIG) continue;
+        const lower = sName.toLowerCase();
+        if (
+          lower.includes('câu trả lời') ||
+          lower.includes('form responses') ||
+          lower.includes('biểu mẫu') ||
+          lower.includes('form')
+        ) {
+          formSheet = sh;
+          break;
+        }
+      }
+
+      // Nếu chưa thấy theo tên, kiểm tra sheet nào có cột 1 là Timestamp / Dấu thời gian
+      if (!formSheet) {
+        for (let i = 0; i < allSheets.length; i++) {
+          const sh = allSheets[i];
+          if (sh.getName() === SHEET_STUDENTS || sh.getName() === SHEET_CONFIG) continue;
+          if (sh.getLastRow() > 1) {
+            const h = String(sh.getRange(1, 1).getValue() || '').toLowerCase();
+            if (h.includes('thời gian') || h.includes('timestamp') || h.includes('date') || h.includes('giờ')) {
+              formSheet = sh;
+              break;
+            }
+          }
+        }
+      }
+
+      // 2. Nếu cô truyền URL / ID của trang tính Form bên ngoài
+      const externalUrl = String(params.formSheetUrl || '').trim();
+      if (externalUrl) {
+        try {
+          let extSS;
+          if (externalUrl.startsWith('https://')) {
+            extSS = SpreadsheetApp.openByUrl(externalUrl);
+          } else {
+            extSS = SpreadsheetApp.openById(externalUrl);
+          }
+          if (extSS) {
+            const extSheets = extSS.getSheets();
+            for (let i = 0; i < extSheets.length; i++) {
+              const sName = extSheets[i].getName();
+              const lower = sName.toLowerCase();
+              if (
+                lower.includes('câu trả lời') ||
+                lower.includes('form responses') ||
+                lower.includes('biểu mẫu') ||
+                extSheets[i].getLastRow() > 1
+              ) {
+                formSheet = extSheets[i];
+                break;
+              }
+            }
+          }
+        } catch (extErr) {
+          return { ok: false, error: 'Không mở được trang tính Google Form ngoài: ' + extErr.message };
+        }
+      }
+
+      if (!formSheet) {
+        return {
+          ok: false,
+          error: 'Chưa tìm thấy sheet "Câu trả lời biểu mẫu" trong file Google Sheet này. Nếu Google Form nằm ở file Sheet khác, cô có thể copy sheet đó vào file này hoặc dán link Google Sheet biểu mẫu vào ô nhập nhé!'
+        };
+      }
+
+      const rows = formSheet.getDataRange().getValues();
+      if (rows.length <= 1) {
+        return { ok: false, error: 'Sheet câu trả lời biểu mẫu "' + formSheet.getName() + '" chưa có dữ liệu nào.' };
+      }
+
+      // Nhóm theo từng học viên -> tập hợp các ngày (YYYY-MM-DD)
+      const studentMap = {}; // key -> { fullName, classCode, dates: [] }
+      const seenDatesPerStudent = {};
+
+      for (let i = 1; i < rows.length; i++) {
+        const rawDate = rows[i][0];
+        const dateStr = parseFormTimestamp(rawDate);
+        if (!dateStr) continue;
+
+        const payloadStr = String(rows[i][1] || '').trim();
+        const parsed = parseFormPayload(payloadStr);
+        if (!parsed || !parsed.fullName) continue;
+
+        const slug = slugifyName(parsed.fullName);
+        if (slug === 'ptmn' || slug === 'co_nguyet' || parsed.classCode === 'GV') continue;
+
+        const sKey = makeStudentKey(parsed.fullName, parsed.classCode);
+        if (!studentMap[sKey]) {
+          studentMap[sKey] = {
+            key: sKey,
+            fullName: parsed.fullName,
+            classCode: parsed.classCode,
+            dates: []
+          };
+          seenDatesPerStudent[sKey] = {};
+        }
+        if (!seenDatesPerStudent[sKey][dateStr]) {
+          seenDatesPerStudent[sKey][dateStr] = true;
+          studentMap[sKey].dates.push(dateStr);
+        }
+      }
+
+      const allowSunday = (cfg.StreakMode === 'ALLOW_SUNDAY_OFF');
+      let updatedCount = 0;
+      let createdCount = 0;
+
+      Object.keys(studentMap).forEach((sKey) => {
+        const info = studentMap[sKey];
+        const stats = calculateStreakStats(info.dates, today, allowSunday);
+
+        const found = findStudentRow(studentSheet, sKey);
+        if (found) {
+          const rNum = found.rowNumber;
+          const st = found.student;
+
+          const newStreak = Math.max(st.streakCount, stats.streakCount);
+          const newBest = Math.max(st.bestStreak, stats.bestStreak, newStreak);
+          const newTotal = Math.max(st.totalDays, stats.totalDays);
+          const newLastActive = stats.lastActiveDate || st.lastActiveDate || today;
+
+          studentSheet.getRange(rNum, 4).setValue(newStreak);
+          studentSheet.getRange(rNum, 5).setValue(newBest);
+          studentSheet.getRange(rNum, 6).setValue(newLastActive);
+          studentSheet.getRange(rNum, 8).setValue(newTotal);
+          studentSheet.getRange(rNum, 16).setValue(nowStr);
+          updatedCount++;
+        } else {
+          const newRow = [
+            sKey,
+            info.fullName,
+            info.classCode,
+            stats.streakCount,
+            stats.bestStreak,
+            stats.lastActiveDate || today,
+            stats.lastActiveDate || today,
+            stats.totalDays,
+            'ACTIVE',
+            '', '', 'NO', '', '', '', nowStr
+          ];
+          studentSheet.appendRow(newRow);
+          createdCount++;
+        }
+      });
+
+      return {
+        ok: true,
+        sheetFound: formSheet.getName(),
+        updatedCount: updatedCount,
+        createdCount: createdCount,
+        totalSynced: updatedCount + createdCount,
+        message: 'Đã tự động gộp thành công ' + (updatedCount + createdCount) + ' học viên từ sheet "' + formSheet.getName() + '"!'
       };
     }
 
