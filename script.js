@@ -598,6 +598,20 @@ document.addEventListener('DOMContentLoaded', () => {
             message = "Không sao đâu, miễn là cậu vẫn đang cố gắng! Kiên nhẫn thêm một chút nhé! Nếu không, Miss Nguyệt đấm cậu đó!";
         }
         
+        // Hiển thị tên học viên, lớp, DAY
+        const savedName = localStorage.getItem('vstep_student_name') || 'Học viên';
+        const savedClass = localStorage.getItem('vstep_student_class') || '--';
+        const rawDayNum = (d && d.title ? String(d.title).replace(/\D+/g, '') : '');
+        const dayStr = rawDayNum ? `DAY ${rawDayNum.padStart(2, '0')}` : ((d && d.title) || 'DAY');
+
+        const dayTextEl = document.getElementById('res-day-text');
+        const nameEl = document.getElementById('res-student-name');
+        const classEl = document.getElementById('res-student-class');
+
+        if (dayTextEl) dayTextEl.textContent = dayStr;
+        if (nameEl) nameEl.textContent = savedName;
+        if (classEl) classEl.textContent = `LỚP: ${savedClass}`;
+
         document.getElementById('final-score').textContent = realScore;
         document.querySelector('.score-total').textContent = `/ ${total}`;
         document.getElementById('score-message').textContent = message;

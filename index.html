@@ -19,7 +19,7 @@
     <link rel="preload" as="image" href="assets/garden/clover_stage_2.webp" type="image/webp">
     <link rel="preload" as="image" href="assets/garden/clover_stage_3.webp" type="image/webp">
     <link rel="preload" as="image" href="assets/garden/clover_stage_4.webp" type="image/webp">
-    <link rel="stylesheet" href="style.css?v=20261112_v21">
+    <link rel="stylesheet" href="style.css?v=20261116_v27">
     <link rel="stylesheet" href="flower_garden.css?v=20261105_v20">
     <link rel="stylesheet" href="streak_guard.css?v=20261114_v25">
 </head>
@@ -262,6 +262,16 @@
         <div class="results-overlay" id="results-overlay">
             <div class="results-modal card">
                 <h2>Kết Quả Làm Bài</h2>
+
+                <!-- Thông tin học viên, lớp, DAY -->
+                <div class="result-student-info-card">
+                    <div class="result-day-badge" id="res-day-badge">
+                        <i class="fa-solid fa-headphones"></i> <span id="res-day-text">DAY 01</span>
+                    </div>
+                    <div class="result-student-name" id="res-student-name">Học viên</div>
+                    <div class="result-student-class" id="res-student-class">LỚP: --</div>
+                </div>
+
                 <div class="score-display">
                     <span class="score-number" id="final-score">0</span>
                     <span class="score-total">/ 8</span>
@@ -481,7 +491,7 @@
 
     <script src="data.js"></script>
     <script src="streak_guard.js?v=20261114_v26"></script>
-    <script src="script.js?v=20261112_v22"></script>
+    <script src="script.js?v=20261116_v27"></script>
     <script src="flower_definitions.js?v=20261105_v20"></script>
     <script src="flower_garden.js?v=20261105_v20"></script>
 </body>
