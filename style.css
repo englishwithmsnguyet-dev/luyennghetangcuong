@@ -2219,3 +2219,155 @@ body.light-theme .btn-close-modal {
     font-size: 1.1rem;
 }
 
+/* ============================================================
+   EXERCISE LIVE TIMER & TIME TRACKING
+   ============================================================ */
+.exercise-timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 14px auto 18px auto;
+    max-width: 650px;
+    padding: 10px 16px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.3s ease;
+}
+
+.timer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+}
+
+.timer-pill-exercise {
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    color: #cbd5e1;
+}
+
+.timer-pill-exercise i {
+    color: #818cf8;
+    font-size: 1rem;
+}
+
+.timer-pill-exercise strong {
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace, sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+}
+
+.timer-pill-audio {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #cbd5e1;
+}
+
+.timer-pill-audio i {
+    color: #38bdf8;
+    font-size: 1rem;
+}
+
+.timer-pill-audio strong {
+    color: #38bdf8;
+    font-family: 'Courier New', Courier, monospace, sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+}
+
+.timer-pill-submitted {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
+}
+
+.timer-pill-submitted strong {
+    color: #ffffff;
+}
+
+/* Modal Time Display */
+.modal-time-container {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.modal-time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.88rem;
+    color: #cbd5e1;
+}
+
+.modal-time-row span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #94a3b8;
+}
+
+.modal-time-row strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.modal-time-warning {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    animation: pulse 2s infinite;
+}
+
+.modal-time-warning i {
+    color: #ef4444;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.modal-time-valid {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 8px;
+    color: #6ee7b7;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-time-valid i {
+    color: #10b981;
+    font-size: 0.95rem;
+}
+

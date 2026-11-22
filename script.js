@@ -14,6 +14,108 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressFill = document.getElementById('progress-fill');
     const themeBtn = document.getElementById('theme-btn');
 
+    // --- Exercise Time Tracking State & Logic ---
+    let daySessionStartTime = null;
+    let daySessionAudioSeconds = 0;
+    let dayLiveTimerInterval = null;
+    let lastAudioPlaybackTimestamp = null;
+    let isDaySubmitted = false;
+
+    function formatTimerDigits(totalSeconds) {
+        const sec = Math.max(0, Math.floor(totalSeconds));
+        const mins = Math.floor(sec / 60);
+        const remainingSecs = sec % 60;
+        return `${String(mins).padStart(2, '0')}:${String(remainingSecs).padStart(2, '0')}`;
+    }
+
+    function formatTimerHuman(totalSeconds) {
+        const sec = Math.max(0, Math.floor(totalSeconds));
+        const mins = Math.floor(sec / 60);
+        const remainingSecs = sec % 60;
+        if (mins === 0) {
+            return `${remainingSecs} giây`;
+        }
+        return `${mins} phút ${remainingSecs < 10 ? '0' : ''}${remainingSecs} giây`;
+    }
+
+    function updateLiveTimerUI() {
+        if (!daySessionStartTime || isDaySubmitted) return;
+        const now = Date.now();
+        const elapsedSec = Math.floor((now - daySessionStartTime) / 1000);
+        const liveTimerEl = document.getElementById('live-timer-text');
+        const liveAudioEl = document.getElementById('live-audio-timer-text');
+        if (liveTimerEl) liveTimerEl.textContent = formatTimerDigits(elapsedSec);
+        if (liveAudioEl) liveAudioEl.textContent = formatTimerDigits(daySessionAudioSeconds);
+    }
+
+    function startDayTimer() {
+        stopDayTimer();
+        daySessionStartTime = Date.now();
+        daySessionAudioSeconds = 0;
+        isDaySubmitted = false;
+        lastAudioPlaybackTimestamp = null;
+        
+        const timerBar = document.getElementById('exercise-timer-bar');
+        if (timerBar) {
+            timerBar.classList.remove('hidden');
+            timerBar.innerHTML = `
+                <div class="timer-pill timer-pill-exercise">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <span>Thời gian làm bài: <strong id="live-timer-text">00:00</strong></span>
+                </div>
+                <div class="timer-pill timer-pill-audio">
+                    <i class="fa-solid fa-headphones"></i>
+                    <span>Đã nghe audio: <strong id="live-audio-timer-text">00:00</strong></span>
+                </div>
+            `;
+        }
+        updateLiveTimerUI();
+        dayLiveTimerInterval = setInterval(updateLiveTimerUI, 1000);
+    }
+
+    function stopDayTimer() {
+        if (dayLiveTimerInterval) {
+            clearInterval(dayLiveTimerInterval);
+            dayLiveTimerInterval = null;
+        }
+    }
+
+    // Global Audio Playback Tracking
+    document.addEventListener('play', (e) => {
+        if (e.target && e.target.tagName === 'AUDIO') {
+            lastAudioPlaybackTimestamp = Date.now();
+        }
+    }, true);
+
+    document.addEventListener('pause', (e) => {
+        if (e.target && e.target.tagName === 'AUDIO') {
+            if (lastAudioPlaybackTimestamp && !isDaySubmitted) {
+                const now = Date.now();
+                const delta = (now - lastAudioPlaybackTimestamp) / 1000;
+                if (delta > 0 && delta < 5) {
+                    daySessionAudioSeconds += delta;
+                }
+            }
+            lastAudioPlaybackTimestamp = null;
+            updateLiveTimerUI();
+        }
+    }, true);
+
+    document.addEventListener('timeupdate', (e) => {
+        if (e.target && e.target.tagName === 'AUDIO') {
+            if (isDaySubmitted) return;
+            const now = Date.now();
+            if (lastAudioPlaybackTimestamp) {
+                const delta = (now - lastAudioPlaybackTimestamp) / 1000;
+                if (delta > 0 && delta < 2.5) {
+                    daySessionAudioSeconds += delta;
+                }
+            }
+            lastAudioPlaybackTimestamp = now;
+            updateLiveTimerUI();
+        }
+    }, true);
+
     // Initialize App
     function init() {
         // Restructure Practice 16 in-place to combine the two conversations into parts
@@ -195,8 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadDay(index) {
         const dayData = appData[index];
         const homeContent = document.getElementById('home-content');
+        const timerBar = document.getElementById('exercise-timer-bar');
         
         if (dayData.isHome) {
+            stopDayTimer();
+            if (timerBar) timerBar.classList.add('hidden');
             activeDayContent.style.display = 'none';
             placeholderContent.style.display = 'none';
             if (homeContent) homeContent.style.display = 'block';
@@ -205,6 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (dayData.isPlaceholder) {
+            stopDayTimer();
+            if (timerBar) timerBar.classList.add('hidden');
             activeDayContent.style.display = 'none';
             placeholderContent.style.display = 'block';
             if (homeContent) homeContent.style.display = 'none';
@@ -215,6 +322,32 @@ document.addEventListener('DOMContentLoaded', () => {
         activeDayContent.style.display = 'block';
         placeholderContent.style.display = 'none';
         if (homeContent) homeContent.style.display = 'none';
+
+        // Check if day was already completed in review mode or previously submitted
+        const practiceId = dayData.title;
+        let savedTimes = {};
+        try {
+            savedTimes = JSON.parse(localStorage.getItem('vstepListeningTimes') || '{}');
+        } catch(e) {}
+        const prevRecord = savedTimes[practiceId];
+
+        if (isReviewMode) {
+            isDaySubmitted = true;
+            stopDayTimer();
+            if (timerBar) {
+                timerBar.classList.remove('hidden');
+                const spentStr = prevRecord && typeof prevRecord.timeSpent === 'number' ? formatTimerHuman(prevRecord.timeSpent) : '--';
+                const audioStr = prevRecord && typeof prevRecord.audioTime === 'number' ? formatTimerDigits(prevRecord.audioTime) : '--';
+                timerBar.innerHTML = `
+                    <div class="timer-pill timer-pill-submitted">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Đã nộp bài: <strong>${spentStr}</strong> (Nghe audio: <strong>${audioStr}</strong>)</span>
+                    </div>
+                `;
+            }
+        } else {
+            startDayTimer();
+        }
         
         // Render Questions
         questionsContainer.innerHTML = '';
@@ -604,6 +737,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const rawDayNum = (d && d.title ? String(d.title).replace(/\D+/g, '') : '');
         const dayStr = rawDayNum ? `DAY ${rawDayNum.padStart(2, '0')}` : ((d && d.title) || 'DAY');
 
+        // Calculate final time elapsed and audio time
+        const totalElapsedSeconds = daySessionStartTime ? Math.max(1, Math.floor((Date.now() - daySessionStartTime) / 1000)) : 0;
+        const recordedAudioSec = Math.floor(daySessionAudioSeconds);
+        isDaySubmitted = true;
+        stopDayTimer();
+
+        // Save time to localStorage
+        try {
+            const savedTimes = JSON.parse(localStorage.getItem('vstepListeningTimes') || '{}');
+            savedTimes[practiceId] = {
+                timeSpent: totalElapsedSeconds,
+                audioTime: recordedAudioSec,
+                submittedAt: new Date().toISOString()
+            };
+            localStorage.setItem('vstepListeningTimes', JSON.stringify(savedTimes));
+        } catch(e) {}
+
+        const timerBar = document.getElementById('exercise-timer-bar');
+        if (timerBar) {
+            timerBar.classList.remove('hidden');
+            timerBar.innerHTML = `
+                <div class="timer-pill timer-pill-submitted">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Đã nộp bài: <strong>${formatTimerHuman(totalElapsedSeconds)}</strong> (Nghe audio: <strong>${formatTimerDigits(recordedAudioSec)}</strong>)</span>
+                </div>
+            `;
+        }
+
         const dayTextEl = document.getElementById('res-day-text');
         const nameEl = document.getElementById('res-student-name');
         const classEl = document.getElementById('res-student-class');
@@ -611,6 +772,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dayTextEl) dayTextEl.textContent = dayStr;
         if (nameEl) nameEl.textContent = savedName;
         if (classEl) classEl.textContent = `LỚP: ${savedClass}`;
+
+        const timeSpentEl = document.getElementById('res-time-spent');
+        const audioTimeEl = document.getElementById('res-audio-time');
+        const warningEl = document.getElementById('res-time-warning');
+        const validEl = document.getElementById('res-time-valid');
+
+        if (timeSpentEl) {
+            timeSpentEl.textContent = formatTimerHuman(totalElapsedSeconds);
+        }
+        if (audioTimeEl) {
+            audioTimeEl.textContent = formatTimerDigits(recordedAudioSec);
+        }
+
+        // Cảnh báo đối phó: Làm bài dưới 60 giây hoặc nghe audio dưới 15 giây
+        const isRushed = totalElapsedSeconds < 60 || recordedAudioSec < 15;
+        if (warningEl && validEl) {
+            if (isRushed) {
+                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>Cảnh báo: Làm bài quá nhanh (${formatTimerHuman(totalElapsedSeconds)})! Có dấu hiệu chọn bừa đối phó mà chưa nghe kỹ audio.</span>`;
+                warningEl.classList.remove('hidden');
+                validEl.classList.add('hidden');
+            } else {
+                validEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Thời gian làm bài hợp lệ (${formatTimerHuman(totalElapsedSeconds)})</span>`;
+                validEl.classList.remove('hidden');
+                warningEl.classList.add('hidden');
+            }
+        }
 
         document.getElementById('final-score').textContent = realScore;
         document.querySelector('.score-total').textContent = `/ ${total}`;
@@ -646,12 +833,17 @@ document.addEventListener('DOMContentLoaded', () => {
         isReviewMode = false;
         document.body.classList.remove('review-mode');
         
-        // Clear answers
+        // Clear answers & saved times
         const practiceId = appData[currentPartIndex].title;
         userAnswers[practiceId] = {};
         
         // Save to localStorage
         localStorage.setItem('vstepListeningAnswers', JSON.stringify(userAnswers));
+        try {
+            const savedTimes = JSON.parse(localStorage.getItem('vstepListeningTimes') || '{}');
+            delete savedTimes[practiceId];
+            localStorage.setItem('vstepListeningTimes', JSON.stringify(savedTimes));
+        } catch(e) {}
         
         loadDay(currentPartIndex);
     });
