@@ -45,6 +45,16 @@
     }
   }
 
+  function diffDaysYMD(ymdStart, ymdEnd) {
+    if (!ymdStart || !ymdEnd) return 0;
+    const p1 = String(ymdStart).split('-').map(Number);
+    const p2 = String(ymdEnd).split('-').map(Number);
+    if (p1.length !== 3 || p2.length !== 3) return 0;
+    const t1 = Date.UTC(p1[0], p1[1] - 1, p1[2]);
+    const t2 = Date.UTC(p2[0], p2[1] - 1, p2[2]);
+    return Math.round((t2 - t1) / 86400000);
+  }
+
   function slugifyName(str) {
     if (!str) return 'unknown';
     return String(str)
@@ -132,6 +142,7 @@
     currentStudent: null,
     currentStreakCount: 0,
     todayDone: false,
+    isMissedWarning: false,
     isTeacherMode: false,
     accumulatedAudioSec: 0,
     lastAudioTimeMap: new WeakMap(),
@@ -256,11 +267,15 @@
                 <span class="streak-stat-lbl">Đang mở / Học tốt</span>
               </div>
               <div class="streak-stat-box">
+                <span class="streak-stat-val" id="sa-stat-warned" style="color:#f59e0b;">0</span>
+                <span class="streak-stat-lbl">Bỏ 1 ngày (Cảnh báo)</span>
+              </div>
+              <div class="streak-stat-box">
                 <span class="streak-stat-val" id="sa-stat-locked" style="color:#ef4444;">0</span>
                 <span class="streak-stat-lbl">Đang bị khóa</span>
               </div>
               <div class="streak-stat-box">
-                <span class="streak-stat-val" id="sa-stat-req" style="color:#f59e0b;">0</span>
+                <span class="streak-stat-val" id="sa-stat-req" style="color:#8b5cf6;">0</span>
                 <span class="streak-stat-lbl">Đang xin mở khóa</span>
               </div>
             </div>
@@ -310,6 +325,7 @@
               <div class="streak-filter-tabs">
                 <button type="button" class="streak-filter-btn active" data-filter="all">Tất cả</button>
                 <button type="button" class="streak-filter-btn" data-filter="locked">🔒 Bị khóa / Xin mở</button>
+                <button type="button" class="streak-filter-btn" data-filter="warned">⚠️ Bỏ 1 ngày (Nhắc nhở)</button>
                 <button type="button" class="streak-filter-btn" data-filter="active">🟢 Đang hoạt động</button>
               </div>
               <input type="text" id="sa-search-input" class="streak-search-input" placeholder="Tìm tên học viên hoặc lớp...">
@@ -479,6 +495,7 @@
     // Kiểm tra khi học viên đăng nhập
     async checkStudentLogin(name, classCode) {
       this.isTeacherMode = false;
+      this.isMissedWarning = false;
       this.currentStudent = { name, classCode, key: makeStudentKey(name, classCode) };
       this.toggleTeacherUI(false);
 
@@ -520,7 +537,13 @@
         this.activityMarkedToday = this.todayDone;
         this.cachedConfig = res.config || this.cachedConfig;
         this.hideLockedLoginBox();
+        this.isMissedWarning = Boolean(res.missedWarning || (res.daysMissed === 1 && !res.todayDone));
         this.renderSidebarStreakPill();
+
+        if (this.isMissedWarning) {
+          this.showMissedStreakWarningModal(name, res);
+        }
+
         return { allowed: true, data: res };
       }
 
@@ -529,9 +552,23 @@
         const cachedRaw = localStorage.getItem(cacheKey);
         if (cachedRaw) {
           const cached = JSON.parse(cachedRaw);
-          if (cached.locked) {
-            this.renderLockedLoginBox(name, classCode, cached);
+          const gap = diffDaysYMD(cached.lastActiveDate, getTodayVN());
+          if (cached.locked || gap >= 3) {
+            this.renderLockedLoginBox(name, classCode, Object.assign({}, cached, {
+              lockReason: cached.lockReason || `Bỏ chuỗi ${gap - 1} ngày liên tiếp (chế độ ngoại tuyến).`
+            }));
             return { allowed: false, locked: true, offlineCached: true };
+          } else if (gap === 2) {
+            this.hideLockedLoginBox();
+            this.isMissedWarning = true;
+            this.currentStreakCount = Number(cached.streakCount || 1);
+            this.todayDone = false;
+            this.renderSidebarStreakPill();
+            this.showMissedStreakWarningModal(name, {
+              daysMissed: 1,
+              streakCount: cached.streakCount || 1,
+              lastActiveDate: cached.lastActiveDate
+            });
           }
         }
       } catch (e) {}
@@ -673,6 +710,67 @@
       }
     },
 
+    showMissedStreakWarningModal(name, data) {
+      this.ensureDomElements();
+      let overlay = document.getElementById('streak-warning-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'streak-warning-overlay';
+        overlay.className = 'streak-warning-overlay';
+        document.body.appendChild(overlay);
+      }
+
+      const streakCount = (data && data.streakCount) || this.currentStreakCount || 1;
+      const lastActive = (data && data.lastActiveDate) || 'Hôm qua';
+
+      overlay.innerHTML = `
+        <div class="streak-warning-modal-card">
+          <button type="button" class="streak-close-btn" id="btn-close-streak-warning" aria-label="Đóng">&times;</button>
+          <div class="streak-warning-icon-wrapper">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="streak-warning-badge">
+            <i class="fa-solid fa-bell"></i> Cảnh báo duy trì chuỗi
+          </div>
+          <h3 class="streak-warning-title">BẠN ĐÃ BỎ LỠ 1 NGÀY LUYỆN NGHE!</h3>
+          <div class="streak-warning-stats">
+            <span class="streak-warning-stat-chip"><i class="fa-solid fa-user"></i> ${escapeHtml(name)}</span>
+            <span class="streak-warning-stat-chip"><i class="fa-solid fa-fire"></i> Chuỗi: ${streakCount} ngày</span>
+            <span class="streak-warning-stat-chip"><i class="fa-regular fa-calendar-xmark"></i> Nghe gần nhất: ${escapeHtml(lastActive)}</span>
+          </div>
+          <div class="streak-warning-message">
+            <p style="margin:0 0 8px 0;">Chào <b>${escapeHtml(name)}</b>! Hôm qua bạn chưa hoàn thành bài nghe hằng ngày.</p>
+            <p style="margin:0 0 8px 0;color:#b45309;font-weight:700;">
+              ⚠️ <b>Quy định giữ chuỗi:</b> Hôm nay hệ thống vẫn mở để bạn vào học bình thường và tiếp tục duy trì chuỗi.
+            </p>
+            <p style="margin:0;color:#dc2626;font-weight:800;">
+              🚨 <b>Cảnh báo:</b> Nếu hôm nay bạn tiếp tục không nghe <i>(bỏ 2 ngày liên tiếp)</i>, tài khoản sẽ <b>TỰ ĐỘNG BỊ KHÓA</b> vào ngày mai và cần cô Nguyệt duyệt mở khóa lại!
+            </p>
+          </div>
+          <button type="button" class="btn-ack-streak-warning" id="btn-ack-streak-warning">
+            <i class="fa-solid fa-headphones"></i> EM HIỂU RỒI, EM VÀO LUYỆN NGHE NGAY!
+          </button>
+        </div>
+      `;
+
+      overlay.classList.add('open');
+
+      const closeAction = () => {
+        overlay.classList.remove('open');
+        notify('🎧 Hãy nghe tối thiểu 8 giây audio hoặc nộp bài để hoàn thành chuỗi hôm nay nhé!');
+      };
+
+      const closeBtn = document.getElementById('btn-close-streak-warning');
+      if (closeBtn) closeBtn.addEventListener('click', closeAction);
+
+      const ackBtn = document.getElementById('btn-ack-streak-warning');
+      if (ackBtn) ackBtn.addEventListener('click', closeAction);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeAction();
+      });
+    },
+
     renderSidebarStreakPill() {
       const pill = document.getElementById('streak-sidebar-pill');
       if (!pill || this.isTeacherMode || !this.isConfigured()) return;
@@ -680,10 +778,17 @@
       pill.style.display = 'flex';
       if (this.todayDone) {
         pill.classList.add('done');
+        pill.classList.remove('warning');
         pill.innerHTML = `<span>🔥 Chuỗi: <b>${this.currentStreakCount}</b> ngày</span><span>✅ Đã nghe hôm nay</span>`;
         pill.title = 'Tuyệt vời! Hôm nay bạn đã hoàn thành giữ chuỗi luyện nghe.';
+      } else if (this.isMissedWarning) {
+        pill.classList.remove('done');
+        pill.classList.add('warning');
+        pill.innerHTML = `<span>🔥 Chuỗi: <b>${this.currentStreakCount}</b> ngày</span><span style="color:#d97706;font-weight:900;">⚠️ Cần nghe hôm nay</span>`;
+        pill.title = 'Bạn đã bỏ 1 ngày! Hãy nghe Audio hoặc nộp bài hôm nay để tránh bị khóa tài khoản!';
       } else {
         pill.classList.remove('done');
+        pill.classList.remove('warning');
         pill.innerHTML = `<span>🔥 Chuỗi: <b>${this.currentStreakCount}</b> ngày</span><span>⏳ Chờ nghe hôm nay</span>`;
         pill.title = 'Hãy nghe Audio tối thiểu 8 giây hoặc nộp bài hôm nay để giữ chuỗi!';
       }
@@ -732,6 +837,7 @@
 
       if (res && res.ok) {
         this.todayDone = true;
+        this.isMissedWarning = false;
         this.currentStreakCount = Number(res.streakCount || this.currentStreakCount || 1);
         this.renderSidebarStreakPill();
         if (typeof window.showToast === 'function') {
@@ -818,7 +924,8 @@
       const all = this.currentCourseScope === 'all' ? rawAll : rawAll.filter((s) => !isChongDiecRow(s));
       const lockedList = all.filter((s) => s.status === 'LOCKED' || s.willBeLockedOnNextLogin);
       const reqList = all.filter((s) => s.unlockRequested);
-      const activeList = all.filter((s) => s.status !== 'LOCKED' && !s.willBeLockedOnNextLogin);
+      const warnedList = all.filter((s) => !lockedList.includes(s) && (s.willBeWarnedOnNextLogin || s.daysMissed === 1));
+      const activeList = all.filter((s) => !lockedList.includes(s) && !warnedList.includes(s));
 
       const setTxt = (id, v) => {
         const el = document.getElementById(id);
@@ -826,6 +933,7 @@
       };
       setTxt('sa-stat-total', all.length);
       setTxt('sa-stat-active', activeList.length);
+      setTxt('sa-stat-warned', warnedList.length);
       setTxt('sa-stat-locked', lockedList.length);
       setTxt('sa-stat-req', reqList.length);
       const tcLockedCount = rawAll.filter((s) => !isChongDiecRow(s)).filter((s) => s.status === 'LOCKED' || s.willBeLockedOnNextLogin).length;
@@ -834,6 +942,8 @@
       let filtered = all;
       if (this.currentFilter === 'locked') {
         filtered = lockedList;
+      } else if (this.currentFilter === 'warned') {
+        filtered = warnedList;
       } else if (this.currentFilter === 'active') {
         filtered = activeList;
       }
@@ -853,11 +963,14 @@
 
       listEl.innerHTML = filtered.map((s) => {
         const isLocked = s.status === 'LOCKED' || s.willBeLockedOnNextLogin;
+        const isWarned = !isLocked && (s.willBeWarnedOnNextLogin || s.daysMissed === 1);
         const statusPill = s.status === 'LOCKED'
           ? `<span class="streak-status-pill locked">🔒 ĐÃ KHÓA</span>`
           : (s.willBeLockedOnNextLogin
-              ? `<span class="streak-status-pill locked">⚠️ BỎ CHUỖI (${s.daysMissed} ngày)</span>`
-              : `<span class="streak-status-pill active">${s.todayDone ? '✅ ĐÃ NGHE HÔM NAY' : '🟢 ĐANG MỞ'}</span>`);
+              ? `<span class="streak-status-pill locked">🔒 BỎ CHUỖI (${s.daysMissed} ngày)</span>`
+              : (isWarned
+                  ? `<span class="streak-status-pill warning">⚠️ BỎ 1 NGÀY (NHẮC NHỞ)</span>`
+                  : `<span class="streak-status-pill active">${s.todayDone ? '✅ ĐÃ NGHE HÔM NAY' : '🟢 ĐANG MỞ'}</span>`));
 
         const reqPill = s.unlockRequested
           ? `<span class="streak-status-pill req">📩 XIN MỞ KHÓA</span>`
@@ -894,7 +1007,7 @@
             `;
 
         return `
-          <div class="streak-student-row ${isLocked ? 'is-locked' : ''}">
+          <div class="streak-student-row ${isLocked ? 'is-locked' : ''} ${isWarned ? 'is-warned' : ''}">
             <div class="streak-student-main">
               <div class="streak-student-top">
                 <span class="streak-student-name">${escapeHtml(s.fullName)}</span>

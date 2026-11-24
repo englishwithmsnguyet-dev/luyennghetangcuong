@@ -443,11 +443,11 @@ function handleAction(params) {
       // Kiểm tra khoảng cách ngày từ lần cuối học đến hôm nay
       const gap = diffDaysYMD(st.lastActiveDate, today);
 
-      // Nếu gap >= 2 (tức là đã bỏ ít nhất 1 ngày trọn vẹn không vào nghe) và không có ân hạn hôm nay
-      if (gap >= 2 && !hasGraceToday) {
+      // Nếu gap >= 3 (tức là đã bỏ từ 2 ngày liên tiếp trở lên) và không có ân hạn hôm nay -> KHÓA
+      if (gap >= 3 && !hasGraceToday) {
         const sundayBypass = (cfg.StreakMode === 'ALLOW_SUNDAY_OFF') && isOnlySundaysMissed(st.lastActiveDate, today);
         if (!sundayBypass) {
-          const reason = `Bỏ chuỗi (lần cuối nghe: ${st.lastActiveDate || 'chưa rõ'}, vắng ${gap - 1} ngày)`;
+          const reason = `Bỏ chuỗi ${gap - 1} ngày liên tiếp (lần cuối nghe: ${st.lastActiveDate || 'chưa rõ'})`;
           studentSheet.getRange(rNum, 9).setValue('LOCKED');   // Status
           studentSheet.getRange(rNum, 10).setValue(reason);    // LockReason
           studentSheet.getRange(rNum, 11).setValue(nowStr);    // LockedAt
@@ -467,9 +467,20 @@ function handleAction(params) {
         }
       }
 
+      // Nếu gap === 2 (bỏ lỡ đúng 1 ngày hôm qua) -> NHẮC NHỞ CẢNH BÁO, KHÔNG KHÓA!
+      let missedWarning = false;
+      let warningMessage = '';
+      if (gap === 2 && !hasGraceToday) {
+        const sundayBypass = (cfg.StreakMode === 'ALLOW_SUNDAY_OFF') && isOnlySundaysMissed(st.lastActiveDate, today);
+        if (!sundayBypass) {
+          missedWarning = true;
+          warningMessage = `Bạn đã bỏ lỡ 1 ngày luyện nghe hôm qua (${st.lastActiveDate})! Hãy hoàn thành bài nghe hôm nay ngay nhé. Nếu bỏ thêm ngày nữa (bỏ 2 ngày liên tiếp), tài khoản sẽ bị TỰ ĐỘNG KHÓA! ⚠️`;
+        }
+      }
+
       // Nếu chế độ là LOGIN (chỉ cần đăng nhập mỗi ngày là tính giữ chuỗi luôn)
       if (cfg.RequireActivity === 'LOGIN') {
-        const nextStreak = (gap === 1 || hasGraceToday) ? (st.streakCount + 1) : 1;
+        const nextStreak = (gap <= 2 || hasGraceToday) ? (st.streakCount + 1) : 1;
         const nextBest = Math.max(st.bestStreak, nextStreak);
         studentSheet.getRange(rNum, 4).setValue(nextStreak);
         studentSheet.getRange(rNum, 5).setValue(nextBest);
@@ -481,6 +492,9 @@ function handleAction(params) {
         return {
           ok: true,
           locked: false,
+          missedWarning: missedWarning,
+          warningMessage: warningMessage,
+          daysMissed: gap === 2 ? 1 : 0,
           streakCount: nextStreak,
           bestStreak: nextBest,
           lastActiveDate: today,
@@ -494,6 +508,9 @@ function handleAction(params) {
       return {
         ok: true,
         locked: false,
+        missedWarning: missedWarning,
+        warningMessage: warningMessage,
+        daysMissed: gap === 2 ? 1 : 0,
         streakCount: st.streakCount,
         bestStreak: st.bestStreak,
         lastActiveDate: st.lastActiveDate,
@@ -543,7 +560,8 @@ function handleAction(params) {
       const gap = diffDaysYMD(st.lastActiveDate, today);
       const sundayBypass = (cfg.StreakMode === 'ALLOW_SUNDAY_OFF') && isOnlySundaysMissed(st.lastActiveDate, today);
       let nextStreak = 1;
-      if (gap <= 1 || sundayBypass || st.graceUntilDate === today) {
+      // Nếu học liên tiếp (gap <= 1) hoặc bỏ 1 ngày nhưng hôm nay đã vào làm bài kịp thời (gap === 2) -> tiếp tục cộng chuỗi
+      if (gap <= 2 || sundayBypass || st.graceUntilDate === today) {
         nextStreak = Math.max(1, st.streakCount + 1);
       }
       const nextBest = Math.max(st.bestStreak, nextStreak);
@@ -606,20 +624,24 @@ function handleAction(params) {
         // Tính thêm trạng thái thực tế theo ngày hôm nay (dù học viên chưa đăng nhập lại hôm nay)
         const gap = diffDaysYMD(st.lastActiveDate, today);
         const sundayBypass = (cfg.StreakMode === 'ALLOW_SUNDAY_OFF') && isOnlySundaysMissed(st.lastActiveDate, today);
-        const willBeLocked = cfg.SystemEnabled && st.status !== 'LOCKED' && st.graceUntilDate !== today && gap >= 2 && !sundayBypass;
+        // Bỏ từ 2 ngày trở lên (gap >= 3) mới khóa; bỏ 1 ngày (gap === 2) chỉ nhắc nhở cảnh báo
+        const willBeLocked = cfg.SystemEnabled && st.status !== 'LOCKED' && st.graceUntilDate !== today && gap >= 3 && !sundayBypass;
+        const willBeWarned = cfg.SystemEnabled && st.status !== 'LOCKED' && st.graceUntilDate !== today && gap === 2 && !sundayBypass;
         st.daysMissed = Math.max(0, gap - 1);
         st.willBeLockedOnNextLogin = willBeLocked;
+        st.willBeWarnedOnNextLogin = willBeWarned;
         st.todayDone = (st.lastActiveDate === today);
         students.push(st);
       }
 
-      // Sắp xếp: Xin mở khóa -> Đang bị khóa -> Sắp bị khóa -> Đang học
+      // Sắp xếp: Xin mở khóa -> Đang bị khóa -> Sắp bị khóa (bỏ 2 ngày) -> Đang bị nhắc nhở (bỏ 1 ngày) -> Đang học
       students.sort((a, b) => {
         const score = (s) => {
           if (s.status === 'LOCKED' && s.unlockRequested) return 0;
           if (s.status === 'LOCKED') return 1;
           if (s.willBeLockedOnNextLogin) return 2;
-          return 3;
+          if (s.willBeWarnedOnNextLogin) return 3;
+          return 4;
         };
         return score(a) - score(b);
       });
