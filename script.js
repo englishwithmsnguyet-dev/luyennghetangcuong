@@ -182,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadDay(currentPartIndex);
         updateSidebarUserProfile();
         checkLoginState();
+        initHistoryEvents();
     }
 
     // Render Sidebar Menu
@@ -343,6 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fa-solid fa-circle-check"></i>
                         <span>Đã nộp bài: <strong>${spentStr}</strong> (Nghe audio: <strong>${audioStr}</strong>)</span>
                     </div>
+                    <button type="button" class="btn-timer-view-confirm" onclick="openDayConfirmationModal('${practiceId}')" title="Mở bảng điểm để chụp ảnh màn hình">
+                        <i class="fa-solid fa-camera"></i> Xem lại ảnh xác nhận
+                    </button>
                 `;
             }
         } else {
@@ -749,7 +753,10 @@ document.addEventListener('DOMContentLoaded', () => {
             savedTimes[practiceId] = {
                 timeSpent: totalElapsedSeconds,
                 audioTime: recordedAudioSec,
-                submittedAt: new Date().toISOString()
+                submittedAt: new Date().toISOString(),
+                score: realScore,
+                total: total,
+                message: message
             };
             localStorage.setItem('vstepListeningTimes', JSON.stringify(savedTimes));
         } catch(e) {}
@@ -762,8 +769,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid fa-circle-check"></i>
                     <span>Đã nộp bài: <strong>${formatTimerHuman(totalElapsedSeconds)}</strong> (Nghe audio: <strong>${formatTimerDigits(recordedAudioSec)}</strong>)</span>
                 </div>
+                <button type="button" class="btn-timer-view-confirm" onclick="openDayConfirmationModal('${practiceId}')" title="Mở bảng điểm để chụp ảnh màn hình">
+                    <i class="fa-solid fa-camera"></i> Xem lại ảnh xác nhận
+                </button>
             `;
         }
+
+        showResultsModal({
+            dayStr: dayStr,
+            score: realScore,
+            total: total,
+            message: message,
+            timeSpent: totalElapsedSeconds,
+            audioTime: recordedAudioSec
+        });
+        updateProgress();
+
+        // Reward water drops for completing listening exercise
+        if (window.FlowerGarden) {
+            const rewardDrops = Math.max(5, realScore * 2);
+            window.FlowerGarden.addWaterDrops(rewardDrops, `Hoàn thành bài luyện nghe (${realScore}/${total} câu đúng)`);
+        }
+
+        // Mark today's listening streak activity complete
+        if (window.StreakGuard) {
+            window.StreakGuard.markTodayActivityDone('Nộp bài luyện nghe');
+        }
+    });
+
+    // ==========================================
+    // CONFIRMATION MODAL & PRACTICE HISTORY LOGIC
+    // ==========================================
+    function showResultsModal({ dayStr, score, total, message, timeSpent, audioTime }) {
+        const savedName = localStorage.getItem('vstep_student_name') || 'Học viên';
+        const savedClass = localStorage.getItem('vstep_student_class') || '--';
 
         const dayTextEl = document.getElementById('res-day-text');
         const nameEl = document.getElementById('res-student-name');
@@ -778,43 +817,307 @@ document.addEventListener('DOMContentLoaded', () => {
         const warningEl = document.getElementById('res-time-warning');
         const validEl = document.getElementById('res-time-valid');
 
+        const spentVal = typeof timeSpent === 'number' ? timeSpent : 0;
+        const audioVal = typeof audioTime === 'number' ? audioTime : 0;
+
         if (timeSpentEl) {
-            timeSpentEl.textContent = formatTimerHuman(totalElapsedSeconds);
+            timeSpentEl.textContent = typeof timeSpent === 'number' ? formatTimerHuman(timeSpent) : (timeSpent || '--');
         }
         if (audioTimeEl) {
-            audioTimeEl.textContent = formatTimerDigits(recordedAudioSec);
+            audioTimeEl.textContent = typeof audioTime === 'number' ? formatTimerDigits(audioTime) : (audioTime || '--');
         }
 
-        // Cảnh báo đối phó: Làm bài dưới 60 giây hoặc nghe audio dưới 15 giây
-        const isRushed = totalElapsedSeconds < 60 || recordedAudioSec < 15;
+        const hasTime = typeof timeSpent === 'number' && timeSpent > 0;
+        const isRushed = hasTime && (spentVal < 60 || audioVal < 15);
+
         if (warningEl && validEl) {
-            if (isRushed) {
-                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>Cảnh báo: Làm bài quá nhanh (${formatTimerHuman(totalElapsedSeconds)})! Có dấu hiệu chọn bừa đối phó mà chưa nghe kỹ audio.</span>`;
+            if (!hasTime) {
+                warningEl.classList.add('hidden');
+                validEl.classList.add('hidden');
+            } else if (isRushed) {
+                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>Cảnh báo: Làm bài quá nhanh (${formatTimerHuman(spentVal)})! Có dấu hiệu chọn bừa đối phó mà chưa nghe kỹ audio.</span>`;
                 warningEl.classList.remove('hidden');
                 validEl.classList.add('hidden');
             } else {
-                validEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Thời gian làm bài hợp lệ (${formatTimerHuman(totalElapsedSeconds)})</span>`;
+                validEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Thời gian làm bài hợp lệ (${formatTimerHuman(spentVal)})</span>`;
                 validEl.classList.remove('hidden');
                 warningEl.classList.add('hidden');
             }
         }
 
-        document.getElementById('final-score').textContent = realScore;
-        document.querySelector('.score-total').textContent = `/ ${total}`;
-        document.getElementById('score-message').textContent = message;
-        document.getElementById('results-overlay').classList.add('active');
+        const finalScoreEl = document.getElementById('final-score');
+        const scoreTotalEl = document.querySelector('.score-total');
+        const msgEl = document.getElementById('score-message');
 
-        // Reward water drops for completing listening exercise
-        if (window.FlowerGarden) {
-            const rewardDrops = Math.max(5, realScore * 2);
-            window.FlowerGarden.addWaterDrops(rewardDrops, `Hoàn thành bài luyện nghe (${realScore}/${total} câu đúng)`);
+        if (finalScoreEl) finalScoreEl.textContent = score;
+        if (scoreTotalEl) scoreTotalEl.textContent = `/ ${total}`;
+        if (msgEl) msgEl.textContent = message;
+
+        const resultsOverlay = document.getElementById('results-overlay');
+        if (resultsOverlay) resultsOverlay.classList.add('active');
+    }
+
+    function openDayConfirmationModal(practiceId) {
+        try {
+            const idx = appData.findIndex(d => d.title === practiceId);
+            const d = idx !== -1 ? appData[idx] : null;
+            if (idx !== -1) {
+                currentPartIndex = idx;
+            }
+
+            let savedTimes = {};
+            try {
+                savedTimes = JSON.parse(localStorage.getItem('vstepListeningTimes') || '{}');
+            } catch(e) {}
+            const record = savedTimes[practiceId] || {};
+
+            let questions = [];
+            if (d) {
+                if (d.parts) {
+                    d.parts.forEach(part => {
+                        questions = questions.concat(part.questions || []);
+                    });
+                } else if (d.questions) {
+                    questions = d.questions;
+                }
+            }
+
+            const totalQuestions = (typeof record.total === 'number' && record.total > 0) ? record.total : (questions.length || 8);
+
+            let realScore = typeof record.score === 'number' ? record.score : 0;
+            if (typeof record.score !== 'number' && questions.length > 0 && userAnswers[practiceId]) {
+                questions.forEach(q => {
+                    if (userAnswers[practiceId][q.id] === q.correctAnswer) {
+                        realScore++;
+                    }
+                });
+            }
+
+            const rawDayNum = (d && d.title ? String(d.title).replace(/\D+/g, '') : String(practiceId).replace(/\D+/g, ''));
+            const dayStr = rawDayNum ? `DAY ${rawDayNum.padStart(2, '0')}` : (practiceId || 'DAY');
+
+            let message = record.message;
+            if (!message) {
+                const percentage = (realScore / totalQuestions) * 100;
+                if (percentage === 0) {
+                    message = "Ôi không, 0 điểm rồi kìa! Mau nghe lại và làm lại ngay nhé, nếu không, Miss Nguyệt đấm cậu đó!";
+                } else if (percentage >= 50) {
+                    message = "Cậu đã làm tốt lắm. Tiếp tục cố gắng nhé! Miss Nguyệt khen cậu đó!";
+                } else {
+                    message = "Không sao đâu, miễn là cậu vẫn đang cố gắng! Kiên nhẫn thêm một chút nhé! Nếu không, Miss Nguyệt đấm cậu đó!";
+                }
+            }
+
+            showResultsModal({
+                dayStr: dayStr,
+                score: realScore,
+                total: totalQuestions,
+                message: message,
+                timeSpent: record.timeSpent,
+                audioTime: record.audioTime
+            });
+        } catch(err) {
+            console.warn('Error opening confirmation modal:', err);
+        }
+    }
+
+    function openHistoryModal() {
+        const modal = document.getElementById('history-modal');
+        if (!modal) return;
+        renderHistoryList();
+        modal.classList.remove('hidden');
+    }
+
+    function closeHistoryModal() {
+        const modal = document.getElementById('history-modal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function renderHistoryList() {
+        const listEl = document.getElementById('history-list');
+        const nameEl = document.getElementById('hist-student-name');
+        const classEl = document.getElementById('hist-student-class');
+        const totalEl = document.getElementById('hist-total-count');
+        const sidebarCountEl = document.getElementById('sidebar-history-count');
+
+        const savedName = localStorage.getItem('vstep_student_name') || 'Học viên';
+        const savedClass = localStorage.getItem('vstep_student_class') || '--';
+
+        if (nameEl) nameEl.textContent = savedName;
+        if (classEl) classEl.textContent = `Lớp: ${savedClass}`;
+
+        let savedTimes = {};
+        try {
+            savedTimes = JSON.parse(localStorage.getItem('vstepListeningTimes') || '{}');
+        } catch(e) {}
+
+        const submittedItems = [];
+
+        appData.forEach((d, idx) => {
+            if (d.isPlaceholder) return;
+            const practiceId = d.title;
+            const ans = userAnswers[practiceId] || {};
+            const hasAnswers = Object.keys(ans).length > 0;
+            const record = savedTimes[practiceId] || {};
+
+            if (hasAnswers || record.submittedAt) {
+                let questions = [];
+                if (d.parts) {
+                    d.parts.forEach(part => {
+                        questions = questions.concat(part.questions || []);
+                    });
+                } else if (d.questions) {
+                    questions = d.questions;
+                }
+
+                const totalQ = (typeof record.total === 'number' && record.total > 0) ? record.total : (questions.length || 8);
+                let score = typeof record.score === 'number' ? record.score : 0;
+                if (typeof record.score !== 'number' && questions.length > 0) {
+                    questions.forEach(q => {
+                        if (ans[q.id] === q.correctAnswer) score++;
+                    });
+                }
+
+                const rawDayNum = String(practiceId).replace(/\D+/g, '');
+                const dayNum = parseInt(rawDayNum, 10) || (idx + 1);
+                const title = rawDayNum ? `DAY ${rawDayNum.padStart(2, '0')}` : practiceId;
+
+                submittedItems.push({
+                    practiceId: practiceId,
+                    dayNum: dayNum,
+                    title: title,
+                    score: score,
+                    total: totalQ,
+                    timeSpent: record.timeSpent,
+                    audioTime: record.audioTime,
+                    submittedAt: record.submittedAt
+                });
+            }
+        });
+
+        // Sắp xếp: bài nộp gần nhất lên đầu (hoặc theo ngày)
+        submittedItems.sort((a, b) => {
+            if (a.submittedAt && b.submittedAt) {
+                return new Date(b.submittedAt) - new Date(a.submittedAt);
+            }
+            return b.dayNum - a.dayNum;
+        });
+
+        if (totalEl) totalEl.textContent = String(submittedItems.length);
+        if (sidebarCountEl) {
+            if (submittedItems.length > 0) {
+                sidebarCountEl.textContent = String(submittedItems.length);
+                sidebarCountEl.style.display = 'inline-block';
+            } else {
+                sidebarCountEl.style.display = 'none';
+            }
         }
 
-        // Mark today's listening streak activity complete
-        if (window.StreakGuard) {
-            window.StreakGuard.markTodayActivityDone('Nộp bài luyện nghe');
+        if (!listEl) return;
+
+        if (submittedItems.length === 0) {
+            listEl.innerHTML = `
+                <div class="history-empty-state">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <h4 style="margin: 0 0 6px 0; color: #64748b;">Chưa có bài nghe nào được nộp</h4>
+                    <p style="margin: 0; font-size: 0.84rem;">Sau khi hoàn thành và nộp bất kỳ bài nghe nào, kết quả và ảnh xác nhận sẽ hiển thị ở đây để bạn xem lại bất cứ lúc nào!</p>
+                </div>
+            `;
+            return;
         }
-    });
+
+        listEl.innerHTML = submittedItems.map(item => {
+            const pct = Math.round((item.score / item.total) * 100);
+            let scoreClass = 'score-good';
+            if (pct === 0) scoreClass = 'score-low';
+            else if (pct < 50) scoreClass = 'score-mid';
+
+            const spentStr = typeof item.timeSpent === 'number' ? formatTimerHuman(item.timeSpent) : '--';
+            const audioStr = typeof item.audioTime === 'number' ? formatTimerDigits(item.audioTime) : '--';
+
+            const isRushed = typeof item.timeSpent === 'number' && (item.timeSpent < 60 || (typeof item.audioTime === 'number' && item.audioTime < 15));
+            const statusBadge = isRushed
+                ? `<span class="history-time-badge warning"><i class="fa-solid fa-triangle-exclamation"></i> Làm quá nhanh</span>`
+                : (typeof item.timeSpent === 'number'
+                    ? `<span class="history-time-badge valid"><i class="fa-solid fa-circle-check"></i> Hợp lệ</span>`
+                    : '');
+
+            let dateStr = '';
+            if (item.submittedAt) {
+                try {
+                    const d = new Date(item.submittedAt);
+                    dateStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')} - ${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                } catch(e) {}
+            }
+
+            return `
+                <div class="history-item-row">
+                    <div class="history-item-main">
+                        <div class="history-item-top">
+                            <span class="history-day-badge"><i class="fa-solid fa-headphones"></i> ${item.title}</span>
+                            <span class="history-score-badge ${scoreClass}">${item.score}/${item.total} câu (${pct}%)</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="history-item-meta">
+                            <span><i class="fa-solid fa-stopwatch"></i> Làm bài: <strong>${spentStr}</strong></span>
+                            <span><i class="fa-solid fa-headphones"></i> Nghe audio: <strong>${audioStr}</strong></span>
+                            ${dateStr ? `<span><i class="fa-regular fa-calendar-check"></i> ${dateStr}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="history-item-actions">
+                        <button type="button" class="btn-history-view-confirm" onclick="closeHistoryModal(); openDayConfirmationModal('${item.practiceId}')" title="Mở bảng điểm để chụp ảnh màn hình">
+                            <i class="fa-solid fa-camera"></i> Xem ảnh xác nhận
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function initHistoryEvents() {
+        const btnSidebar = document.getElementById('btn-sidebar-history');
+        if (btnSidebar) {
+            btnSidebar.addEventListener('click', () => openHistoryModal());
+        }
+
+        const btnHeader = document.getElementById('btn-header-history');
+        if (btnHeader) {
+            btnHeader.addEventListener('click', () => openHistoryModal());
+        }
+
+        const btnClose = document.getElementById('btn-close-history');
+        if (btnClose) {
+            btnClose.addEventListener('click', () => closeHistoryModal());
+        }
+
+        const histModal = document.getElementById('history-modal');
+        if (histModal) {
+            histModal.addEventListener('click', (e) => {
+                if (e.target === histModal) closeHistoryModal();
+            });
+        }
+
+        const btnCloseResults = document.getElementById('btn-close-results');
+        if (btnCloseResults) {
+            btnCloseResults.addEventListener('click', () => {
+                const resultsOverlay = document.getElementById('results-overlay');
+                if (resultsOverlay) resultsOverlay.classList.remove('active');
+            });
+        }
+
+        const resultsOverlay = document.getElementById('results-overlay');
+        if (resultsOverlay) {
+            resultsOverlay.addEventListener('click', (e) => {
+                if (e.target === resultsOverlay) {
+                    resultsOverlay.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    window.openDayConfirmationModal = openDayConfirmationModal;
+    window.openHistoryModal = openHistoryModal;
+    window.closeHistoryModal = closeHistoryModal;
 
     // Results Actions
     document.getElementById('review-btn').addEventListener('click', () => {
@@ -846,6 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
         
         loadDay(currentPartIndex);
+        updateProgress();
     });
 
     // Update Progress
@@ -863,6 +1167,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentage = Math.round((completedDays / totalAvailableDays) * 100);
         progressPercent.textContent = `${percentage}%`;
         progressFill.style.width = `${percentage}%`;
+
+        // Update history count badge in sidebar
+        const sidebarCountEl = document.getElementById('sidebar-history-count');
+        if (sidebarCountEl) {
+            if (completedDays > 0) {
+                sidebarCountEl.textContent = String(completedDays);
+                sidebarCountEl.style.display = 'inline-block';
+            } else {
+                sidebarCountEl.style.display = 'none';
+            }
+        }
     }
 
     // Theme Toggle (Real logic)
