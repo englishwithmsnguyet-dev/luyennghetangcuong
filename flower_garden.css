@@ -298,27 +298,27 @@
 
 /* 5 Discrete Growth Stage Visual Transforms (Gradual, proportional organic progression) */
 .clover-living-stage.clover-stage-1 .clover-living-art {
-    transform: scale(0.70) translateY(18px) !important;
+    transform: scale(0.90) translateY(4px) !important;
     transform-origin: 50% 92% !important;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 .clover-living-stage.clover-stage-2 .clover-living-art {
-    transform: scale(0.80) translateY(10px) !important;
+    transform: scale(0.92) translateY(3px) !important;
     transform-origin: 50% 92% !important;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 .clover-living-stage.clover-stage-3 .clover-living-art {
-    transform: scale(0.86) translateY(6px) !important;
+    transform: scale(0.95) translateY(2px) !important;
     transform-origin: 50% 92% !important;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 .clover-living-stage.clover-stage-4 .clover-living-art {
-    transform: scale(0.92) translateY(2px) !important;
+    transform: scale(0.98) translateY(1px) !important;
     transform-origin: 50% 92% !important;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 .clover-living-stage.clover-stage-5 .clover-living-art {
-    transform: scale(0.96) translateY(0) !important;
+    transform: scale(1.0) translateY(0) !important;
     transform-origin: 50% 92% !important;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
@@ -1829,12 +1829,12 @@
 }
 
 /* Benefits Matrix Grid */
-.benefits-grid {
+.vstep-guide-wrap .benefits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 14px;
 }
-.benefit-card {
+.vstep-guide-wrap .benefit-card {
     background: #FFFFFF;
     border: 1px solid #E2E8F0;
     border-radius: 16px;
@@ -3886,6 +3886,9 @@
    Ensures Flower Garden renders flawlessly across all VSTEP & TOEIC sites
    ============================================================= */
 .garden-container {
+    max-width: 580px !important;
+    margin: 0 auto 24px auto !important;
+    width: 100% !important;
     background: rgba(255, 255, 255, 0.94) !important;
     border: 1.5px solid #fde68a !important;
     border-radius: 20px !important;
@@ -3968,14 +3971,15 @@ body.dark-theme .garden-container .garden-subtitle {
     position: relative !important;
     overflow: hidden !important;
     border-radius: 18px !important;
+    padding-bottom: 10px !important;
 }
 
 .garden-pot-wrapper {
     display: flex !important;
     align-items: flex-end !important;
     justify-content: center !important;
-    width: 175px !important;
-    height: 175px !important;
+    width: 185px !important;
+    height: 185px !important;
     margin: 0 auto !important;
     position: relative !important;
     z-index: 3 !important;
