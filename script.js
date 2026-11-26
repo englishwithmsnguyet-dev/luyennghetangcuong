@@ -1637,8 +1637,17 @@ document.addEventListener('DOMContentLoaded', () => {
             loginOverlay.style.display = 'flex';
         }
 
-        const savedName = localStorage.getItem('vstep_student_name') || '';
-        const savedClass = localStorage.getItem('vstep_student_class') || '';
+        let savedName = localStorage.getItem('vstep_student_name') || '';
+        let savedClass = localStorage.getItem('vstep_student_class') || '';
+        const normSaved = savedName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+        if (normSaved.includes('gia tue') || normSaved.replace(/\s+/g, '').includes('giatue') || savedClass === 'B2') {
+            localStorage.removeItem('vstep_student_name');
+            localStorage.removeItem('vstep_student_class');
+            localStorage.removeItem('vstep_student_logged_in');
+            sessionStorage.removeItem('vstep_student_logged_in');
+            savedName = '';
+            savedClass = '';
+        }
         const isTeacherSaved = (savedName.trim().toUpperCase() === 'PTMN' || savedName.toLowerCase().includes('cô nguyệt'));
         updateSidebarUserProfile();
 
@@ -1730,6 +1739,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const normName = nameVal.toUpperCase();
+        const normNoTone = nameVal.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+        const isGiaTue = normNoTone.includes('gia tue') || normNoTone.replace(/\s+/g, '').includes('giatue');
+        if (isGiaTue || rawClassVal === 'B2') {
+            showLoginError('Tài khoản học viên "Gia Tuệ" hiện đã bị KHÓA! Vui lòng liên hệ Giáo viên (Cô Nguyệt).');
+            if (studentNameInput) studentNameInput.focus();
+            return;
+        }
+
         // Tài khoản giáo viên: PTMN với mã lớp GV (hoặc để trống lớp sẽ tự gán GV), không cần mật khẩu
         const isTeacher = (normName === 'PTMN') || normName.includes('CÔ NGUYỆT') || normName.includes('CO NGUYET');
 
